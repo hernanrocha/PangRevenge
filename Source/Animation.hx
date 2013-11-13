@@ -2,7 +2,6 @@ package ;
 
 import flash.display.Sprite;
 import flash.display.BitmapData;
-//import openfl.display.Tilesheet;
 import openfl.display.Tilesheet;
 import flash.geom.Rectangle;
 import flash.geom.Point;
@@ -29,10 +28,11 @@ class Animation extends GameElement {
 				t.addTileRect(new Rectangle(col*w,row*h,w,h));
 			}
 		}
+		
 		this.width=w;
 		this.height=h;
 		cant=cols*rows;
-		trace(cant);
+		trace("Cargar sprite de " + cant + " elementos.");
 		t.drawTiles(graphics,[0,0,0]);
 		totalTime=0;
 	}

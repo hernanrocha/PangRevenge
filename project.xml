@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<meta title="HelloShooter" package="mycompany.myapp" version="1.0.0" company="" />
+	<meta title="PangRevenge" package="mycompany.myapp" version="1.0.0" company="" />
 	
-	<app path="Export" main="HelloShooter" file="HelloShooter" />
+	<app path="Export" main="PangRevenge" file="PangRevenge" />
 	
 	<source path="Source" />
 	

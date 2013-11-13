@@ -1,7 +1,7 @@
 #if !macro
 #if (openfl_html5 && !flambe)
 
-import HelloShooter;
+import PangRevenge;
 import haxe.Resource;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -29,7 +29,7 @@ class ApplicationMain {
 		urlLoaders = new Map <String, URLLoader>();
 		total = 0;
 		
-		//flash.Lib.setPackage("", "HelloShooter", "mycompany.myapp", "1.0.0");
+		//flash.Lib.setPackage("", "PangRevenge", "mycompany.myapp", "1.0.0");
 		flash.Lib.current.loaderInfo = flash.display.LoaderInfo.create (null);
 		
 		try {
@@ -150,6 +150,11 @@ class ApplicationMain {
 		
 		
 		var loader:Loader = new Loader();
+		loaders.set("images/pelotita.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
 		loaders.set("images/player_explode.png", loader);
 		total ++;
 		
@@ -228,7 +233,7 @@ class ApplicationMain {
 		preloader.removeEventListener(Event.COMPLETE, preloader_onComplete);
 		Lib.current.removeChild(preloader);
 		preloader = null;
-		if (Reflect.field(HelloShooter, "main") == null)
+		if (Reflect.field(PangRevenge, "main") == null)
 		{
 			var mainDisplayObj = Type.createInstance(DocumentClass, []);
 			if (Std.is(mainDisplayObj, flash.display.DisplayObject))
@@ -236,25 +241,25 @@ class ApplicationMain {
 		}
 		else
 		{
-			Reflect.callMethod(HelloShooter, Reflect.field (HelloShooter, "main"), []);
+			Reflect.callMethod(PangRevenge, Reflect.field (PangRevenge, "main"), []);
 		}
 	}
 }
 
 @:build(DocumentClass.build())
-class DocumentClass extends HelloShooter {}
+class DocumentClass extends PangRevenge {}
 
 #else
 
-import HelloShooter;
+import PangRevenge;
 
 class ApplicationMain {
 
 	public static function main() {
-		if (Reflect.field(HelloShooter, "main") == null) {
-			Type.createInstance(HelloShooter, []);
+		if (Reflect.field(PangRevenge, "main") == null) {
+			Type.createInstance(PangRevenge, []);
 		} else {
-			Reflect.callMethod(HelloShooter, Reflect.field(HelloShooter, "main"), []);
+			Reflect.callMethod(PangRevenge, Reflect.field(PangRevenge, "main"), []);
 		}
 	}
 }

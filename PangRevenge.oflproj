@@ -75,7 +75,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\openfl.svg" />
-    <Compile Include="Source\HelloShooter.hx" />
+    <Compile Include="Source\PangRevenge.hx" />
     <Compile Include="project.xml" />
     <Compile Include="Source\Animation.hx" />
     <Compile Include="Source\GameElement.hx" />

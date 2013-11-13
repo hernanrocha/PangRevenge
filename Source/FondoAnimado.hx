@@ -13,6 +13,7 @@ class FondoAnimado extends GameElement {
 	public function new () {
 		super();
 		
+		// Cargar Sprites
 		fondoLejano=new Sprite();		
 		fondoMedio=new Sprite();		
 		fondoCercano=new Sprite();		

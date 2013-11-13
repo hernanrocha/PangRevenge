@@ -7,7 +7,7 @@
 -D openfl
 -D html5
 -D web
--js Export/html5/bin/HelloShooter.js
+-js Export/html5/bin/PangRevenge.js
 -cp Export/html5/haxe
 -D html5
 -D html

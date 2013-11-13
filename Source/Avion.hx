@@ -1,6 +1,7 @@
 package ;
 
 import flash.display.Bitmap;
+import flash.display.Stage;
 import openfl.Assets;
 
 
@@ -15,7 +16,7 @@ class Avion extends GameElement{
 	var tiempoCanon:Float;
 	//var explotando://;
 	
-	public function new () {
+	public function new (stage:Stage) {
 		super();
 		misiles = new Array<Misil1>();
 		for(i in 0 ... 5){

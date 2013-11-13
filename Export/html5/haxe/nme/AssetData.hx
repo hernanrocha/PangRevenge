@@ -57,6 +57,8 @@ class AssetData {
 			type.set ("images/malo1.png", Reflect.field (AssetType, "image".toUpperCase ()));
 			path.set ("images/minion_explode.png", "images/minion_explode.png");
 			type.set ("images/minion_explode.png", Reflect.field (AssetType, "image".toUpperCase ()));
+			path.set ("images/pelotita.png", "images/pelotita.png");
+			type.set ("images/pelotita.png", Reflect.field (AssetType, "image".toUpperCase ()));
 			path.set ("images/player_explode.png", "images/player_explode.png");
 			type.set ("images/player_explode.png", Reflect.field (AssetType, "image".toUpperCase ()));
 			path.set ("images/player_missile.png", "images/player_missile.png");
@@ -83,6 +85,7 @@ class AssetData {
 	
 	
 }
+
 
 
 

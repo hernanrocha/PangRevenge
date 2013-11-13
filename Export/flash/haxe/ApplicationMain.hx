@@ -1,7 +1,7 @@
 #if (!macro || !haxe3)
 #if (nme || openfl)
 
-import HelloShooter;
+import PangRevenge;
 import flash.display.DisplayObject;
 import openfl.Assets;
 import flash.events.Event;
@@ -13,7 +13,7 @@ class ApplicationMain {
 	public static function main() {
 		var call_real = true;
 		
-		//nme.Lib.setPackage("", "HelloShooter", "mycompany.myapp", "1.0.0");
+		//nme.Lib.setPackage("", "PangRevenge", "mycompany.myapp", "1.0.0");
 		
 		
 		var loaded:Int = flash.Lib.current.loaderInfo.bytesLoaded;
@@ -54,7 +54,7 @@ class ApplicationMain {
 	private static function begin() {
 		var hasMain = false;
 		
-		for (methodName in Type.getClassFields(HelloShooter))
+		for (methodName in Type.getClassFields(PangRevenge))
 		{
 			if (methodName == "main")
 			{
@@ -65,7 +65,7 @@ class ApplicationMain {
 		
 		if (hasMain)
 		{
-			Reflect.callMethod(HelloShooter, Reflect.field (HelloShooter, "main"), []);
+			Reflect.callMethod(PangRevenge, Reflect.field (PangRevenge, "main"), []);
 		}
 		else
 		{
@@ -98,7 +98,7 @@ class ApplicationMain {
 
 #else
 
-import HelloShooter;
+import PangRevenge;
 
 class ApplicationMain {
 	
@@ -106,7 +106,7 @@ class ApplicationMain {
 		
 		var hasMain = false;
 		
-		for (methodName in Type.getClassFields(HelloShooter))
+		for (methodName in Type.getClassFields(PangRevenge))
 		{
 			if (methodName == "main")
 			{
@@ -117,7 +117,7 @@ class ApplicationMain {
 		
 		if (hasMain)
 		{
-			Reflect.callMethod(HelloShooter, Reflect.field (HelloShooter, "main"), []);
+			Reflect.callMethod(PangRevenge, Reflect.field (PangRevenge, "main"), []);
 		}
 		else
 		{
@@ -132,7 +132,7 @@ class ApplicationMain {
 #end
 
 #if haxe3 @:build(DocumentClass.build()) #end
-class DocumentClass extends HelloShooter { }
+class DocumentClass extends PangRevenge { }
 
 #else
 
