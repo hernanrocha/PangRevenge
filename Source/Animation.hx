@@ -15,6 +15,8 @@ class Animation extends GameElement {
 	var totalTime:Float;
 	var cant:Int;
 	
+	var pos:Int = 0;
+	
 	public function new (img:BitmapData, cols:Int, rows:Int) {		
 		super();
 		var col:Int;
@@ -40,8 +42,24 @@ class Animation extends GameElement {
 	override public function updateLogic(time:Float){
 		graphics.clear();
 		totalTime+=time;
-		var pos:Int=Math.round(totalTime*10)%cant;	
-		t.drawTiles(graphics,[0,0,pos]);
+		//var pos:Int=Math.round(totalTime*10)%cant;	
+		//var pos = 1;
+		trace(totalTime);
+		if (totalTime > 0.1) {
+				trace ("Cambiando");
+				totalTime -= 0.1;
+				pos = (pos + 1);
+				
+		}
+		if (pos < cant) {
+			t.drawTiles(graphics, [0, 0, pos]);						
+		}else {
+				visible = false;
+		}
+			
 	}
 
+	public function reinit() {
+			pos = 0;
+	}
 }

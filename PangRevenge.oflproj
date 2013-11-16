@@ -79,10 +79,9 @@
     <Compile Include="project.xml" />
     <Compile Include="Source\Animation.hx" />
     <Compile Include="Source\GameElement.hx" />
-    <Compile Include="Source\Avion.hx" />
     <Compile Include="Source\InputManager.hx" />
-    <Compile Include="Source\FondoAnimado.hx" />
-    <Compile Include="Source\Malo1.hx" />
-    <Compile Include="Source\Misil1.hx" />
+    <Compile Include="Source\Player.hx" />
+    <Compile Include="Source\Ball.hx" />
+    <Compile Include="Source\Screen.hx" />
   </ItemGroup>
 </Project>

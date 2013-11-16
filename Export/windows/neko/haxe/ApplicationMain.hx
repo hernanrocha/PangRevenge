@@ -1,7 +1,7 @@
 import openfl.Assets;
 
 #if display
-import HelloShooter;
+import PangRevenge;
 
 class ApplicationMain {
 	
@@ -31,7 +31,7 @@ class ApplicationMain
 	public static function main()
 	{
 		#if openfl
-		flash.Lib.setPackage("", "HelloShooter", "mycompany.myapp", "1.0.0");
+		flash.Lib.setPackage("", "PangRevenge", "mycompany.myapp", "1.0.0");
 		
 		#end
 		
@@ -39,14 +39,14 @@ class ApplicationMain
 		wx.App.boot(function()
 		{
 			
-			frame = wx.Frame.create(null, null, "HelloShooter", null, { width: 800, height: 600 });
+			frame = wx.Frame.create(null, null, "PangRevenge", null, { width: 800, height: 600 });
 			
 			#if openfl
 			var stage = wx.NMEStage.create(frame, null, null, { width: 800, height: 600 });
 			#end
 
 			var hasMain = false;
-			for (methodName in Type.getClassFields(HelloShooter)) {
+			for (methodName in Type.getClassFields(PangRevenge)) {
 				if (methodName == "main") {
 					hasMain = true;
 					break;
@@ -54,13 +54,13 @@ class ApplicationMain
 			}
 			
 			if (hasMain) {
-				Reflect.callMethod(HelloShooter, Reflect.field(HelloShooter, "main"), []);
+				Reflect.callMethod(PangRevenge, Reflect.field(PangRevenge, "main"), []);
 			}else {
-				var instance = Type.createInstance(HelloShooter, []);
+				var instance = Type.createInstance(PangRevenge, []);
 			}
 			
-			/*if (Reflect.hasField(HelloShooter, "main")) {
-				HelloShooter.main();			
+			/*if (Reflect.hasField(PangRevenge, "main")) {
+				PangRevenge.main();			
 			}*/
 			
 			
@@ -126,7 +126,7 @@ class ApplicationMain
 				
 				var hasMain = false;
 				
-				for (methodName in Type.getClassFields(HelloShooter))
+				for (methodName in Type.getClassFields(PangRevenge))
 				{
 					if (methodName == "main")
 					{
@@ -137,7 +137,7 @@ class ApplicationMain
 				
 				if (hasMain)
 				{
-					Reflect.callMethod (HelloShooter, Reflect.field (HelloShooter, "main"), []);
+					Reflect.callMethod (PangRevenge, Reflect.field (PangRevenge, "main"), []);
 				}
 				else
 				{
@@ -163,7 +163,7 @@ class ApplicationMain
 			(false ? flash.Lib.FULLSCREEN : 0) |
 			(0 == 4 ? flash.Lib.HW_AA_HIRES : 0) |
 			(0 == 2 ? flash.Lib.HW_AA : 0),
-			"HelloShooter"
+			"PangRevenge"
 			
 			, null
 			
@@ -252,7 +252,7 @@ class ApplicationMain
 
 
 #if haxe3 @:build(DocumentClass.build()) #end
-class DocumentClass extends HelloShooter {}
+class DocumentClass extends PangRevenge {}
 
 
 
