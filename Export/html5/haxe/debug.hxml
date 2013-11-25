@@ -1,13 +1,16 @@
 -main ApplicationMain 
 -lib openfl
 -lib openfl-html5
+-lib actuate
+-lib haxe-ga
 -cp Source
 -D tools=1
 -D openfl_ver=1.0.10
 -D openfl
 -D html5
 -D web
--js Export/html5/bin/PangRevenge.js
+-resource C:\Users\hernan\Desktop\PangRevenge-master\Assets\fonts\AnglesOctagon.ttf.hash@NME_fonts_anglesoctagon_ttf
+-js Export/html5/bin/HelloShooter.js
 -cp Export/html5/haxe
 -D html5
 -D html

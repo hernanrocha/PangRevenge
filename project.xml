@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<meta title="PangRevenge" package="mycompany.myapp" version="1.0.0" company="" />
-	
-	<app path="Export" main="PangRevenge" file="PangRevenge" />
-	
+	<meta title="HelloShooter" package="mycompany.myapp" version="1.0.0" company="" />
+	<app path="Export" main="HelloShooter" file="HelloShooter" />
 	<source path="Source" />
 	
 	<haxelib name="openfl" />
+	<haxelib name="actuate" />
+	<haxelib name="haxe-ga" />
 	
 	<assets path="Assets/images" rename="images" include="*" />
 	<assets path="Assets/sounds" rename="sounds" include="*" />
+	<assets path="Assets/fonts" rename="fonts" include="*.ttf" />
 	
 	<window width="800" height="600" fps="60" background="#000000" />
 	

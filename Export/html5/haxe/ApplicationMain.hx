@@ -1,7 +1,7 @@
 #if !macro
 #if (openfl_html5 && !flambe)
 
-import PangRevenge;
+import HelloShooter;
 import haxe.Resource;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
@@ -29,7 +29,7 @@ class ApplicationMain {
 		urlLoaders = new Map <String, URLLoader>();
 		total = 0;
 		
-		//flash.Lib.setPackage("", "PangRevenge", "mycompany.myapp", "1.0.0");
+		//flash.Lib.setPackage("", "HelloShooter", "mycompany.myapp", "1.0.0");
 		flash.Lib.current.loaderInfo = flash.display.LoaderInfo.create (null);
 		
 		try {
@@ -55,6 +55,21 @@ class ApplicationMain {
 		
 		
 		var loader:Loader = new Loader();
+		loaders.set("images/background1.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/background3.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/background5.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
 		loaders.set("images/ball.png", loader);
 		total ++;
 		
@@ -65,7 +80,97 @@ class ApplicationMain {
 		
 		
 		var loader:Loader = new Loader();
+		loaders.set("images/bola1.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/bola2.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/bola3.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/bola4.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/booster1.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/booster2.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/boosterdown.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/boosterup.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/bossy_explode.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/bossy_idle.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/brainy_explode.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/brainy_idle.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/enemy_missile.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/enemy_missile_explode.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
 		loaders.set("images/explosion.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/explosion1.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/explosion2.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/explosion3.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/explosion4.png", loader);
 		total ++;
 		
 		
@@ -90,12 +195,62 @@ class ApplicationMain {
 		
 		
 		var loader:Loader = new Loader();
+		loaders.set("images/gancho.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/gancho2.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/ganchoinvierno.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/ganchoverano.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/malo1.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/malo1_explode.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
 		loaders.set("images/pelotita.png", loader);
 		total ++;
 		
 		
 		var loader:Loader = new Loader();
 		loaders.set("images/player1.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/player_explode.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/player_missile.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/player_missile_explode.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
+		loaders.set("images/player_spaceship.png", loader);
 		total ++;
 		
 		
@@ -214,6 +369,12 @@ class ApplicationMain {
 		total ++;
 		
 		
+		var loader:Loader = new Loader();
+		loaders.set("images/soga.png", loader);
+		total ++;
+		
+		
+		
 		
 		
 		
@@ -273,7 +434,7 @@ class ApplicationMain {
 		preloader.removeEventListener(Event.COMPLETE, preloader_onComplete);
 		Lib.current.removeChild(preloader);
 		preloader = null;
-		if (Reflect.field(PangRevenge, "main") == null)
+		if (Reflect.field(HelloShooter, "main") == null)
 		{
 			var mainDisplayObj = Type.createInstance(DocumentClass, []);
 			if (Std.is(mainDisplayObj, flash.display.DisplayObject))
@@ -281,25 +442,25 @@ class ApplicationMain {
 		}
 		else
 		{
-			Reflect.callMethod(PangRevenge, Reflect.field (PangRevenge, "main"), []);
+			Reflect.callMethod(HelloShooter, Reflect.field (HelloShooter, "main"), []);
 		}
 	}
 }
 
 @:build(DocumentClass.build())
-class DocumentClass extends PangRevenge {}
+class DocumentClass extends HelloShooter {}
 
 #else
 
-import PangRevenge;
+import HelloShooter;
 
 class ApplicationMain {
 
 	public static function main() {
-		if (Reflect.field(PangRevenge, "main") == null) {
-			Type.createInstance(PangRevenge, []);
+		if (Reflect.field(HelloShooter, "main") == null) {
+			Type.createInstance(HelloShooter, []);
 		} else {
-			Reflect.callMethod(PangRevenge, Reflect.field(PangRevenge, "main"), []);
+			Reflect.callMethod(HelloShooter, Reflect.field(HelloShooter, "main"), []);
 		}
 	}
 }
