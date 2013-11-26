@@ -17,6 +17,9 @@ class Animation extends GameElement {
 	
 	var pos:Int = 0;
 	
+	var activada:Bool;
+	var finalizada:Bool;
+	
 	public function new (img:BitmapData, cols:Int, rows:Int) {		
 		super();
 		var col:Int;
@@ -39,24 +42,37 @@ class Animation extends GameElement {
 		totalTime=0;
 	}
 	
+	public function activateAnimation() {
+		activada = true;
+	}
+	
+	public function finalizeAnimation() {
+		finalizada = true;
+		visible = false;	
+	}
+	
+	public function finalizo() : Bool {
+		return finalizada;
+	}
+	
 	override public function updateLogic(time:Float){
 		graphics.clear();
-		totalTime+=time;
-		//var pos:Int=Math.round(totalTime*10)%cant;	
-		//var pos = 1;
-		//trace(totalTime);
-		if (totalTime > 0.05) {
-				//trace ("Cambiando");
-				totalTime -= 0.05;
-				pos = (pos + 1);
-				
-		}
-		if (pos < cant) {
-			t.drawTiles(graphics, [0, 0, pos]);						
-		}else {
-			visible = false;
-		}
+		
+		if (!activada) {
+			t.drawTiles(graphics, [0, 0, 0]);
+		}else{		
+			totalTime+=time;
+			if (totalTime > 0.05) {
+					totalTime -= 0.05;
+					pos = (pos + 1);
+			}
 			
+			if (pos < cant) {
+				t.drawTiles(graphics, [0, 0, pos]);						
+			}else {
+				finalizeAnimation();
+			}		
+		}			
 	}
 
 	public function reinit() {

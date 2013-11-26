@@ -23,6 +23,8 @@ class GameScene extends Scene {
 	//public var obstaculos:Array<Malo1>;
 	
 	private var screen:Screen;
+	public var enPausa:Bool;
+	private var btnPause:Bool;
 
 	public function new (sm:SceneManager) {
 		super(sm);
@@ -31,7 +33,7 @@ class GameScene extends Scene {
 		totalTime = 0;
 		
 		// Agrego la pantalla de juego
-		screen = new Screen();
+		screen = new Screen(this);
 		screen.x = 20;
 		screen.y = 20;
 		addChild(screen);
@@ -53,14 +55,19 @@ class GameScene extends Scene {
 	}*/
 
 	// Nuestro gameLoop (se ejecuta antes de cada cuadro).
-	override public function updateLogic(time:Float){
+	override public function updateLogic(time:Float) {
+		
 		super.updateLogic(time);
-		totalTime+=time;
-       	
-       	/*if(totalTime>5.0 && obstaculos.length<=5){
-     		totalTime=0;
-     		this.createObstaculo();
-       	}*/
+		totalTime += time;
+		
+       	if (InputManager.getInstance().keyCodePressed(InputManager.config.get("PAUSE")) ) {
+			if (!btnPause) {
+				btnPause = true;
+				enPausa = !enPausa;				
+			}
+		}else {
+			btnPause = false;	
+		}
        	
        	if(InputManager.getInstance().keyPressed(String.fromCharCode(27))){
        		goBack();

@@ -27,6 +27,7 @@ class InputManager {
 		config.set("P1_LEFT", LEFT_ARROW);
 		config.set("P1_RIGHT", RIGHT_ARROW);
 		config.set("P1_FIRE", "Z".charCodeAt(0));
+		config.set("PAUSE", "P".charCodeAt(0));
 	}
 	
 	// Suscribirse a los Eventos del Teclado

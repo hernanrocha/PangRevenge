@@ -63,8 +63,8 @@ class Player extends GameElement
 			x = 0;
 		}
 		
-		if (x + width > Screen.WIDTH) {
-			x = Screen.WIDTH - width;
+		if (x + width > Screen.SCREEN_WIDTH) {
+			x = Screen.SCREEN_WIDTH - width;
 		}
 		
 		// Disparar

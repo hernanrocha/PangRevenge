@@ -12,13 +12,16 @@ import openfl.Assets;
  */
 class Ball extends GameElement 
 {
-	var bitmap:Bitmap;
+	//var bitmap:Bitmap;
 	var delta:Int;
 	var deltaY:Float;
 	var h:Int;
 	var subiendo:Bool;
 	public var exploto:Bool;
 	var explosion:Animation;
+	
+	var tipo:Int;
+	var screen:Screen;
 	
 	// Constantes
 	var g:Float;
@@ -37,28 +40,22 @@ class Ball extends GameElement
 	public static inline var TIPO_3:Int = 3;
 	public static inline var TIPO_4:Int = 4;
 	
+	public static var BOUNCE_TIPO_2:Rectangle =  new Rectangle(0, 0, 75, 75);
+	public static var BOUNCE_TIPO_3:Rectangle =  new Rectangle(0, 0, 50, 50);
 	public static var BOUNCE_TIPO_4:Rectangle =  new Rectangle(0, 0, 25, 25);
 	
-	public function new(p_tipo:Int, p_x0:Int) 
+	public function new(p_screen:Screen, p_tipo:Int, p_x0:Int, dirIzquierda:Bool) 
 	{
 		super();
-				
-		// Bola
-		bitmap = new Bitmap (Assets.getBitmapData("images/bola" + p_tipo + ".png"));		
-		addChild (bitmap);
-		bitmap.x = 0;
-		bitmap.y = 0;
 		
 		// Explosion
 		explosion = new Animation( Assets.getBitmapData("images/explosion" + p_tipo + ".png"), 1, 5);
 		addChild(explosion);
 		hijos.push(explosion);
-		explosion.visible = false;
-		explosion.x = 0;
-		explosion.y = 0;
 		
-		
-		if (p_tipo == TIPO_4) {
+		screen = p_screen;
+		tipo = p_tipo;
+		if (tipo == TIPO_4) {
 			// Datos por defecto
 			delta = 3;
 			t = 0.01;
@@ -67,12 +64,44 @@ class Ball extends GameElement
 			g = 0.025;	
 			
 			// Datos configurables
-			y = yMin = s0 = Screen.HEIGHT - 250;
-			x = p_x0;	
-			
+			y = yMin = s0 = Screen.SCREEN_HEIGHT - 250;
+			x = p_x0;			
 			
 			// Boundings
 			boundingBox = BOUNCE_TIPO_4;
+		}else if (tipo == TIPO_3) {
+			// Datos por defecto
+			delta = 3;
+			t = 0.01;
+			v0 = 0;
+			subiendo = false;
+			g = 0.025;	
+			
+			// Datos configurables
+			y = yMin = s0 = Screen.SCREEN_HEIGHT - 350;
+			x = p_x0;
+			
+			// Boundings
+			boundingBox = BOUNCE_TIPO_3;
+		}else if (tipo == TIPO_2) {
+			// Datos por defecto
+			delta = 3;
+			t = 0.01;
+			v0 = 0;
+			subiendo = false;
+			g = 0.025;	
+			
+			// Datos configurables
+			y = yMin = s0 = Screen.SCREEN_HEIGHT - 450;
+			x = p_x0;
+			
+			// Boundings
+			boundingBox = BOUNCE_TIPO_2;
+		}
+		
+		// Direccion en x
+		if (dirIzquierda) {
+			delta = -1 * delta;
 		}
 	
 		
@@ -81,19 +110,21 @@ class Ball extends GameElement
 	
 	public function reventar() {
 		exploto = true;
+		screen.desactivarPelota(this);
+		explosion.activateAnimation();
+		
 		// Determinar si es necesario crear otras bolas
+		if (tipo != TIPO_4) {
+			trace("Crear pelotas");
+			screen.agregarPelota(new Ball(screen, tipo + 1, Std.int(x), true));
+			screen.agregarPelota(new Ball(screen, tipo + 1, Std.int(x), false));
+		}
 	}
 	
 	override function updateLogic(time:Float) {
-		if (exploto){
-			bitmap.visible = false;
-			explosion.visible = true;
-			explosion.updateLogic(time);
-		}else{
-			explosion.reinit();
-			explosion.visible = false;
-			bitmap.visible = true;
-			
+		//if (InputManager.getInstance().keyPressed("A")) {
+			super.updateLogic(time);
+		
 			var incremento = time * 50;
 			
 			// Actualizar posicion X
@@ -110,29 +141,31 @@ class Ball extends GameElement
 			// Calcular posicion Y
 			ay = g;
 			vy = v0 + ay * t;
-			sy = 0.5 * ay * Math.pow(t, 2) + vy * t + s0;			
-			y = sy;				
+			sy = 0.5 * ay * Math.pow(t, 2) + vy * t + s0;
+			y = sy;
 			
 			// Calcular colision en X
-			if ((x + width > Screen.WIDTH) && (delta > 0)) {
-				trace("Colision derecha");
+			if ((x + boundingBox.width > Screen.SCREEN_WIDTH) && (delta > 0)) {
 				delta = -1 * delta;
-				x = Screen.WIDTH - width;
+				x = Screen.SCREEN_WIDTH - boundingBox.width;
 			}else if ( ( x < 0) && (delta < 0) ) {
-				trace("Colision izquierda");
 				delta = -1 * delta;
 				x = 0;
 			}
 			
 			// Calcular colision en Y
-			if ( (y + height >= Screen.HEIGHT) ) {
+			if ( (y + boundingBox.height >= Screen.SCREEN_HEIGHT) ) {
 				subiendo = true;
-				y = Screen.HEIGHT - height;
+				y = Screen.SCREEN_HEIGHT - boundingBox.height;
 				//trace(y + "+" + height + ">" + Screen.HEIGHT + ": Rebota. Sube");
 			}else if (y <= yMin) {
 				subiendo = false;
 				//trace("Comienza a caer de nuevo");
 			}
-		}		
+			
+			if (explosion.finalizo()) {
+				screen.eliminarPelota(this);
+			}
+		//}		
 	}
 }

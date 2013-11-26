@@ -1,6 +1,7 @@
 package game;
 import engine.ContAnimation;
 import engine.GameElement;
+import engine.InputManager;
 import flash.display.Bitmap;
 import flash.geom.Rectangle;
 import openfl.Assets;
@@ -20,14 +21,14 @@ class Soga extends GameElement
 	var player:Player;
 	
 	
-	public static var BOUNCE_SOGA:Rectangle = new Rectangle(0, 0, 10, 600);
+	public static var BOUNCE_SOGA:Rectangle = new Rectangle(0, 0, 20, 600);
 	
 	public function new(p:Player) 
 	{
 		super();
 		
 		// Imagen animada gancho
-		gancho = new ContAnimation( Assets.getBitmapData("images/gancho.png"), 3, 1);
+		gancho = new ContAnimation( Assets.getBitmapData("images/gancholargo.png"), 3, 1);
 		addChild(gancho);
 		hijos.push(gancho);
 		
@@ -38,12 +39,13 @@ class Soga extends GameElement
 	
 	public function init(posX:Float) {
 		x = posX;
-		y = Screen.HEIGHT - 10;
+		y = Screen.SCREEN_HEIGHT - 10;
 		
 		boundingBox = BOUNCE_SOGA;
 	}
 	
 	override function updateLogic(time:Float) {
+		//if (InputManager.getInstance().keyPressed("A")) {
 		super.updateLogic(time);
 		
 		// Actualizar posicion y
@@ -54,7 +56,7 @@ class Soga extends GameElement
 		if (y < 0) {
 			player.finalizarDisparo(this);
 		}
-		
+		//}
 	}
 	
 	override function collisionTest(ge:GameElement):Bool {

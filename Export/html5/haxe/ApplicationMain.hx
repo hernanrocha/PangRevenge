@@ -55,21 +55,6 @@ class ApplicationMain {
 		
 		
 		var loader:Loader = new Loader();
-		loaders.set("images/background1.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/background3.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/background5.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
 		loaders.set("images/ball.png", loader);
 		total ++;
 		
@@ -100,56 +85,6 @@ class ApplicationMain {
 		
 		
 		var loader:Loader = new Loader();
-		loaders.set("images/booster1.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/booster2.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/boosterdown.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/boosterup.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/bossy_explode.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/bossy_idle.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/brainy_explode.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/brainy_idle.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/enemy_missile.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/enemy_missile_explode.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
 		loaders.set("images/explosion.png", loader);
 		total ++;
 		
@@ -175,21 +110,6 @@ class ApplicationMain {
 		
 		
 		var loader:Loader = new Loader();
-		loaders.set("images/fondo_invierno.jpg", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/fondo_otonio.jpg", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/fondo_primavera.jpg", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
 		loaders.set("images/fondo_verano.jpg", loader);
 		total ++;
 		
@@ -210,17 +130,12 @@ class ApplicationMain {
 		
 		
 		var loader:Loader = new Loader();
+		loaders.set("images/gancholargo.png", loader);
+		total ++;
+		
+		
+		var loader:Loader = new Loader();
 		loaders.set("images/ganchoverano.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/malo1.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/malo1_explode.png", loader);
 		total ++;
 		
 		
@@ -231,11 +146,6 @@ class ApplicationMain {
 		
 		var loader:Loader = new Loader();
 		loaders.set("images/player1.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/player_explode.png", loader);
 		total ++;
 		
 		
@@ -251,121 +161,6 @@ class ApplicationMain {
 		
 		var loader:Loader = new Loader();
 		loaders.set("images/player_spaceship.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/asteroid.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/background1.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/background2.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/background3.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/background4.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/background5.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/background6.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/booster1.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/booster2.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/boosterdown.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/boosterup.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/bossy_explode.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/bossy_idle.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/brainy_explode.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/brainy_idle.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/enemy_missile.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/enemy_missile_explode.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/malo1.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/minion_explode.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/player_explode.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/player_missile.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/player_missile_explode.png", loader);
-		total ++;
-		
-		
-		var loader:Loader = new Loader();
-		loaders.set("images/shooter/player_spaceship.png", loader);
 		total ++;
 		
 		
