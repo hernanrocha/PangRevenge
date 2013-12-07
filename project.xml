@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<meta title="Pang Revenge" package="mycompany.myapp" version="1.0.0" company="" />
+	<app path="Export" main="PangRevenge" file="PangRevenge" />
+	<source path="Source" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="actuate" />
+	
+	<assets path="Assets/images" rename="images" include="*" />
+	<assets path="Assets/fonts" rename="fonts" include="*.ttf" />
+	
+	<window width="0" height="0" fps="60" background="#000000" />
+
+</project>
