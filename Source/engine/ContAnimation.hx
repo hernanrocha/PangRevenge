@@ -24,8 +24,8 @@ class ContAnimation extends GameElement {
 		lHeight=Math.round(img.height/rows);
 
 		t=new Tilesheet(img);
-		for(col in 0 ... cols){
-			for(row in 0 ... rows){
+		for(row in 0 ... rows){
+			for(col in 0 ... cols){
 				t.addTileRect(new Rectangle(col*lWidth,row*lHeight,lWidth,lHeight));
 			}
 		}
@@ -56,7 +56,7 @@ class ContAnimation extends GameElement {
 		if(loops==0) return;
 		lastPos=f%this.cant;
 		graphics.clear();
-		t.drawTiles(graphics,[0,0,lastPos]);
+		t.drawTiles(graphics, [0, 0, lastPos]);
 	}
 	
 	public function getFrame():Int{

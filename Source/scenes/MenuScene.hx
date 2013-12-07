@@ -2,83 +2,120 @@ package scenes;
 
 import engine.Scene;
 import engine.SceneManager;
-import engine.Button;
+import engine.BallButton;
+import flash.display.Bitmap;
+import flash.events.Event;
 import motion.Actuate;
 import flash.text.TextField;
 import flash.text.TextFormat;
+import motion.MotionPath;
+import openfl.Assets;
+import motion.easing.*;
+
+import engine.AudioManager;
+import engine.Sonido;
 
 class MenuScene extends Scene {
 
-	private var b1:Button;
-	private var b2:Button;
+	private var b1:BallButton;
+	private var b2:BallButton;
+	private var b3:BallButton;
 	private var text:TextField;
+	private var fondo:Bitmap;
+	private var revenge:Bitmap;
 	
 	public function new (sm:SceneManager) {
 		super(sm);
-		this.graphics.beginFill(0x323232);
-		this.graphics.drawRect(0,0,800,600);
-		this.graphics.endFill();
+		 
+		fondo = new Bitmap(Assets.getBitmapData("images/PangLogo.png"));
+		fondo.width = 800;
+		fondo.height = 300;
+		fondo.visible = true;
+		this.addChild(fondo);
+				
+		revenge = new Bitmap(Assets.getBitmapData("images/revenge.png"));
+		this.addChild(revenge);
 		
-		b1=new Button(400,100,0x00FF00,play,'PLAY');
+		b1 = new BallButton(225, 200, play1, '1 Jugador');
+		b2 = new BallButton(225, 200, play2, '2 Jugadores');
+		b3 = new BallButton(225, 200, help, 'Ayuda');
+		b1.x=25;
+		b2.x=287;
+		b3.x = 550;
+		b1.y = - 400;
+		b2.y = - 400;
+		b3.y = - 400;
+		b1.visible = false;
+		b2.visible = false;
+		b3.visible = false;
+		
 		this.addChild(b1);
-
-		#if desktop
-		b2=new Button(400,100,0xFF0000,exit,'EXIT');		
 		this.addChild(b2);
-		#end
-		
-		this.text=new TextField();
-		var tf=new TextFormat(openfl.Assets.getFont('fonts/AnglesOctagon.ttf').fontName);
-		tf.size=20;
-		tf.color=0xFFFFFF;
-		tf.bold=true;
-		tf.align=flash.text.TextFormatAlign.CENTER;
-		this.text.width=200;
-		this.text.selectable=false;
-		this.text.height=100;
-		//this.text.text='Score: '+Score.getInstance().bestScore;
-		
-		
-		this.text.setTextFormat(tf);
-		this.addChild(text);
-		this.text.y=10;
-		this.text.x=800-10-this.text.width;
-		
+		this.addChild(b3);
 	}
 	
-	public function play(){
-		this.sm.switchScene('game');
+	public function play1(event:Event) {
+		AudioManager.getInstance().justPlay(Sonido.EXPLO1);
+		GameScene.PLAYER_CANT = 1;	
+		this.sm.switchScene('levelselect');
 	}
+	
+	public function play2(event:Event) {
+		AudioManager.getInstance().justPlay(Sonido.EXPLO1);
+		GameScene.PLAYER_CANT = 2;
+		this.sm.switchScene('levelselect');
+	}
+	
+	public function help(event:Event) {	
+		AudioManager.getInstance().justPlay(Sonido.EXPLO1);
+		this.sm.switchScene('help');
+	}
+	
 	
 	public function exit(){
 		flash.system.System.exit(0);
 	}
 	
 	override public function init(){
-		//engine.Stats.track('menu','main','');
-		b1.x=400;
-		b1.width=0;
-		b1.height=0;
-		this.alpha=0;
-		b1.y=100;
+		b1.y = - 400;
+		b2.y = - 400;
+		b3.y = - 400;		
 		
-		var tf=text.getTextFormat();
-		//this.text.text='Score: '+Score.getInstance().bestScore;
-		this.text.setTextFormat(tf);
+		//SONIDO
+		AudioManager.getInstance().setSound(Sonido.MENU,true);
 		
-		Actuate.tween(this,0.2,{alpha:1});
-		Actuate.tween (b1, 1, { x: (800-400)/2, width:400, height:100} );
+		//TARDANZA AL ENTRAR
+		Actuate.tween(this, 0.2, { alpha:1 } );
 		
-		if(b2!=null){
-			b2.x=400;
-			b2.width=0;
-			b2.height=0;
-			b2.y=300;		
-			Actuate.tween (b2, 1, { x: (800-400)/2, width:400, height:100 } ).delay(0.15);
-		}
+		//REVENGE
+		revenge.width = 80000;
+		revenge.height = 60000;
+		revenge.alpha = 0;
+		
+		//ANIMACION
+		Actuate.tween(revenge, 1.5, { alpha : 1, width : 600, height : 200, x: 100, y: 100 } ).delay(1).onComplete(function(){
+		
+		//Bola 1
+		b1.visible = true;
+		Actuate.tween (b1, 4, {  y: 350 } ).ease(Bounce.easeOut);
+		
+		//Bola 2
+		b2.visible = true;	
+		Actuate.tween (b2, 4, {  y: 350 } ).ease(Bounce.easeOut).delay(0.2);
+			
+		//Bola 3
+		b3.visible = true;	
+		Actuate.tween (b3, 4, {  y: 350 } ).ease(Bounce.easeOut).delay(0.3);
+		
+		});		
+		
+		
 	}
 	
 	override public function end(onComplete:Dynamic){
+		b1.y = - 400;
+		b2.y = - 400;
+		b3.y = - 400;
 		this.alpha=1;
 		Actuate.tween(this,1,{alpha:0}).onComplete(onComplete);
 	}

@@ -24,10 +24,22 @@ class InputManager {
 		teclas=new Array<Bool>();
 		
 		config = new Map<String, Int>();
+		
+		// Teclas jugador 1
 		config.set("P1_LEFT", LEFT_ARROW);
 		config.set("P1_RIGHT", RIGHT_ARROW);
 		config.set("P1_FIRE", "Z".charCodeAt(0));
+		config.set("P1_JUMP", "X".charCodeAt(0));		
+		
+		// Teclas jugador 2
+		config.set("P2_LEFT", "J".charCodeAt(0));
+		config.set("P2_RIGHT", "L".charCodeAt(0));
+		config.set("P2_FIRE", "Q".charCodeAt(0));
+		config.set("P2_JUMP", "W".charCodeAt(0));
+		
 		config.set("PAUSE", "P".charCodeAt(0));
+		config.set("DEBUG_END_LEVEL", "N".charCodeAt(0));
+		config.set("DEBUG_UNLOCK_SCENES", "U".charCodeAt(0));
 	}
 	
 	// Suscribirse a los Eventos del Teclado

@@ -27,9 +27,9 @@ class Animation extends GameElement {
 		var w:Int=Math.round(img.width/cols);
 		var h:Int=Math.round(img.height/rows);
 
-		t=new Tilesheet(img);
-		for(col in 0 ... cols){
-			for(row in 0 ... rows){
+		t = new Tilesheet(img);
+		for(row in 0 ... rows){
+			for(col in 0 ... cols){
 				t.addTileRect(new Rectangle(col * w, row * h, w, h));
 			}
 		}
@@ -37,8 +37,7 @@ class Animation extends GameElement {
 		this.width=w;
 		this.height=h;
 		cant=cols*rows;
-		trace("Cargar sprite de " + cant + " elementos.");
-		t.drawTiles(graphics,[0,0,0]);
+		t.drawTiles(graphics, [0, 0, 0]);
 		totalTime=0;
 	}
 	
@@ -66,6 +65,8 @@ class Animation extends GameElement {
 					totalTime -= 0.05;
 					pos = (pos + 1);
 			}
+	
+			//pos++;
 			
 			if (pos < cant) {
 				t.drawTiles(graphics, [0, 0, pos]);						
