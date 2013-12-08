@@ -103,6 +103,8 @@ class Player extends GameElement
 		
 		this.reset();
 	}
+
+	private function metodoVacio(){}
 	
 	// Segun la organizacion de los archivos: images/player1der.png = id + nom + .png
 	private function getPlayerAsset(nom:String) {
