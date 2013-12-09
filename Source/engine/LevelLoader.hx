@@ -8,30 +8,41 @@ import openfl.Assets;
 class LevelLoader
 {
 	public var content:Dynamic;
+	public var year:Dynamic;
 	public var season:Dynamic;
+	public var level:Dynamic;
 	
 	public function new(config:String) {
 		trace(config);
 		var jsonTxt = Assets.getText("assets/"+config);
 		//trace(jsonTxt);
 		content = Json.parse(jsonTxt);
+		year = content[0];
+		season = year.spring;
+		level = season.lvls[0];
+	}
+	
+	public function setYear(year:Int) {
+		if ( year < content.length )
+			this.year = content[year];
 	}
 	
 	public function setSeason(season:Int) {
 		switch(season) {
 			case 2:
-				season = content.summer;
+				this.season = year.summer;
 			case 3:
-				season = content.autumn;
+				this.season = year.autumn;
 			case 4:
-				season = content.winter;
+				this.season = year.winter;
 			default:
-				season = content.spring;
+				this.season = year.spring;
 		}
 	}
 	
-	public function load(lvl:Int) {
-		//season[lvl]
+	public function setLevel(lvl:Int) {
+		if ( lvl < season.lvls.length )
+			this.level = season.lvls[year];
 	}
 	
 	private function spawnBalls(ballsArray:Array<Dynamic>) {
@@ -39,7 +50,7 @@ class LevelLoader
 			spawnBall(ball);
 	}
 	private function spawnBall(ball:Dynamic) {
-		var b = Ball.getBall(screen, ball.size );
+		var b = Ball.getBall( Screen.getInstance(), ball.size );
 		var x0:Float = ball.spawn.x * Screen.SCREEN_WIDTH;
 		var y0:Float = ball.spawn.y * Screen.SCREEN_HEIGHT;
 		if ( ball.spawn.inv == "true" ) x0 -= b.getWidth();

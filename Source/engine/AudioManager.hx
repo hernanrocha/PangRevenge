@@ -19,20 +19,11 @@ class AudioManager
 	private var libreria : Map<String,Sonido>;
 	private var sonidoActual : Sonido;
 	private var canal : SoundChannel;
-	private static var audioM:AudioManager;
 	//private static inline var server: String = "http://bcaimmi.com.ar/sonidos/";
 	private static inline var server: String = "http://localhost/PangRevenge/stream/";
 	
 	
-	public static function getInstance():AudioManager {
-		if (audioM == null) {
-			audioM = new AudioManager();
-		}
-		return audioM;
-	}
-	
-	private function new() 
-	{
+	public function new(){
 		//Creo el hash.	
 		libreria=new Map<String,Sonido>();		
 		//No reproduzco nada.

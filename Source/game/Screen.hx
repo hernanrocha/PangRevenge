@@ -51,9 +51,11 @@ class Screen extends GameElement
 	private var text_message:TextField;
 	private var text_success:TextField;
 
-	public function new(p_game:GameScene) 
-	{
+	public function new(p_game:GameScene,x:Float,y:Float){
 		super();
+		
+		this.x = x;
+		this.y = y;
 		
 		game = p_game;
 		

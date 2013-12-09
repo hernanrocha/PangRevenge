@@ -32,7 +32,7 @@ class LevelSelect extends Scene
 		levelSpring = new LevelButton(Assets.getBitmapData("images/springMenu.png"), playSpring, true);
 		levelSummer = new LevelButton(Assets.getBitmapData("images/summerMenu.png"), playSummer);
 		levelAutumn = new LevelButton(Assets.getBitmapData("images/autumnMenu.png"), playAutumn);
-		levelWinter = new LevelButton(Assets.getBitmapData("images/winterMenu.png"), playWinter);		
+		levelWinter = new LevelButton(Assets.getBitmapData("images/winterMenu.png"), playWinter);
 		
 		levelSpring.width = levelSummer.width = levelAutumn.width = levelWinter.width = 200;
 		levelSpring.height = levelSummer.height = levelAutumn.height = levelWinter.height = 350;
@@ -54,7 +54,7 @@ class LevelSelect extends Scene
 	
 	
 	public function playSpring(e:Event) {
-		GameScene.CURRENT_SCENE = 1;
+		GameScene.levelLoader.setSeason(1);
 		Actuate.tween(levelSummer, 1, { alpha:0 } );
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -62,7 +62,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playSummer(e:Event) {
-		GameScene.CURRENT_SCENE = 2;
+		GameScene.levelLoader.setSeason(2);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -70,7 +70,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playAutumn(e:Event) {
-		GameScene.CURRENT_SCENE = 3;
+		GameScene.levelLoader.setSeason(3);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelSummer, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -78,7 +78,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playWinter(e:Event) {
-		GameScene.CURRENT_SCENE = 4;
+		GameScene.levelLoader.setSeason(4);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelSummer, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.2);
@@ -86,7 +86,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playScene() {
-		sm.switchScene('scene' + GameScene.CURRENT_SCENE);
+		sm.switchScene('game');
 	}
 	
 	override public function init() {

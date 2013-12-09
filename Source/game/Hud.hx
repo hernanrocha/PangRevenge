@@ -44,14 +44,16 @@ class Hud extends GameElement
 	private var elementos2:Array<Bitmap>;
 	
 	private var cantJugadores:Int;
-	private var scr:Screen;
+	private var GameScene.screen:GameScene.screeneen;
 	
-	public function new(w:Int,h:Int) 
+	public function new(w:Int,h:Int,x:Float,y:Float) 
 	{
 		super();
 		
 		this.w = w;
 		this.h = h;
+		this.x = x;
+		this.y = y;
 		
 		//Cuadrado
 		this.graphics.beginFill(0xFF0000);
@@ -208,10 +210,6 @@ class Hud extends GameElement
 		setElemento(GANCHO,1);*/
 	}
 	
-	public function setScreen(s : Screen) {
-		this.scr = s;
-	}
-	
 	public function addScore(jugador:Int, puntos:Int) {
 		// Agregar puntos
 		var total = 0;
@@ -260,7 +258,7 @@ class Hud extends GameElement
 		if (jugador == 1) {
 			if (p1Lifes == 0) {
 				cantJugadores--;
-				scr.unload1();
+				GameScene.screen.unload1();
 			}else {				
 				p1Lifes--;
 				setVidas1(p1Lifes);
@@ -268,7 +266,7 @@ class Hud extends GameElement
 		}else if (jugador == 2) {
 			if (p2Lifes == 0) {
 				cantJugadores--;
-				scr.unload2();
+				GameScene.screen.unload2();
 			}else {				
 				p2Lifes--;
 				setVidas2(p2Lifes);
@@ -278,7 +276,7 @@ class Hud extends GameElement
 		//Me fijo si llamar o no al GameOver
 		if ( cantJugadores == 0 ) {
 			trace("llamando al gameOver");
-			scr.gameOver();
+			GameScene.screen.gameOver();
 		}
 	}
 	

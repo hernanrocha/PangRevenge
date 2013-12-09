@@ -1,28 +1,35 @@
 package scenes;
 
+import engine.LevelLoader;
 import engine.Scene;
 import engine.SceneManager;
 import engine.GameElement;
 import engine.Button;
 import engine.InputManager;
-import flash.display.Sprite;
-import flash.Lib;
-import flash.display.Bitmap;
-import flash.text.TextFormat;
+import engine.AudioManager;
+import engine.Sonido;
+import engine.Save;
 import game.bosses.Boss;
 import game.bosses.FireBoss;
 import game.Hud;
 import game.Screen;
-import openfl.Assets;
+import game.ball.*;
+import flash.display.Sprite;
+import flash.Lib;
+import flash.display.Bitmap;
+import flash.text.TextFormat;
 import flash.media.Sound;
 import flash.events.Event;
-import game.ball.*;
-import engine.AudioManager;
-import engine.Sonido;
-import engine.Save;
+import openfl.Assets;
+
+// única instancia
 
 class GameScene extends Scene {
-
+	
+	public static var lvlLoader(default, null):LevelLoader;
+	public static var screen(default, null):Screen;
+	public static var hud(default,null):Hud;
+	
 	// Boss
 	private var bossLevel:Int=5;
 	private var bossDead:Bool;
@@ -53,16 +60,10 @@ class GameScene extends Scene {
 	public function new (sm:SceneManager) {
 		super(sm);
 		
-		// Crear HUD
-		hud = new Hud(720,100);
-		hud.x = 40;
-		hud.y = 30 + Screen.SCREEN_HEIGHT;
+		lvlLoader = new LevelLoader("lvls.json");
+		screen = new Screen(this,20,20);
+		hud = new Hud(720, 100, 40, 30+Screen.SCREEN_HEIGHT );
 		
-		// Agrego la pantalla de juego
-		screen = new Screen(this);
-		screen.x = 20;
-		screen.y = 20;
-		hud.setScreen(screen);
 		
 		// Boton de Regreso
 		backButton = new Button(this.goBack);
@@ -97,7 +98,6 @@ class GameScene extends Scene {
 				
 		// Inicializar valores
 		totalTime = 0;
-		bossDead = false;
 		
 		// Agregar a pantalla
 		addChild(screen);
@@ -130,8 +130,6 @@ class GameScene extends Scene {
 		
 		onComplete();
 	}
-	
-	public function cargarPelotas(nivel:Int) {	}
 	
 	public function loadLevel() {
 		screen.enJuego = false;
