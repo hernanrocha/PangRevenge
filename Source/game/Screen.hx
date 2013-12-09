@@ -44,11 +44,12 @@ class Screen extends GameElement
 	public var boss:Boss;
 	public var powerups:Array<PowerUp>;
 	
-
-	
 	public var btnLevel:Button;
 	public var game:GameScene;
-	public var text:TextField;
+	
+	private var text_subtitle:TextField;
+	private var text_message:TextField;
+	private var text_success:TextField;
 
 	public function new(p_game:GameScene) 
 	{
@@ -57,6 +58,9 @@ class Screen extends GameElement
 		game = p_game;
 		
 		loadPlayers();
+		
+		// Fonts
+		initFonts();
 	}
 	
 	public function init() {
@@ -89,6 +93,40 @@ class Screen extends GameElement
 		
 		// PowerUp (nada)
 	}
+	
+	private function initFonts() {
+		var font = openfl.Assets.getFont('fonts/JOINTBYPIZZADUDE.ttf').fontName;
+		
+		text_format_subtitle = new TextFormat(font);
+		text_format_subtitle.size = 40*0.8;
+		text_format_subtitle.color = 0x000000;
+		text_format_subtitle.bold = true;
+		
+		var text_subtitle=new TextField();
+		text_subtitle.selectable=false;
+		text_subtitle.height=40;
+		text_subtitle.setTextFormat(text_format_subtitle);
+		
+		text_format_message = new TextFormat(font);
+		text_format_message.size = 100*0.8;
+		text_format_message.color = 0x000000;
+		
+		text_message=new TextField();
+		text_message.selectable=false;
+		text_message.height = 100;
+		text_message.setTextFormat(text_format_message);
+		
+		text_format_success = new TextFormat(font);
+		text_format_success.size = 100*0.8;
+		text_format_success.color = 0x00FF00;
+		
+		text_success=new TextField();
+		text_success.selectable=false;
+		text_success.height = 100;
+		text_success.setTextFormat(text_format_success);
+		text_success.text = "Nivel superado";
+		textAdjustPos(text_success);
+	}
 
 	public function setBackground(img:String) {
 		fondo = new Bitmap( Assets.getBitmapData (img));
@@ -108,11 +146,13 @@ class Screen extends GameElement
 		restablecerPosiciones();
 	}
 	
-	public function restablecerPosiciones() {
+	public function restablecerPosiciones(distancia:Float = -1) {
+		if ( distancia == -1 ) distancia = Player.P1_X_INICIAL;
+		
 		p1.y = Screen.SCREEN_HEIGHT - p1.height;
-		p1.x = Player.P1_X_INICIAL;
+		p1.x = distancia;
 		p2.y = Screen.SCREEN_HEIGHT - p2.height;
-		p2.x = Player.P2_X_INICIAL - p2.width;
+		p2.x = Screen.SCREEN_WIDTH - distancia - p2.width;
 	}
 	
 	public function unloadPlayers() {		
@@ -189,167 +229,33 @@ class Screen extends GameElement
 		PowerUp.reset();
 	}
 	
-	public function showLevelName(str:String) {
-		// Setear fuente
-		var tf = new TextFormat(openfl.Assets.getFont('fonts/JOINTBYPIZZADUDE.ttf').fontName);
-		tf.size = 100*0.8;
-		tf.color = 0x000000;
-		//tf.bold = true;
-		
-		// Setear texto
-		text=new TextField();
-		text.selectable=false;
-		text.height=100;
-		text.text= str;
-		text.setTextFormat(tf);
+	private function textAdjustPos(text:TextField) {
 		text.x = (SCREEN_WIDTH - text.width) / 2;
 		text.y = (SCREEN_HEIGHT - text.height) / 2;
-		text.alpha = 0;
-		
-		addChild(text);
-		
-		trace("GG " + GameScene.CURRENT_SCENE + " " + GameScene.CURRENT_LEVEL);
-		
-		
-		Actuate.tween(text, 1, { alpha: 1 } ).delay(1).onComplete(hideLevelName);
 	}
 	
-	public function hideLevelName() {
-		//if (.....)
+	public function showLevelName(str:Int , subtitle:String) {
+		// Setear texto
+		text_message.text = "Nivel " + str;		
+		text.alpha = 0;
+		textAdjustPos(TEXT);
 		
-		showAdvice();
-		
-		Actuate.tween(text, 1, { alpha: 0 } ).delay(3).onComplete(startLevel);
+		addChild(text);		
+		Actuate.tween(text, 1, { alpha: 1 } ).delay(1).onComplete(function() {
+			showSubtitle(subtitle);
+			Actuate.tween(text, 1, { alpha: 0 } ).delay(3).onComplete(startLevel);
+		});
 	}
 		
-	public function showAdvice() {
-		// Setear fuente
-		var tf1 = new TextFormat(openfl.Assets.getFont('fonts/JOINTBYPIZZADUDE.ttf').fontName);
-		tf1.size = 40*0.8;
-		tf1.color = 0x000000;
-		tf1.bold = true;
+	public function showSubtitle(msj:String, time:Float) {
 		
-		// Setear texto
-		var text2=new TextField();
-		text2.selectable=false;
-		text2.height=40;
-		text2.setTextFormat(tf1);
-		text2.alpha = 0;
+		text_subtitle.text = msj;
+		text_subtitle.alpha = 0;
+		textAdjustPos(text_subtitle);
 		
-		//ESCENA 1
-		if (GameScene.CURRENT_SCENE == 1 && GameScene.CURRENT_LEVEL == 1) {
-			text2.text = "Ojo con las bolas";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 80;
-		}
+		addChild(mensaje);
 		
-		if (GameScene.CURRENT_SCENE == 1 && GameScene.CURRENT_LEVEL == 2) {
-			text2.text = "Trata de agarrar los Power Ups!";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 80;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 1 && GameScene.CURRENT_LEVEL == 3) {
-			text2.text = "Mas Grandes?";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 80;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 1 && GameScene.CURRENT_LEVEL == 4) {
-			text2.text = "Pensabas que era facil?";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 80;
-		}
-		
-		//ESCENA 2
-		if (GameScene.CURRENT_SCENE == 2 && GameScene.CURRENT_LEVEL == 1) {
-			text2.text = "Cuidado con estas peculiares bolas!";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 2 && GameScene.CURRENT_LEVEL == 2) {
-			text2.text = "De donde saldran?";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 2 && GameScene.CURRENT_LEVEL == 3) {
-			text2.text = "Nada es lo que parece";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 2 && GameScene.CURRENT_LEVEL == 4) {
-			text2.text = "CORRE!!!";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 2 && GameScene.CURRENT_LEVEL == 5) {
-			text2.text = "DESTRUILA CUANTO ANTES!!";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		//ESCENA 3
-		if (GameScene.CURRENT_SCENE == 3 && GameScene.CURRENT_LEVEL == 1) {
-			text2.text = "Preparado?";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 3 && GameScene.CURRENT_LEVEL == 2) {
-			text2.text = "Saltar es una posible solucion";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 3 && GameScene.CURRENT_LEVEL == 3) {
-			text2.text = "Este parece facil o no ?";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 3 && GameScene.CURRENT_LEVEL == 4) {
-			text2.text = "SON MUCHAS!!!";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		//ESCENA 4
-		if (GameScene.CURRENT_SCENE == 4 && GameScene.CURRENT_LEVEL == 1) {
-			text2.text = "Frio Invierno";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 4 && GameScene.CURRENT_LEVEL == 2) {
-			text2.text = "Salta y hacelo todo rapido";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 4 && GameScene.CURRENT_LEVEL == 3) {
-			text2.text = "Esto no te lo esperas";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 4 && GameScene.CURRENT_LEVEL == 4) {
-			text2.text = "TODO RAPIDO";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 4 && GameScene.CURRENT_LEVEL == 5) {
-			text2.text = "PERSEVERA Y TRIUNFARAS";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		addChild(text2);
-		
-		Actuate.tween(text2, 2, { alpha: 1 } ).onComplete(function() { text2.alpha = 0; } );
+		Actuate.tween(mensaje, time, { alpha: 1 } ).onComplete(function() { mensaje.alpha = 0; removeChild(mensaje); } );
 	}
 		
 	public function startLevel() {
@@ -357,28 +263,12 @@ class Screen extends GameElement
 	}
 	
 	public function showScore() {
-		// Setear fuente
-		var tf = new TextFormat(openfl.Assets.getFont('fonts/JOINTBYPIZZADUDE.ttf').fontName);
-		tf.size = 100*0.8;
-		tf.color = 0x000000;
-		//tf.bold = true;
-		
-		// Setear texto
-		text=new TextField();
-		text.selectable=false;
-		text.height=100;
-		text.text= "Nivel superado";
-		text.setTextFormat(tf);
-		text.x = (SCREEN_WIDTH - text.width) / 2;
-		text.y = (SCREEN_HEIGHT - text.height) / 2;
 		text.alpha = 0;
 		
 		addChild(text);
-		Actuate.tween(text, 1, { alpha: 1 } ).delay(0).onComplete(hideScore);
-	}
-	
-	public function hideScore() {
-		Actuate.tween(text, 1, { alpha: 0 } ).delay(1).onComplete(game.loadLevel);
+		Actuate.tween(text, 1, { alpha: 1 } ).delay(0).onComplete(function() {
+			Actuate.tween(text, 1, { alpha: 0 } ).delay(1).onComplete(game.loadLevel);
+		});
 	}
 	
 	public function iniciarVida(p:Player) {

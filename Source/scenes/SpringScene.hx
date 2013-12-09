@@ -20,7 +20,7 @@ class SpringScene extends GameScene
 	{
 		super(sm);
 		
-		screen.setBackground("images/fondo_primavera.jpg");
+		//screen.setBackground("images/fondo_primavera.jpg");
 	}
 	
 	override public function init() {

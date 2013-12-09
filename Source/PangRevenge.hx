@@ -1,6 +1,7 @@
 package;
 
 import engine.AudioManager;
+import engine.LevelLoader;
 import engine.Scene;
 import engine.SceneManager;
 import engine.InputManager;
@@ -28,11 +29,10 @@ class PangRevenge extends Sprite {
 
 	private var sm:SceneManager;
 	private var audioManager : AudioManager;
+	private var lvlLoader:LevelLoader;
 	
 	public function new () {
 		super();
-		
-		//engine.Stats.init('UA-27265081-3','testing.sempaigames.com');
 		
 		// Audio Manager
 		AudioManager.getInstance().addLibreria(Sonido.DISPARO);
@@ -48,6 +48,8 @@ class PangRevenge extends Sprite {
 		//Save.getInstance().sessionBegin();
 		//GameScene.MAX_SCENE = Save.getInstance().lastLevel;
 		GameScene.MAX_SCENE = 3;
+		
+		lvlLoader = new LevelLoader("lvls.json");
 		
 		// Scene Manager
 		sm=new SceneManager(stage,audioManager);
