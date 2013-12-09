@@ -104,7 +104,7 @@ class Player extends GameElement
 		this.reset();
 	}
 
-	private function metodoVacio(){}
+	private function metodoVacio():Int { return 0; }
 	
 	// Segun la organizacion de los archivos: images/player1der.png = id + nom + .png
 	private function getPlayerAsset(nom:String) {
