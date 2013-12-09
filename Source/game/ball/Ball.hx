@@ -101,6 +101,13 @@ class Ball extends GameElement
 		configRebote();
 		configBoundingBox();
 	}
+
+	// Spawn con velocidad en coordenadas polares
+	public function spawnPolares(x0:Float, y0:Float, angulo:Float=270, radio:Float=0, mantener:Bool=true) {
+		vx = radio * Math.cos( angulo );
+		vy = radio * Math.sin( angulo );
+		this.spawn(x0 ,y0 ,vx, vy, mantener);		
+	}
 	
 	public function initSprite() {
 		// Explosion
