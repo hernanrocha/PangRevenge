@@ -106,6 +106,10 @@ class Player extends GameElement
 
 	private function metodoVacio():Int { return 0; }
 	
+	// Metodo (HERNAN)
+	private function metodoVacio():Int { return 0; }
+	// Metodo (HERNAN)
+	
 	// Segun la organizacion de los archivos: images/player1der.png = id + nom + .png
 	private function getPlayerAsset(nom:String) {
 		return Assets.getBitmapData("images/player" + id + nom + ".png");
