@@ -1,5 +1,6 @@
 package scenes;
 
+import engine.Level;
 import engine.LevelLoader;
 import engine.Scene;
 import engine.SceneManager;
@@ -28,7 +29,9 @@ class GameScene extends Scene {
 	
 	public static var lvlLoader(default, null):LevelLoader;
 	public static var screen(default, null):Screen;
-	public static var hud(default,null):Hud;
+	public static var hud(default, null):Hud;
+	public static var level(default, null):Level;
+	public static var inst(default, null):GameScene;
 	
 	// Boss
 	private var bossLevel:Int=5;
@@ -44,24 +47,31 @@ class GameScene extends Scene {
 	private var inmunidad:Int;
 	private var totalTime:Float;
 	
-	public var enPausa:Bool;
+	public static var enPausa:Bool;
 	private var btnPause:Bool;
 	
 	private var backButton:Button;
 	
-	public static var PLAYER_CANT:Int = 1;	
+	public static var PLAYER_CANT(default, null):Int;
+	
 	public static var FIN_ETAPA:Int = 5;
 	public static var CURRENT_SCENE:Int;
 	public static var CURRENT_LEVEL:Int;
-	public static var MAX_SCENE:Int;
+	
+	public static var Session_year:Int = 0;
+	public static var Session_season:Int = 1;
+	
+	// Constantes:
+	public static inline var MAX_PLAYERS:Int = 2;
 	
 	public function new (sm:SceneManager) {
 		super(sm);
 		
+		inst = this;
 		lvlLoader = new LevelLoader("lvls.json");
 		hud = new Hud(720, 100, 40, 30+Screen.SCREEN_HEIGHT );
-		screen = new Screen(this,20,20);
-		
+		screen = new Screen(20, 20);
+		level = new Level();
 		
 		// Boton de Regreso
 		backButton = new Button(this.goBack);
@@ -88,7 +98,7 @@ class GameScene extends Scene {
 		bordeAbajo.graphics.beginFill(0x000000);
 		bordeAbajo.graphics.drawRect(0, 0, 800, 400);
 		bordeAbajo.y = Screen.SCREEN_HEIGHT + 20;
-		bordeAbajo.graphics.endFill();		
+		bordeAbajo.graphics.endFill();
 	}
 	
 	override function init() {
@@ -116,6 +126,8 @@ class GameScene extends Scene {
 		screen.init();
 		hud.init();
 		hud.resetScore();
+		
+		iniciarNivel();
 	}
 	
 	override public function end(onComplete:Dynamic) {	
@@ -134,71 +146,74 @@ class GameScene extends Scene {
 		onComplete();
 	}
 	
-	public function loadLevel() {
+	public function iniciarNivel() {
+		
 		screen.enJuego = false;
-		screen.restablecerPosiciones();
-		if (GameScene.CURRENT_LEVEL == FIN_ETAPA) {
-			GameScene.MAX_SCENE = Std.int(Math.max(GameScene.MAX_SCENE, GameScene.CURRENT_SCENE));
-			Save.getInstance().setLevel(GameScene.MAX_SCENE);
-			// Cambiar de escena
-			if (GameScene.CURRENT_SCENE == 4) {
-				sm.switchScene('winner');
-			}else{
-				sm.switchScene('levelselect');
-			}
-		}else{
-			// Cargar pelotas
-			//cargarPelotas(GameScene.CURRENT_LEVEL);
-			//screen.showLevelName("Nivel " + GameScene.CURRENT_LEVEL );
-			//screen.game.hud.setEscena(GameScene.CURRENT_SCENE, GameScene.CURRENT_LEVEL);
+		if ( ! level.nextLevel() ) {
+			PangRevenge.sm.switchScene('levelselect');
+			return;
 		}
+		
+		level.load();
+	
+		// Cargar pelotas
+		//cargarPelotas(GameScene.CURRENT_LEVEL);
+		//screen.showLevelName("Nivel " + GameScene.CURRENT_LEVEL );
+		//screen.game.hud.setEscena(GameScene.CURRENT_SCENE, GameScene.CURRENT_LEVEL);
 	}
 	
 	public function finalizarNivel() {
-		trace("Finalizar nivel");
 		screen.enJuego = false;		
 		screen.resetLevel();
 		
-		GameScene.CURRENT_LEVEL++;
-		trace("Mostrar puntajes y cargar siguiente nivel");	
-		screen.showScore();
+		screen.showScore(iniciarNivel);
+	}
+	
+	public static function setTwoPlayers(b:Bool) {
+		if ( b )
+			PLAYER_CANT = 2;
+		else
+			PLAYER_CANT = 1;
+	}
+	
+	private function pasaNivel():Bool {
+		return (
+			(screen.pelotasCantidad == 0 && GameScene.CURRENT_LEVEL != bossLevel) || 
+			bossDead || 
+			PangRevenge.inputManager.keyCodePressed(InputManager.config.get("DEBUG_END_LEVEL"))
+		);
 	}
 	
 	// Nuestro gameLoop (se ejecuta antes de cada cuadro).
 	override public function updateLogic(time:Float) {
 		
-		if (screen.enJuego && !enPausa ) {
+		if(PangRevenge.inputManager.keyPressed(String.fromCharCode(27))){
+       		goBack();
+			return;
+       	}
+		
+		if (PangRevenge.inputManager.keyCodePressed(InputManager.config.get("PAUSE")) )
+			if (!btnPause) { // Anti-rebote
+				btnPause = true;
+				enPausa = !enPausa;
+			}
+		else
+			btnPause = false;
+		
+		if ( screen.enJuego && !enPausa ) {
 			totalTime += time;
 			super.updateLogic(time);
 			
 			// Detectar fin de nivel (No anima la ultima pelota)
-			if ((screen.pelotasCantidad == 0 && GameScene.CURRENT_LEVEL != bossLevel) || bossDead || PangRevenge.inputManager.keyCodePressed(InputManager.config.get("DEBUG_END_LEVEL"))) {
+			if (pasaNivel()) {
 				finalizarNivel();
 			}
-		}
-		
-       	if (PangRevenge.inputManager.keyCodePressed(InputManager.config.get("PAUSE")) ) {
-			if (!btnPause) {
-				btnPause = true;
-				enPausa = !enPausa;				
-			}
-		}else {
-			btnPause = false;	
-		}
-       	
-       	if(PangRevenge.inputManager.keyPressed(String.fromCharCode(27))){
-       		goBack();
-       	}
+		}       	
 	}
 	
 	private function goBack() {
 		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('menu');
-	}
-	
-	public function killBoss () { 
-		bossDead = true; 
-		screen.removeChild(boss);
 	}
 	
 	/*override public function end(onComplete:Dynamic){

@@ -56,13 +56,13 @@ class MenuScene extends Scene {
 	
 	public function play1(event:Event) {
 		PangRevenge.audioManager.justPlay(Sonido.EXPLO1);
-		GameScene.PLAYER_CANT = 1;	
+		GameScene.setTwoPlayers(false);
 		this.sm.switchScene('levelselect');
 	}
 	
 	public function play2(event:Event) {
 		PangRevenge.audioManager.justPlay(Sonido.EXPLO1);
-		GameScene.PLAYER_CANT = 2;
+		GameScene.setTwoPlayers(true);
 		this.sm.switchScene('levelselect');
 	}
 	

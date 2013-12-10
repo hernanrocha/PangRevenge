@@ -253,30 +253,12 @@ class Hud extends GameElement
 			return digitos;
 	}
 	
-	public function restarVida(jugador:Int) {
-		if (jugador == 1) {
-			if (p1Lifes == 0) {
-				cantJugadores--;
-				GameScene.screen.unload1();
-			}else {				
-				p1Lifes--;
-				setVidas1(p1Lifes);
-			}
-		}else if (jugador == 2) {
-			if (p2Lifes == 0) {
-				cantJugadores--;
-				GameScene.screen.unload2();
-			}else {				
-				p2Lifes--;
-				setVidas2(p2Lifes);
-			}
-		}
-		
-		//Me fijo si llamar o no al GameOver
-		if ( cantJugadores == 0 ) {
-			trace("llamando al gameOver");
-			GameScene.screen.gameOver();
-		}
+	public function mostrarVidas(jugador:Player) {
+		// Arreglar HUD lpm
+		if ( jugador.id == 1 )
+			setVidas1(jugador.lives);
+		else
+			setVidas2(jugador.lives);
 	}
 	
 	public function setVidas1(n:Int) {

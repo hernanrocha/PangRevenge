@@ -7,31 +7,41 @@ import game.Screen;
  * ...
  * @author ...
  */
-class Boss extends GameElement
-{	
-	var died:Bool;
-	var screen:Screen;
-	var ax:Float;
-	var vx:Float;
-	var sx:Float;
-	private var damage:Int = 0;
-	var h:Float;
-	var scene:GameScene;
+class Boss extends GameElement {	
+	
+	public var nombre(default, null):String;
+	
+	private var died:Bool;
+	private var ax:Float;
+	private var vx:Float;
+	private var sx:Float;
+	private var h:Float;
 	
 	var radio:Float = 100;
 	
-	public function new(p_scene:GameScene) 
-	{
+	private var health:Int;
+	private var max_health:Int;
+	
+	public function new( name:String , hits:Int ) {
 		super();
+		this.nombre = name;
+		this.health = hits;
+		this.max_health = hits;
 	}
 	
-	public function init(p_screen:Screen, p_x0:Int, dirIzquierda:Bool, p_y:Float = -1.0) {
-		// Referencia
-		screen = p_screen;
-		
+	public function init(p_x0:Int, dirIzquierda:Bool, p_y:Float = -1.0) {
 		// Configurar datos de control
 		initConfig(p_x0, dirIzquierda, p_y);
 		
+		// Init logico y grafico
+		GameScene.screen.addChild(this);
+		GameScene.screen.hijos.push(this);
+	}
+	
+	public function end() {
+		// Init logico y grafico
+		GameScene.screen.removeChild(this);
+		GameScene.screen.hijos.remove(this);
 	}
 	
 	
@@ -49,31 +59,27 @@ class Boss extends GameElement
 		
 		// Datos en Y	
 		h = Screen.SCREEN_HEIGHT;
-		}
+	}
 		
-		public function actualizarPosicion(incremento:Float)
-		{
-			
-		}
+	public function actualizarPosicion(incremento:Float){}
 		
-		public function actualizarColision() { }
+	public function actualizarColision() {}
 		
-		public function disparar(time:Float) { }
+	public function disparar(time:Float) {}
 		
-		public function getDamage() { }
+	public function getDamage() {}
 		
-		public function die() { }
+	public function die() { }
 		
-		override function updateLogic(time:Float) 
-		{
-				super.updateLogic(time);
-				var incremento = time * 50;	
-				actualizarPosicion(incremento);		
-				disparar(time);
-				actualizarColision();
-		}
-		
-		public function colisionJugador(p:Player):Bool {
-			return false;
-		}
+	override function updateLogic(time:Float){
+		super.updateLogic(time);
+		var incremento = time * 50;	
+		actualizarPosicion(incremento);		
+		disparar(time);
+		actualizarColision();
+	}
+	
+	public function colisionJugador(p:Player):Bool {
+		return false;
+	}
 }

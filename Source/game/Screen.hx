@@ -1,4 +1,5 @@
 package game;
+
 import engine.Button;
 import engine.GameElement;
 import flash.display.Bitmap;
@@ -14,11 +15,6 @@ import game.ball.*;
 import engine.AudioManager;
 import engine.Sonido;
 
-
-/**
- * ...
- * @author ...
- */
 class Screen extends GameElement
 {	
 	// Constantes
@@ -32,37 +28,30 @@ class Screen extends GameElement
 	public var pelotasCantidad:Int;
 	public var enJuego:Bool;
 	
-	// Objetos en pantalla
-	public var p1:Player;
-	public var p2:Player;
+	// Objetos en pantalla	
+	public var jugadores(default, null):Array<Player>;
 	
-	private var p1muerto:Bool;
-	private var p2muerto:Bool;
-	
-	var jugadores:Array<Player>;
-	public var pelotas:Array<Ball>;
-	public var boss:Boss;
-	public var powerups:Array<PowerUp>;
+	public var pelotas(default, null):Array<Ball>;
+	public var boss(default, null):Boss;
+	public var powerups(default, null):Array<PowerUp>;
 	
 	public var btnLevel:Button;
-	public var game:GameScene;
 	
 	private var text_subtitle:TextField;
 	private var text_message:TextField;
 	private var text_success:TextField;
 
-	public function new(p_game:GameScene,x:Float,y:Float){
+	public function new(x:Float,y:Float){
 		super();
 		
 		this.x = x;
 		this.y = y;
 		
-		game = p_game;
-		
 		loadPlayers();
 		
 		// Fonts
 		initFonts();
+		pelotas = new Array<Ball>();
 	}
 	
 	public function init() {
@@ -70,17 +59,8 @@ class Screen extends GameElement
 		addChild(fondo);
 		
 		// Jugador
-		jugadores.push(p1);
-		addChild(p1);
-		hijos.push(p1);
-		p1.reset();
-		
-		if (GameScene.PLAYER_CANT >= 2) {			
-			jugadores.push(p2);
-			addChild(p2);
-			hijos.push(p2);
-			p2.reset();
-		}
+		for ( player in jugadores )
+			player.init();
 		
 		// PowerUp
 		loadPowerUps();
@@ -91,7 +71,8 @@ class Screen extends GameElement
 		removeChild(fondo);
 		
 		// Jugador
-		unloadPlayers();
+		for ( player in jugadores )
+			player.end();
 		
 		// PowerUp (nada)
 	}
@@ -136,66 +117,33 @@ class Screen extends GameElement
 		fondo.height = SCREEN_HEIGHT;
 	}
 	
-	public function loadPlayers() {		
+	private function loadPlayers() {		
 		jugadores = new Array<Player>();
 		
 		// Agregar jugador 1
-		p1 = new Player(1);
-		
-		// Agregar jugador 2
-		p2 = new Player(2);	
-		
-		restablecerPosiciones();
+		for ( id in 0 ... GameScene.MAX_PLAYERS )
+			jugadores.push(new Player(id+1));
 	}
 	
-	public function restablecerPosiciones(distancia:Float = -1) {
-		if ( distancia == -1 ) distancia = Player.P1_X_INICIAL;
+	public function ubicarPlayers(distancia:Float = -1) { // No soporta más de 2 players
+		trace(distancia);
+		if ( distancia == -1 ) distancia = Player.POS_INICIAL;
 		
-		p1.y = Screen.SCREEN_HEIGHT - p1.height;
-		p1.x = distancia;
-		p2.y = Screen.SCREEN_HEIGHT - p2.height;
-		p2.x = Screen.SCREEN_WIDTH - distancia - p2.width;
-	}
-	
-	public function unloadPlayers() {		
-		if ( !p1muerto ) {			
-			p1.reset();
-			jugadores.remove(p1);
-			removeChild(p1);
-			hijos.remove(p1);
-		}
-		
-		
-		if (GameScene.PLAYER_CANT >= 2 &&  !p2muerto) {
-			p2.reset();
-			jugadores.remove(p2);
-			removeChild(p2);
-			hijos.remove(p2);
+		for ( player in jugadores ){
+			player.y = Screen.SCREEN_HEIGHT - player.height;
+			if ( player.id == 1 ) 
+				player.x = (distancia/100) * Screen.SCREEN_WIDTH;
+			else
+				player.x = Screen.SCREEN_WIDTH * (1-distancia/100) - player.width;
 		}
 	}
-	
-	public function unload1() {		
-		p1.reset();
-		jugadores.remove(p1);
-		removeChild(p1);
-		hijos.remove(p1);
-		p1muerto = true;
-	}
-	
-	
-	public function unload2() {		
-		p2.reset();
-		jugadores.remove(p2);
-		removeChild(p2);
-		hijos.remove(p2);
-		p2muerto = true;
-	}
-	
+		
 	public function loadPowerUps() {
 		powerups = new Array<PowerUp>();
 		PowerUp.init(this);
 	}
 	
+	// Pelotas
 	public function agregarPelota(b:Ball) {
 		// Agregar a pelotas comunes
 		pelotas.push(b);
@@ -205,27 +153,24 @@ class Screen extends GameElement
 		// Sumar cantidad
 		pelotasCantidad++;
 	}	
-	
 	public function desactivarPelota(b:Ball) {
 		pelotas.remove(b);
-	}
-	
+	}	
 	public function eliminarPelota(b:Ball) {
 		removeChild(b);
 		hijos.remove(b);		
 		pelotasCantidad--;
 	}
 	
+	// Manejo de niveles
 	public function resetLevel() {
-		// Eliminar pelotas (no borra de pelotas)
-		for (p in pelotas) {
+		// Eliminar pelotas que quedan (no borra de pelotas)
+		for (p in pelotas)
 			eliminarPelota(p);
-		}
 		
 		// Reestablecer jugador y eliminar sogas
-		for (p in jugadores) {
-			p.reset();
-		}
+		for (p in jugadores)
+			p.resetLevel();
 			
 		// Eliminar powerups
 		PowerUp.reset();
@@ -265,86 +210,81 @@ class Screen extends GameElement
 		} );
 	}
 		
-	public function startLevel() {
-		enJuego = true;
-	}
 	
-	public function showScore() {
+	
+	public function showScore(callback:Dynamic) {
 		text_success.alpha = 0;
 		
 		addChild(text_success);
 		Actuate.tween(text_success, 1, { alpha: 1 } ).delay(0).onComplete(function() {
-			Actuate.tween(text_success, 1, { alpha: 0 } ).delay(1).onComplete(game.loadLevel);
+			Actuate.tween(text_success, 1, { alpha: 0 } ).delay(1).onComplete( callback );
 		});
 	}
 	
-	public function iniciarVida(p:Player) {
+	public function startLevel() {
 		enJuego = true;
 	}
 	
 	override public function updateLogic(time:Float){
-		if (enJuego && !game.enPausa) {
+		if (enJuego && ! GameScene.enPausa) {
 			super.updateLogic(time);
 			
 			// Colisiones Pelota(normal, fuego) y boss - soga
 			for (j in jugadores) {
-				for (soga in j.sogas ) {
-					// Para cada soga de cada jugador, verificar si colisiona con alguna pelota
-					
-					if ( soga.isOnScreen() ) {
-						var colisiona = false;
-						for (b in pelotas) {
-							if (!colisiona && soga.collisionTest(b)) {
+				if ( j.alive ){
+					for (soga in j.sogas ) {
+						// Para cada soga de cada jugador, verificar si colisiona con alguna pelota
+						
+						if ( soga.isOnScreen() ) {
+							var colisiona = false;
+							for (b in pelotas) {
+								if (!colisiona && soga.collisionTest(b)) {
+									colisiona = true;
+									
+									// Eliminar soga
+									soga.colision();
+									
+									// Reventar pelot
+									PangRevenge.audioManager.justPlay(Sonido.EXPLO1);
+									b.reventar();
+									
+									// Sumar puntos
+									GameScene.hud.addScore(j.id, 50);
+								}
+							}
+							
+							if (boss != null && !colisiona && soga.collisionBoss(boss)) {
 								colisiona = true;
-								
-								// Eliminar soga
 								soga.colision();
-								
-								// Reventar pelot
-								PangRevenge.audioManager.justPlay(Sonido.EXPLO1);
-								b.reventar();
-								
-								// Sumar puntos
+								boss.getDamage();
 								GameScene.hud.addScore(j.id, 50);
 							}
 						}
-						
-						if (boss != null && !colisiona && soga.collisionBoss(boss)) {
-							colisiona = true;
-							soga.colision();
-							boss.getDamage();
-							GameScene.hud.addScore(j.id, 50);
+					}
+					// COLISION DE POWERUPS !!!
+					for (pu in powerups) {
+						if ( j.collisionTest(pu) ) {
+							pu.action(j);
 						}
 					}
-				}
-				// COLISION DE POWERUPS !!!
-				for (pu in powerups) {
-					if ( j.collisionTest(pu) ) {
-						pu.action(j);
+					
+					// Colision jugador - boss
+					if (boss != null && boss.colisionJugador(j)) {
+						j.colision(null);
 					}
-				}
-				
-				// Colision jugador - boss
-				if (boss != null && boss.colisionJugador(j)) {
-					j.actionMorir(null);
 				}
 			}
 			
 			// Colisiones Jugador - Pelota
-			for (b in pelotas) {
-				for (j in jugadores) {
-					if (b.colisionJugador(j)) {
-						j.actionMorir(b);
-					}
-				}
-			}
-			
-
+			for (b in pelotas)
+				for (j in jugadores)
+					if (b.colisionJugador(j))
+						j.colision(b);
 			
 		}
 	}
 	
 	public function gameOver() {		
-		game.sm.switchScene('gameover');
+		PangRevenge.sm.switchScene('gameover');
 	}
 }

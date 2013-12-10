@@ -22,13 +22,11 @@ class Player extends GameElement
 	public static inline var MUNICION_INICIAL:Int = 1;
 	public static inline var VX_INICIAL:Float = 0.7;
 	public static inline var VX_SALTO_INICIAL:Float = 1.8;
-	public static inline var VY_SALTO_INICIAL:Int = -40;
-	
-	public static inline var P1_X_INICIAL:Int = 200;
-	public static inline var P2_X_INICIAL:Int = Screen.SCREEN_WIDTH - 200;	
+	public static inline var VY_SALTO_INICIAL:Int = -40;	
+	public static inline var POS_INICIAL:Int = 25;
 	
 	// Propiedades
-	public var id:Int;
+	public var id(default, null):Int;
 	
 	private var velocidad_movimiento:Float;
 	private var velocidad_saltoX:Float;
@@ -49,6 +47,9 @@ class Player extends GameElement
 	private var saltandoVy:Float = 0;
 	
 	private var pausa:Float = 0;
+	
+	public var alive(default, null):Bool = false;
+	public var lives(default, null):Int = 3;
 	
 	// Public var... Hermoso :P
 	public var sogas:Array<Soga>;
@@ -95,12 +96,23 @@ class Player extends GameElement
 		
 		this.boundingBox = BOUNCE_PLAYER;
 		
-		this.inmunidad = 0;
-		
 		this.reset();
 	}
-
-	private function metodoVacio():Int { return 0; }
+	
+	public function init() {
+		GameScene.screen.addChild(this);
+		GameScene.screen.hijos.push(this);
+		
+		this.reset();
+		setAlive(true);
+	}
+	public function end() {
+		GameScene.screen.removeChild(this);
+		GameScene.screen.hijos.remove(this);
+		
+		this.reset();
+		setAlive(false);
+	}
 	
 	// Segun la organizacion de los archivos: images/player1der.png = id + nom + .png
 	private function getPlayerAsset(nom:String) {
@@ -115,7 +127,7 @@ class Player extends GameElement
 		return y + boundingBox.height / 2;
 	}
 	
-	public function reset() {
+	public function reset() { // Season Reset!
 		this.velocidad_movimiento = VX_INICIAL;
 		this.velocidad_saltoX = VX_SALTO_INICIAL;
 		this.velocidad_saltoY = VY_SALTO_INICIAL;
@@ -123,20 +135,27 @@ class Player extends GameElement
 		this.resetSpeed();		
 		this.setWeapon(0);
 		this.setShield(false);
+		
+		this.lives = 3;
+		GameScene.hud.mostrarVidas(this);
+		
+		resetLevel();
+	}
+	
+	public function resetLevel() {
 		this.inmunidad = 0;
 		this.alpha = 1;
 		this.visible = true;
 		this.pausa = 0;
 		
-		this.aterrizar(); // Por si estaba en el aire
-		this.noAction(); // Por si se estaba moviendo
-		
 		this.sogasUnset();
 		this.resetMunicion();
+		
+		this.aterrizar(); // Por si estaba en el aire
+		this.noAction(); // Por si se estaba moviendo
 	}
 	
-	// Soga
-	
+	// Soga	
 	private function sogaIniciar() {
 		var soga: Soga;
 		var i:Int;
@@ -257,27 +276,44 @@ class Player extends GameElement
 		playerIzq.visible = false;
 	}
 	
-	public function actionMorir(b:Ball) {
+	private function actionDamage() {
+		if ( lives > 0 ) {
+			lives--;
+			inmunidad = TIEMPO_INMUNIDAD;
+			GameScene.hud.mostrarVidas(this);
+			// Animación?
+		} else {
+			actionMuerte();
+		}
+	}
+	
+	public function actionMuerte() {
+		// Animación de muerte
+		
+		//Callback le dice a Screen que murió.
+	}
+	
+	public function colision(b:Ball) {
 		if (inmunidad > 0) {
 			
 		}else if (this.playerShield.visible) {
 			PangRevenge.audioManager.justPlay(Sonido.GOLPE);
 			inmunidad = TIEMPO_INMUNIDAD;
 			setShield(false);
-			if (b != null) {
-				b.reventar();				
-			}
-		}else {			
+			if (b != null)
+				b.reventar();
+		}else{
 			PangRevenge.audioManager.justPlay(Sonido.GOLPE);
 			trace("El personaje murio");
-			if (b != null) {
-				b.reventar();				
-			}
-			GameScene.screen.enJuego = false;
-			GameScene.hud.restarVida(id);
-			GameScene.screen.iniciarVida(this);			
-			inmunidad = Player.TIEMPO_INMUNIDAD;
+			if (b != null)
+				b.reventar();
+			
+			actionDamage();
 		}		
+	}
+	
+	public function setAlive(v:Bool) {
+		alive = v;
 	}
 	
 	override function updateLogic(time:Float) {

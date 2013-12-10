@@ -17,7 +17,6 @@ import game.ball.SnowBall;
  */
 class IceBoss extends Boss
 {
-	public static var MAX_DAMAGE:Int = 10;
 	public static var TIMER_B :Int = 10;
 	private var timer:Float = 0;
 	var dmg:Bitmap;
@@ -29,10 +28,8 @@ class IceBoss extends Boss
 	var vyRebote:Float;
 	
 	
-	public function new(p_scene:GameScene) 
-	{
-		super(p_scene);
-		this.scene = p_scene;
+	public function new( name:String , hits:Int ){
+		super(name,hits);
 		
 		trace("Creando boss");
 		
@@ -92,17 +89,21 @@ class IceBoss extends Boss
 		
 	override public function actualizarPosicion(incremento:Float)	{
 		if (!died){
-			// Actualizar posicion X
+			// Actualizar posicion X 
+			
+			// usar GameScene.scree.jugadores !!!
 			
 			if (vy > 0) {
-				if (GameScene.PLAYER_CANT < 2){
-					if ((screen.p1.x < this.x && vx>0) || (screen.p1.x>this.x && vx<0))
+				
+				/*if (GameScene.PLAYER_CANT < 2){
+					if ((GameScene.screen.p1.x < this.x && vx>0) || (GameScene.screen.p1.x>this.x && vx<0))
 						vx = -vx; 
-				}else if (distancia(screen.p1.x + 20, this.x + 100) < distancia(screen.p2.x + 20, this.x + 100)){
-					if ((screen.p1.x <this.x && vx > 0) || (screen.p1.x>this.x && vx<0))
+				}else if (distancia(GameScene.screen.p1.x + 20, this.x + 100) < distancia(GameScene.screen.p2.x + 20, this.x + 100)){
+					if ((GameScene.screen.p1.x <this.x && vx > 0) || (GameScene.screen.p1.x>this.x && vx<0))
 						vx = -vx;
-				}else if ((screen.p2.x < this.x && vx>0) || (screen.p2.x>this.x && vx<0))
+				}else if ((GameScene.screen.p2.x < this.x && vx>0) || (GameScene.screen.p2.x>this.x && vx<0))
 					vx = -vx;
+				*/
 			}
 		
 				
@@ -138,29 +139,29 @@ class IceBoss extends Boss
 		}
 		}
 		
-	override public function disparar(time:Float) 
-		{ 
-			timer += time;
-			if (timer >= TIMER_B) {
-				var b1:Ball = SnowBall.getBall(screen, Ball.TAM_3); 
-				b1.spawn(x + 100, y + 100, 3, 3);
-				screen.agregarPelota(b1);
+	override public function disparar(time:Float) { 
+		timer += time;
+		if (timer >= TIMER_B) {
+			var b1:Ball = SnowBall.getBall(Ball.TAM_3); 
+			b1.spawn(x + 100, y + 100, 3, 3);
+			GameScene.screen.agregarPelota(b1);
 				
-				var b2 = SnowBall.getBall(screen, Ball.TAM_3);
-				b2.spawn(x + 100, y + 100, -3, 3);
-				screen.agregarPelota(b2);
-				timer = 0;
-			}
+			var b2 = SnowBall.getBall(Ball.TAM_3);
+			b2.spawn(x + 100, y + 100, -3, 3);
+			GameScene.screen.agregarPelota(b2);
+			timer = 0;
 		}
+	}
 		
-	override public function getDamage() 
-		{
-			dmg.visible = true;
-			Actuate.timer(0.2).onComplete(function() { dmg.visible = false; } );
-			damage++;
-			if (damage == MAX_DAMAGE)
-				die();
-		}
+	override public function getDamage() {
+		health--;
+		
+		dmg.visible = true;
+		Actuate.timer(0.2).onComplete(function() { dmg.visible = false; } );
+		
+		if (health == 0)
+			die();
+	}
 		
 	override public function die() { 
 		died = true;
@@ -195,7 +196,10 @@ class IceBoss extends Boss
 			explosion4.x = 50;
 			explosion4.y = 10;
 			explosion4.activateAnimation(); } );
-		Actuate.tween(this, 3, { alpha:0 } ).ease(Bounce.easeIn).onComplete(function() { scene.killBoss(); } );
+		Actuate.tween(this, 3, { alpha:0 } ).ease(Bounce.easeIn).onComplete(function() { 
+			GameScene.level.killBoss(); 
+			this.end();
+		} );
 	}
 		
 	public function getCentroX():Float {

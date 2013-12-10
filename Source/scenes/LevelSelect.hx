@@ -54,7 +54,7 @@ class LevelSelect extends Scene
 	
 	
 	public function playSpring(e:Event) {
-		GameScene.lvlLoader.setSeason(1);
+		GameScene.level.setSeason(1);
 		Actuate.tween(levelSummer, 1, { alpha:0 } );
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -62,7 +62,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playSummer(e:Event) {
-		GameScene.lvlLoader.setSeason(2);
+		GameScene.level.setSeason(2);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -70,7 +70,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playAutumn(e:Event) {
-		GameScene.lvlLoader.setSeason(3);
+		GameScene.level.setSeason(3);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelSummer, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -78,7 +78,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playWinter(e:Event) {
-		GameScene.lvlLoader.setSeason(4);
+		GameScene.level.setSeason(4);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelSummer, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.2);
@@ -104,15 +104,12 @@ class LevelSelect extends Scene
 		levelWinter.setEnabled(false);
 		
 		// Activar botones correspondientes
-		if (GameScene.MAX_SCENE > 0) {
+		if (GameScene.Session_season > 1)
 			levelSummer.setEnabled(true);
-		}
-		if (GameScene.MAX_SCENE > 1) {
+		if (GameScene.Session_season > 2)
 			levelAutumn.setEnabled(true);
-		}
-		if (GameScene.MAX_SCENE > 2) {
+		if (GameScene.Session_season > 3)
 			levelWinter.setEnabled(true);
-		}
 		
 		// Mostrar Escena Primavera
 		levelSpring.x = -200;

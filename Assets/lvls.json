@@ -34,7 +34,6 @@
 			],
 			"background":"primavera.jpg",
 			"sound":"level1.mp3",
-			"boss":{}
 		},
 		"summer":{
 			"lvls":[
@@ -71,8 +70,9 @@
 			"background":"verano.jpg",
 			"sound":"level2.mp3",
 			"boss":{
-				// Variables del jefe
-
+				"name":"SummerBoss",
+				"id":1,
+				"hits":5
 			}
 		},
 		"autumn":{

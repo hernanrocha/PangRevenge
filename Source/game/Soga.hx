@@ -203,7 +203,7 @@ class Soga extends GameElement
 		enTecho = false;
 		onScreen = false;
 		this.visible = false;
-		player.hijos.remove(this); // No más update Logic.
+		player.hijos.remove(this);
 	}
 	
 	private function hook() {
