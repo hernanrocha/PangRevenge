@@ -6,16 +6,74 @@
 					"msj":"Cuidado con las bolas!",
 					"players":25,
 					"bolas":[
-						{},
+						{ 
+							"tipo":"normal",
+							"size":3,
+							"spawn":{
+								"x":0,
+								"y":0,
+								"angulo":0,
+								"radio":1
+							},
+							"powerup":{}
+						},
+						{ 
+							"tipo":"normal",
+							"size":3,
+							"spawn":{
+								"x":100,
+								"y":0,
+								"angulo":180,
+								"radio":1,
+								"inv":"true"
+							},
+							"powerup":{}
+						},
 					],
 				},
 			],
 			"background":"primavera.jpg",
-			"sounds":[
-				"",
-			],
+			"sound":"level1.mp3",
+			"boss":{}
 		},
 		"summer":{
+			"lvls":[
+				{
+					"msj":"Primer lvl del verano!",
+					"players":25,
+					"bolas":[
+						{ 
+							"tipo":"normal",
+							"size":2,
+							"spawn":{
+								"x":0,
+								"y":40,
+								"angulo":0,
+								"radio":1
+							},
+							"powerup":{}
+						},
+						{ 
+							"tipo":"normal",
+							"size":2,
+							"spawn":{
+								"x":100,
+								"y":40,
+								"angulo":180,
+								"radio":1,
+								"inv":"true"
+							},
+							"powerup":{}
+						},
+					],
+				},
+			],
+			"background":"verano.jpg",
+			"sound":"level2.mp3",
+			"boss":{
+				// Variables del jefe
+
+			}
 		},
 		"autumn":{
 		},

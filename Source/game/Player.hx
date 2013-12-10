@@ -9,6 +9,7 @@ import openfl.Assets;
 import engine.InputManager;
 import engine.AudioManager;
 import engine.Sonido;
+import scenes.GameScene;
 
 /**
  * ...
@@ -28,8 +29,6 @@ class Player extends GameElement
 	
 	// Propiedades
 	public var id:Int;
-	public var screen:Screen;
-	private var hud:Hud;
 	
 	private var velocidad_movimiento:Float;
 	private var velocidad_saltoX:Float;
@@ -66,11 +65,8 @@ class Player extends GameElement
 	
 	public static var BOUNCE_PLAYER:Rectangle =  new Rectangle(0, 0, 45, 75);	
 	
-	public function new(p_screen:Screen, p_hud:Hud, playerId:Int){
+	public function new(playerId:Int){
 		super();
-		
-		this.screen = p_screen;
-		this.hud = p_hud;
 		
 		this.id = playerId;
 		
@@ -277,9 +273,9 @@ class Player extends GameElement
 			if (b != null) {
 				b.reventar();				
 			}
-			screen.enJuego = false;
-			hud.restarVida(id);
-			screen.iniciarVida(this);			
+			GameScene.screen.enJuego = false;
+			GameScene.hud.restarVida(id);
+			GameScene.screen.iniciarVida(this);			
 			inmunidad = Player.TIEMPO_INMUNIDAD;
 		}		
 	}
@@ -368,15 +364,15 @@ class Player extends GameElement
 		municion_disp = municion_disp + i;
 		
 		if ( r == 2 )
-			hud.setElemento(Hud.DOBLE_TIRO , this.id);
+			GameScene.hud.setElemento(Hud.DOBLE_TIRO , this.id);
 		else
-			hud.unsetElemento(Hud.DOBLE_TIRO , this.id);
+			GameScene.hud.unsetElemento(Hud.DOBLE_TIRO , this.id);
 	}
 	// Reset
 	public function resetMunicion() {
 		this.municion_disp = MUNICION_INICIAL;
 		this.municion_max = MUNICION_INICIAL;
-		hud.unsetElemento(Hud.DOBLE_TIRO , this.id);
+		GameScene.hud.unsetElemento(Hud.DOBLE_TIRO , this.id);
 	}
 	
 	// PowerUp Escudo
@@ -384,18 +380,18 @@ class Player extends GameElement
 		if ( s ) {
 			playerShield.visible = true;
 			hijos.push(playerShield);
-			hud.setElemento(Hud.ESCUDO , this.id);
+			GameScene.hud.setElemento(Hud.ESCUDO , this.id);
 		} else {
 			playerShield.visible = false;
 			hijos.remove(playerShield);
-			hud.unsetElemento(Hud.ESCUDO , this.id);
+			GameScene.hud.unsetElemento(Hud.ESCUDO , this.id);
 		}
 	}
 	
 	// PowerDown SetWeapon
 	public function setWeapon(t:Int) { // 0 = Flecha - 1 = Gancho
-		if ( t == 0 ) hud.unsetElemento(Hud.GANCHO , this.id);
-		else hud.setElemento(Hud.GANCHO , this.id);
+		if ( t == 0 ) GameScene.hud.unsetElemento(Hud.GANCHO , this.id);
+		else GameScene.hud.setElemento(Hud.GANCHO , this.id);
 		
 		for ( soga in this.sogas )
 			soga.setType(t);
@@ -411,7 +407,7 @@ class Player extends GameElement
 		if ( fast ) {
 			if ( this.speed == 1 || this.speed == 1.5 ) { // Maxima
 				this.speed = 1.5;
-				hud.setElemento(Hud.SPEED , this.id);
+				GameScene.hud.setElemento(Hud.SPEED , this.id);
 				return;
 			}
 			else this.speed = 1;
@@ -419,12 +415,12 @@ class Player extends GameElement
 			if ( this.speed == 1 ) this.speed = 0.5; // Minima
 			else if ( this.speed == 1.5 ) this.speed = 1;
 		}
-		hud.unsetElemento(Hud.SPEED , this.id);
+		//GameScene.hud.unsetElemento( Hud.SPEED , this.id);
 	}
 	// Reset
 	public function resetSpeed() {
 		speed = 1;
-		hud.unsetElemento(Hud.SPEED , this.id);
+		GameScene.hud.unsetElemento(Hud.SPEED , this.id);
 	}
 	
 	

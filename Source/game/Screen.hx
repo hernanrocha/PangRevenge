@@ -140,10 +140,10 @@ class Screen extends GameElement
 		jugadores = new Array<Player>();
 		
 		// Agregar jugador 1
-		p1 = new Player(this, GameScene.hud, 1);
+		p1 = new Player(1);
 		
 		// Agregar jugador 2
-		p2 = new Player(this, GameScene.hud, 2);	
+		p2 = new Player(2);	
 		
 		restablecerPosiciones();
 	}

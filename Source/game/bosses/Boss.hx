@@ -8,10 +8,7 @@ import game.Screen;
  * @author ...
  */
 class Boss extends GameElement
-{
-
-	
-	
+{	
 	var died:Bool;
 	var screen:Screen;
 	var ax:Float;
@@ -38,9 +35,7 @@ class Boss extends GameElement
 	}
 	
 	
-	public function initConfig(x0, dirIzquierda:Bool, y0:Float = -1.0)
-		
-		{
+	public function initConfig(x0, dirIzquierda:Bool, y0:Float = -1.0)	{
 		
 		died = false;
 		// Datos en X

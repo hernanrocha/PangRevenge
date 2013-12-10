@@ -14,13 +14,13 @@ class LevelLoader
 	public var level:Dynamic;
 	
 	public function new(config:String) {
-		trace(config);
 		var jsonTxt = Assets.getText("assets/"+config);
-		//trace(jsonTxt);
 		content = Json.parse(jsonTxt);
 		year = content[0];
 		season = year.spring;
 		level = season.lvls[0];
+		
+		trace(content);
 	}
 	
 	public function setYear(year:Int) {
@@ -46,7 +46,15 @@ class LevelLoader
 			this.level = season.lvls[year];
 	}
 	
+	public function loadSound() {
+		PangRevenge.audioManager.addLibreria(season.sound);
+	}
+	public function playSound() {
+		//PangRevenge.audioManager.setSound(season.sound);
+	}
+	
 	public function setBackground() {
+		//trace(season.background);
 		GameScene.screen.setBackground("images/fondos/" + season.background );
 	}
 	

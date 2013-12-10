@@ -10,7 +10,6 @@ import scenes.GameOverScene;
 import scenes.GameScene;
 import scenes.HelpScene;
 import scenes.LevelSelect;
-import scenes.SeasonScene;
 import scenes.WinScene;
 
 import flash.display.Sprite;

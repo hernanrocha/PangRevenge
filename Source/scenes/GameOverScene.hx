@@ -57,8 +57,7 @@ class GameOverScene extends Scene
 		levelSelectButton = new BackToLevelSelectButton(this.goSelect);
 		levelSelectButton.x=0;
 		levelSelectButton.y = 20;
-		addChild(levelSelectButton);
-		
+		addChild(levelSelectButton);		
 	}
 	
 	

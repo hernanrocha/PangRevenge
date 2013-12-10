@@ -69,7 +69,7 @@ class HelpScene extends Scene
 		PangRevenge.audioManager.setSound(Sonido.HELP,true);
 		alpha = 0;
 		Actuate.tween(this, 1, { alpha:1 } );
-		}
+	}
 	
 	override public function end(onComplete:Dynamic){
 		this.alpha=1;

@@ -136,7 +136,6 @@ class LevelSelect extends Scene
 	}
 	
 	override public function end(onComplete:Dynamic) {
-		trace("On complete");
 		Actuate.tween(this, 1, {alpha:0});
 		onComplete();
 	}

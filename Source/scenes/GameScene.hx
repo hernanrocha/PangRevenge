@@ -59,8 +59,8 @@ class GameScene extends Scene {
 		super(sm);
 		
 		lvlLoader = new LevelLoader("lvls.json");
-		screen = new Screen(this,20,20);
 		hud = new Hud(720, 100, 40, 30+Screen.SCREEN_HEIGHT );
+		screen = new Screen(this,20,20);
 		
 		
 		// Boton de Regreso
@@ -96,7 +96,8 @@ class GameScene extends Scene {
 		
 		// Cargar fondo:
 		lvlLoader.setLevel(0);
-		lvlLoader.loadBackground();
+		lvlLoader.loadSound();
+		lvlLoader.setBackground();
 		
 		// Inicializar valores
 		totalTime = 0;
