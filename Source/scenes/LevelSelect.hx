@@ -54,7 +54,7 @@ class LevelSelect extends Scene
 	
 	
 	public function playSpring(e:Event) {
-		GameScene.levelLoader.setSeason(1);
+		GameScene.lvlLoader.setSeason(1);
 		Actuate.tween(levelSummer, 1, { alpha:0 } );
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -62,7 +62,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playSummer(e:Event) {
-		GameScene.levelLoader.setSeason(2);
+		GameScene.lvlLoader.setSeason(2);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -70,7 +70,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playAutumn(e:Event) {
-		GameScene.levelLoader.setSeason(3);
+		GameScene.lvlLoader.setSeason(3);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelSummer, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -78,7 +78,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playWinter(e:Event) {
-		GameScene.levelLoader.setSeason(4);
+		GameScene.lvlLoader.setSeason(4);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelSummer, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.2);
@@ -142,7 +142,7 @@ class LevelSelect extends Scene
 	}
 	
 	private function goBack(){
-		AudioManager.getInstance().justPlay(Sonido.VOLVER);
+		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('menu');
 	}
 	

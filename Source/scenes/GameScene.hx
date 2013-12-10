@@ -44,8 +44,6 @@ class GameScene extends Scene {
 	private var inmunidad:Int;
 	private var totalTime:Float;
 	
-	private var screen:Screen;
-	public var hud:Hud;
 	public var enPausa:Bool;
 	private var btnPause:Bool;
 	
@@ -95,7 +93,11 @@ class GameScene extends Scene {
 	
 	override function init() {
 		super.init();
-				
+		
+		// Cargar fondo:
+		lvlLoader.setLevel(0);
+		lvlLoader.loadBackground();
+		
 		// Inicializar valores
 		totalTime = 0;
 		
@@ -145,9 +147,9 @@ class GameScene extends Scene {
 			}
 		}else{
 			// Cargar pelotas
-			cargarPelotas(GameScene.CURRENT_LEVEL);
-			screen.showLevelName("Nivel " + GameScene.CURRENT_LEVEL );
-			screen.game.hud.setEscena(GameScene.CURRENT_SCENE, GameScene.CURRENT_LEVEL);
+			//cargarPelotas(GameScene.CURRENT_LEVEL);
+			//screen.showLevelName("Nivel " + GameScene.CURRENT_LEVEL );
+			//screen.game.hud.setEscena(GameScene.CURRENT_SCENE, GameScene.CURRENT_LEVEL);
 		}
 	}
 	
@@ -169,12 +171,12 @@ class GameScene extends Scene {
 			super.updateLogic(time);
 			
 			// Detectar fin de nivel (No anima la ultima pelota)
-			if ((screen.pelotasCantidad == 0 && GameScene.CURRENT_LEVEL != bossLevel) || bossDead || InputManager.getInstance().keyCodePressed(InputManager.config.get("DEBUG_END_LEVEL"))) {
+			if ((screen.pelotasCantidad == 0 && GameScene.CURRENT_LEVEL != bossLevel) || bossDead || PangRevenge.inputManager.keyCodePressed(InputManager.config.get("DEBUG_END_LEVEL"))) {
 				finalizarNivel();
 			}
 		}
 		
-       	if (InputManager.getInstance().keyCodePressed(InputManager.config.get("PAUSE")) ) {
+       	if (PangRevenge.inputManager.keyCodePressed(InputManager.config.get("PAUSE")) ) {
 			if (!btnPause) {
 				btnPause = true;
 				enPausa = !enPausa;				
@@ -183,13 +185,13 @@ class GameScene extends Scene {
 			btnPause = false;	
 		}
        	
-       	if(InputManager.getInstance().keyPressed(String.fromCharCode(27))){
+       	if(PangRevenge.inputManager.keyPressed(String.fromCharCode(27))){
        		goBack();
        	}
 	}
 	
 	private function goBack() {
-		AudioManager.getInstance().justPlay(Sonido.VOLVER);
+		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('menu');
 	}
 	

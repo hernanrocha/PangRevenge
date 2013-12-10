@@ -172,7 +172,7 @@ class Player extends GameElement
 		if ( municion_disp < 1 )
 			return;
 		
-		AudioManager.getInstance().justPlay(Sonido.DISPARO);
+		PangRevenge.audioManager.justPlay(Sonido.DISPARO);
 		this.disparando = DISPARO_COOLDONW;
 		municion_disp--;
 		
@@ -191,7 +191,7 @@ class Player extends GameElement
 	
 	//
 	private function getAction(action:String):Bool {
-		return InputManager.getInstance().keyCodePressed(InputManager.config.get("P" + id + "_" + action));
+		return PangRevenge.inputManager.keyCodePressed(InputManager.config.get("P" + id + "_" + action));
 	}
 	
 	// Salto
@@ -265,14 +265,14 @@ class Player extends GameElement
 		if (inmunidad > 0) {
 			
 		}else if (this.playerShield.visible) {
-			AudioManager.getInstance().justPlay(Sonido.GOLPE);
+			PangRevenge.audioManager.justPlay(Sonido.GOLPE);
 			inmunidad = TIEMPO_INMUNIDAD;
 			setShield(false);
 			if (b != null) {
 				b.reventar();				
 			}
 		}else {			
-			AudioManager.getInstance().justPlay(Sonido.GOLPE);
+			PangRevenge.audioManager.justPlay(Sonido.GOLPE);
 			trace("El personaje murio");
 			if (b != null) {
 				b.reventar();				
@@ -311,7 +311,7 @@ class Player extends GameElement
 				return;
 			}			
 			
-			if (InputManager.getInstance().keyCodePressed(InputManager.config.get("P" + id + "_FIRE"))) {
+			if (PangRevenge.inputManager.keyCodePressed(InputManager.config.get("P" + id + "_FIRE"))) {
 				
 				if ( !disparado_antiRebote )
 					iniciarDisparo();

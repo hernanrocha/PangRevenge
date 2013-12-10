@@ -4,6 +4,7 @@ import game.ball.Ball;
 import game.Screen;
 import engine.Json;
 import openfl.Assets;
+import scenes.GameScene;
 
 class LevelLoader
 {
@@ -45,12 +46,16 @@ class LevelLoader
 			this.level = season.lvls[year];
 	}
 	
+	public function setBackground() {
+		GameScene.screen.setBackground("images/fondos/" + season.background );
+	}
+	
 	private function spawnBalls(ballsArray:Array<Dynamic>) {
 		for ( ball in ballsArray)
 			spawnBall(ball);
 	}
 	private function spawnBall(ball:Dynamic) {
-		var b = Ball.getBall( Screen.getInstance(), ball.size );
+		var b = Ball.getBall( ball.size );
 		var x0:Float = ball.spawn.x * Screen.SCREEN_WIDTH;
 		var y0:Float = ball.spawn.y * Screen.SCREEN_HEIGHT;
 		if ( ball.spawn.inv == "true" ) x0 -= b.getWidth();
@@ -58,6 +63,6 @@ class LevelLoader
 		b.spawnPolares(x0,y0,ball.spawn.angulo,ball.spawn.radio);
 		
 		//b.setPowerUp(PowerUp.get(PowerUp.POWERUP_SH));		
-		screen.agregarPelota(b);
+		GameScene.screen.agregarPelota(b);
 	}	
 }

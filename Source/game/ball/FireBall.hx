@@ -5,6 +5,7 @@ import flash.display.Bitmap;
 import openfl.Assets;
 import engine.InputManager;
 import flash.display.BitmapData;
+import scenes.GameScene;
 
 /**
  * ...
@@ -16,9 +17,9 @@ class FireBall extends Ball {
 	private static var fireballs:Map < Int, Array<FireBall> > = new Map < Int, Array<FireBall> > ();
 	private static var bitmapData:Map < Int, BitmapData > = new Map < Int, BitmapData > ();
 	
-	public function new(screen:Screen, tam:Int) 
+	public function new(tam:Int) 
 	{
-		super(screen, tam);
+		super(tam);
 		
 		// Cambiar gravedad
 		gravedad = 0;
@@ -44,9 +45,9 @@ class FireBall extends Ball {
 	override public function reventar() {
 		exploto = true;
 		ballSprite.visible = false;
-		screen.desactivarPelota(this);
+		GameScene.screen.desactivarPelota(this);
 		
-		//screen.eliminarPelota(this);
+		//GameScene.screen.eliminarPelota(this);
 		if (ballAnimation == null) {
 			ballAnimation = new Animation(Assets.getBitmapData("images/explosionfuego" + tam + ".png"), 1, 5);
 		}
@@ -59,14 +60,14 @@ class FireBall extends Ball {
 		
 		// Determinar si es necesario crear otras bolas
 		if (tam != Ball.TAM_4) {
-			var b1 = FireBall.getBall(screen, tam + 1);
+			var b1 = FireBall.getBall(tam + 1);
 			b1.spawn(x, y, -vx, -vy);
 			b1.setPowerUp(powerup);			
-			screen.agregarPelota(b1);
+			GameScene.screen.agregarPelota(b1);
 			
-			var b2 = FireBall.getBall(screen, tam + 1);			
+			var b2 = FireBall.getBall(tam + 1);			
 			b2.spawn(x, y, vx, -vy);
-			screen.agregarPelota(b2);
+			GameScene.screen.agregarPelota(b2);
 			
 		}else {
 			if (powerup != null) {
@@ -86,12 +87,12 @@ class FireBall extends Ball {
 		}
 	}
 	
-	public static function getBall(screen:Screen, tam:Int):FireBall {
+	public static function getBall(tam:Int):FireBall {
 		if (fireballs.exists(tam) && fireballs.get(tam).length > 0) {
 			var b =  fireballs.get(tam).pop();
 			return b;
 		}else {
-			return new FireBall(screen, tam);
+			return new FireBall(tam);
 		}
 	}
 }

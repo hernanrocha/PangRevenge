@@ -44,7 +44,6 @@ class Hud extends GameElement
 	private var elementos2:Array<Bitmap>;
 	
 	private var cantJugadores:Int;
-	private var GameScene.screen:GameScene.screeneen;
 	
 	public function new(w:Int,h:Int,x:Float,y:Float) 
 	{

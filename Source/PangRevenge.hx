@@ -11,6 +11,7 @@ import scenes.GameScene;
 import scenes.HelpScene;
 import scenes.LevelSelect;
 import scenes.SeasonScene;
+import scenes.WinScene;
 
 import flash.display.Sprite;
 import flash.Lib;
@@ -60,7 +61,7 @@ class PangRevenge extends Sprite {
 		sm.switchScene('menu');
 		this.addChild(sm);
 		
-		this.inputManager.suscribe(stage);
+		inputManager.suscribe(stage);
 		stage.addEventListener(flash.events.Event.ENTER_FRAME,gameLoop);
 		stage.addEventListener(flash.events.Event.RESIZE,onResize);
 		

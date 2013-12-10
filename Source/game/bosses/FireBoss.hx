@@ -93,24 +93,22 @@ class FireBoss extends Boss
 		}
 	}
 	
-	override public function disparar(time:Float)
-		
-	{
+	override public function disparar(time:Float){
 		timerchico += time ;
 		timergrande += time;
 		if (timerchico >=TIEMPO_B_CHICA) {
-			var b1 = FireBall.getBall(screen, Ball.TAM_4);
+			var b1 = FireBall.getBall(Ball.TAM_4);
 			b1.spawn(x, y, 3, 3);
 			screen.agregarPelota(b1);
 			
-			var b2 = FireBall.getBall(screen, Ball.TAM_4);
+			var b2 = FireBall.getBall(Ball.TAM_4);
 			b2.spawn(x, y, -3, 3);
 			screen.agregarPelota(b2);
 			
 			timerchico = 0;
 			}
 		if (timergrande >= TIEMPO_B_GRANDE) {
-			var b2 = FireBall.getBall(screen, Ball.TAM_2);
+			var b2 = FireBall.getBall(Ball.TAM_2);
 			b2.spawn(x, y, -2, 2);
 			screen.agregarPelota(b2);
 			timergrande = 0;

@@ -82,12 +82,12 @@ class GameOverScene extends Scene
 	}
 	
 	public function goBack(ev:Event) {
-		AudioManager.getInstance().justPlay(Sonido.VOLVER);
+		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('menu');
 	}
 	
 	public function goSelect(ev:Event) {
-		AudioManager.getInstance().justPlay(Sonido.VOLVER);
+		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('levelselect');
 	}
 	

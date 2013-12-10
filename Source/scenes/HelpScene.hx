@@ -66,7 +66,7 @@ class HelpScene extends Scene
 	}
 	
 	override public function init() {
-		AudioManager.getInstance().setSound(Sonido.HELP,true);
+		PangRevenge.audioManager.setSound(Sonido.HELP,true);
 		alpha = 0;
 		Actuate.tween(this, 1, { alpha:1 } );
 		}
@@ -77,7 +77,7 @@ class HelpScene extends Scene
 	}
 	
 	public function volver(ev:Event) {
-		AudioManager.getInstance().justPlay(Sonido.VOLVER);
+		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('menu'); 
 	}
 }

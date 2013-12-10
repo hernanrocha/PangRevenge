@@ -163,7 +163,7 @@ class PowerUp extends GameElement
 		this.despawn();
 		
 		//SONIDO
-		AudioManager.getInstance().justPlay(Sonido.POWERUP);
+		PangRevenge.audioManager.justPlay(Sonido.POWERUP);
 	}
 	
 }

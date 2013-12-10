@@ -99,17 +99,17 @@ class Screen extends GameElement
 	private function initFonts() {
 		var font = openfl.Assets.getFont('fonts/JOINTBYPIZZADUDE.ttf').fontName;
 		
-		text_format_subtitle = new TextFormat(font);
+		var text_format_subtitle:TextFormat = new TextFormat(font);
 		text_format_subtitle.size = 40*0.8;
 		text_format_subtitle.color = 0x000000;
 		text_format_subtitle.bold = true;
 		
-		var text_subtitle=new TextField();
+		text_subtitle=new TextField();
 		text_subtitle.selectable=false;
 		text_subtitle.height=40;
 		text_subtitle.setTextFormat(text_format_subtitle);
 		
-		text_format_message = new TextFormat(font);
+		var text_format_message:TextFormat = new TextFormat(font);
 		text_format_message.size = 100*0.8;
 		text_format_message.color = 0x000000;
 		
@@ -118,7 +118,7 @@ class Screen extends GameElement
 		text_message.height = 100;
 		text_message.setTextFormat(text_format_message);
 		
-		text_format_success = new TextFormat(font);
+		var text_format_success:TextFormat = new TextFormat(font);
 		text_format_success.size = 100*0.8;
 		text_format_success.color = 0x00FF00;
 		
@@ -140,10 +140,10 @@ class Screen extends GameElement
 		jugadores = new Array<Player>();
 		
 		// Agregar jugador 1
-		p1 = new Player(this, game.hud, 1);
+		p1 = new Player(this, GameScene.hud, 1);
 		
 		// Agregar jugador 2
-		p2 = new Player(this, game.hud, 2);	
+		p2 = new Player(this, GameScene.hud, 2);	
 		
 		restablecerPosiciones();
 	}
@@ -239,25 +239,30 @@ class Screen extends GameElement
 	public function showLevelName(str:Int , subtitle:String) {
 		// Setear texto
 		text_message.text = "Nivel " + str;		
-		text.alpha = 0;
-		textAdjustPos(TEXT);
+		text_message.alpha = 0;
+		textAdjustPos(text_message);
 		
-		addChild(text);		
-		Actuate.tween(text, 1, { alpha: 1 } ).delay(1).onComplete(function() {
+		addChild(text_message);		
+		Actuate.tween(text_message, 1, { alpha: 1 } ).delay(1).onComplete(function() {
 			showSubtitle(subtitle);
-			Actuate.tween(text, 1, { alpha: 0 } ).delay(3).onComplete(startLevel);
+			Actuate.tween(text_message, 1, { alpha: 0 } ).delay(3).onComplete(function() {
+				removeChild(text_message);
+				startLevel();
+			});
 		});
 	}
 		
-	public function showSubtitle(msj:String, time:Float) {
+	public function showSubtitle(msj:String) {
 		
 		text_subtitle.text = msj;
 		text_subtitle.alpha = 0;
 		textAdjustPos(text_subtitle);
 		
-		addChild(mensaje);
+		addChild(text_subtitle);
 		
-		Actuate.tween(mensaje, time, { alpha: 1 } ).onComplete(function() { mensaje.alpha = 0; removeChild(mensaje); } );
+		Actuate.tween(text_subtitle, 1, { alpha: 1 } ).onComplete(function() {
+			text_subtitle.alpha = 0; removeChild(text_subtitle); 
+		} );
 	}
 		
 	public function startLevel() {
@@ -265,11 +270,11 @@ class Screen extends GameElement
 	}
 	
 	public function showScore() {
-		text.alpha = 0;
+		text_success.alpha = 0;
 		
-		addChild(text);
-		Actuate.tween(text, 1, { alpha: 1 } ).delay(0).onComplete(function() {
-			Actuate.tween(text, 1, { alpha: 0 } ).delay(1).onComplete(game.loadLevel);
+		addChild(text_success);
+		Actuate.tween(text_success, 1, { alpha: 1 } ).delay(0).onComplete(function() {
+			Actuate.tween(text_success, 1, { alpha: 0 } ).delay(1).onComplete(game.loadLevel);
 		});
 	}
 	
@@ -296,11 +301,11 @@ class Screen extends GameElement
 								soga.colision();
 								
 								// Reventar pelot
-								AudioManager.getInstance().justPlay(Sonido.EXPLO1);
+								PangRevenge.audioManager.justPlay(Sonido.EXPLO1);
 								b.reventar();
 								
 								// Sumar puntos
-								game.hud.addScore(j.id, 50);
+								GameScene.hud.addScore(j.id, 50);
 							}
 						}
 						
@@ -308,7 +313,7 @@ class Screen extends GameElement
 							colisiona = true;
 							soga.colision();
 							boss.getDamage();
-							game.hud.addScore(j.id, 50);
+							GameScene.hud.addScore(j.id, 50);
 						}
 					}
 				}
