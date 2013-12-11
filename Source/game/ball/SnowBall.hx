@@ -45,8 +45,6 @@ class SnowBall extends Ball {
 		ballAnimation.visible = true;
 		ballAnimation.activateAnimation();
 		
-		trace("SnowBall reventada");
-		
 		// Determinar si es necesario crear otras bolas
 		if (tam != Ball.TAM_4) {
 			var b1 = SnowBall.getBall(tam + 1);

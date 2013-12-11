@@ -102,10 +102,10 @@ class Ball extends GameElement
 	}
 
 	// Spawn con velocidad en coordenadas polares
-	public function spawnPolares(x0:Float, y0:Float, angulo:Float=270, radio:Float=0, mantener:Bool=true) {
-		vx = radio * Math.cos( angulo );
-		vy = radio * Math.sin( -angulo );
-		this.spawn(x0 ,y0 ,vx, vy, mantener);		
+	public function spawnPolares(x0:Float, y0:Float, angulo:Float = 270, radio:Float = 0, mantener:Bool = true) {
+		var vx:Float = radio * Math.cos( Math.PI / 180 * angulo );
+		var vy:Float = radio * Math.sin( - ( Math.PI / 180 * angulo ) );
+		this.spawn(x0 ,y0 ,vx, vy, mantener);
 	}
 	
 	public function initSprite() {
@@ -189,8 +189,9 @@ class Ball extends GameElement
 		if (ballAnimation == null) {
 			ballAnimation = new Animation(Assets.getBitmapData("images/explosion" + tam + ".png"), 1, 5);
 		}
+		
 		addChild(ballAnimation);
-		hijos.push(ballAnimation);
+		hijos.push(ballAnimation);		
 		ballAnimation.visible = true;
 		ballAnimation.activateAnimation();
 		

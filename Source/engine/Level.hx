@@ -19,10 +19,12 @@ class Level {
 	public function new() {}
 	
 	public function load() {
+		ballCount = 0;
 		// Load level
-		if ( ! lvl_boss )
+		if ( ! lvl_boss ){
 			GameScene.lvlLoader.loadLevel(this.level);
-		else
+			GameScene.hud.setEscena(level+1, season);
+		}else
 			boss = GameScene.lvlLoader.loadBossLevel();
 	}
 	
@@ -74,6 +76,13 @@ class Level {
 	
 	public function clear() {
 		// Resets leveler
+	}
+	
+	public function ballCounter(inc:Bool) {
+		if ( inc )
+			ballCount++;
+		else
+			ballCount--;
 	}
 	
 	public function killBoss () { 

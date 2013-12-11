@@ -1,6 +1,8 @@
 package engine;
 
 import game.ball.Ball;
+import game.ball.FireBall;
+import game.ball.SnowBall;
 import game.bosses.Boss;
 import game.bosses.FireBoss;
 import game.bosses.IceBoss;
@@ -23,7 +25,7 @@ class LevelLoader
 		season = year.spring;
 		level = season.lvls[0];
 		
-		trace(content);
+		//trace(content);
 	}
 	
 	// Setters
@@ -46,8 +48,6 @@ class LevelLoader
 	public function setLevel(lvl:Int) {
 		if ( lvl < season.lvls.length )
 			this.level = season.lvls[lvl];
-		trace("lvl seteado " + lvl);
-		trace(level);
 	}
 	
 	// Getters:
@@ -55,7 +55,7 @@ class LevelLoader
 		return season.lvls.length;
 	}
 	public function hasBoss():Bool {
-		return ( season.boss != "undefined" );
+		return ( season.boss != null );
 	}
 	public function getYears():Int {
 		return content.length;
@@ -69,14 +69,13 @@ class LevelLoader
 		//PangRevenge.audioManager.setSound(season.sound);
 	}
 	public function setBackground() {
-		//trace(season.background);
 		GameScene.screen.setBackground("images/fondos/" + season.background );
 	}
 	
 	// Levels
 	public function loadLevel(lvl:Int) {
 		GameScene.screen.ubicarPlayers(level.players);
-		GameScene.screen.showLevelName(lvl+1, level.msj);
+		GameScene.screen.showLevelName(lvl + 1, level.msj);
 		this.spawnBalls(level.bolas);
 	}	
 	private function spawnBalls(ballsArray:Array<Dynamic>) {
@@ -84,16 +83,20 @@ class LevelLoader
 			spawnBall(ball);
 	}
 	private function spawnBall(ball:Dynamic) {
-		var b = Ball.getBall( ball.size );
+		var b:Ball;		
+		switch(ball.tipo) {
+			default: b = Ball.getBall( ball.size );
+			case "fuego": b = FireBall.getBall( ball.size );
+			case "hielo": b = SnowBall.getBall( ball.size );
+		}
+		
 		var x0:Float = (ball.spawn.x/100) * Screen.SCREEN_WIDTH;
 		var y0:Float = (ball.spawn.y / 100) * Screen.SCREEN_HEIGHT;
 		if ( ball.spawn.inv == "true" ) x0 -= b.getWidth();
 		
 		b.spawnPolares(x0,y0,ball.spawn.angulo,ball.spawn.radio);
 		
-		trace(b);
-		
-		//b.setPowerUp(PowerUp.get(PowerUp.POWERUP_SH));		
+		//b.setPowerUp(PowerUp.get(PowerUp.POWERUP_SH));
 		GameScene.screen.agregarPelota(b);
 	}
 	
@@ -103,8 +106,7 @@ class LevelLoader
 		switch ( season.boss.id ) {
 			case 2: boss = new IceBoss(season.boss.name, season.boss.hits);
 			default: boss = new FireBoss(season.boss.name, season.boss.hits);
-		}
-		
+		}		
 		boss.init(250, false);
 		
 		return boss;

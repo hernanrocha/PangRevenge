@@ -25,7 +25,6 @@ class Screen extends GameElement
 	private var fondo:Bitmap;
 	
 	// Estado del juego
-	public var pelotasCantidad:Int;
 	public var enJuego:Bool;
 	
 	// Objetos en pantalla	
@@ -59,8 +58,8 @@ class Screen extends GameElement
 		addChild(fondo);
 		
 		// Jugador
-		for ( player in jugadores )
-			player.init();
+		for ( it in 0 ... GameScene.PLAYER_CANT )
+			jugadores[it].init();
 		
 		// PowerUp
 		loadPowerUps();
@@ -71,10 +70,8 @@ class Screen extends GameElement
 		removeChild(fondo);
 		
 		// Jugador
-		for ( player in jugadores )
-			player.end();
-		
-		// PowerUp (nada)
+		for ( it in 0 ... GameScene.PLAYER_CANT )
+			jugadores[it].end();
 	}
 	
 	private function initFonts() {
@@ -126,7 +123,6 @@ class Screen extends GameElement
 	}
 	
 	public function ubicarPlayers(distancia:Float = -1) { // No soporta más de 2 players
-		trace(distancia);
 		if ( distancia == -1 ) distancia = Player.POS_INICIAL;
 		
 		for ( player in jugadores ){
@@ -151,15 +147,15 @@ class Screen extends GameElement
 		hijos.push(b);
 		
 		// Sumar cantidad
-		pelotasCantidad++;
+		GameScene.level.ballCounter(true);
 	}	
 	public function desactivarPelota(b:Ball) {
 		pelotas.remove(b);
 	}	
 	public function eliminarPelota(b:Ball) {
 		removeChild(b);
-		hijos.remove(b);		
-		pelotasCantidad--;
+		hijos.remove(b);
+		GameScene.level.ballCounter(false); // Restar cantidad
 	}
 	
 	// Manejo de niveles
@@ -189,28 +185,29 @@ class Screen extends GameElement
 		
 		addChild(text_message);		
 		Actuate.tween(text_message, 1, { alpha: 1 } ).delay(1).onComplete(function() {
-			showSubtitle(subtitle);
-			Actuate.tween(text_message, 1, { alpha: 0 } ).delay(3).onComplete(function() {
-				removeChild(text_message);
-				startLevel();
+			showSubtitle(subtitle, function() {
+				Actuate.tween(text_subtitle, 1, { alpha: 0 } ).delay(3).onComplete(function() {
+					removeChild(text_subtitle);
+				});
+				Actuate.tween(text_message, 1, { alpha: 0 } ).delay(3).onComplete(function() {
+					removeChild(text_message);
+					startLevel();
+				});
 			});
 		});
 	}
 		
-	public function showSubtitle(msj:String) {
+	public function showSubtitle(msj:String , callback:Dynamic) {
 		
 		text_subtitle.text = msj;
 		text_subtitle.alpha = 0;
 		textAdjustPos(text_subtitle);
+		text_subtitle.y += 60;
 		
 		addChild(text_subtitle);
 		
-		Actuate.tween(text_subtitle, 1, { alpha: 1 } ).onComplete(function() {
-			text_subtitle.alpha = 0; removeChild(text_subtitle); 
-		} );
+		Actuate.tween(text_subtitle, 1, { alpha: 1 } ).onComplete(callback);
 	}
-		
-	
 	
 	public function showScore(callback:Dynamic) {
 		text_success.alpha = 0;
@@ -262,24 +259,22 @@ class Screen extends GameElement
 						}
 					}
 					// COLISION DE POWERUPS !!!
-					for (pu in powerups) {
-						if ( j.collisionTest(pu) ) {
+					for (pu in powerups)
+						if ( j.collisionTest(pu) )
 							pu.action(j);
-						}
-					}
 					
 					// Colision jugador - boss
-					if (boss != null && boss.colisionJugador(j)) {
+					if (boss != null && boss.colisionJugador(j))
 						j.colision(null);
-					}
 				}
 			}
 			
 			// Colisiones Jugador - Pelota
 			for (b in pelotas)
 				for (j in jugadores)
-					if (b.colisionJugador(j))
-						j.colision(b);
+					if ( j.alive )
+						if (b.colisionJugador(j))
+							j.colision(b);
 			
 		}
 	}

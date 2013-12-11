@@ -56,8 +56,6 @@ class FireBall extends Ball {
 		ballAnimation.visible = true;
 		ballAnimation.activateAnimation();
 		
-		trace("FireBall reventada");
-		
 		// Determinar si es necesario crear otras bolas
 		if (tam != Ball.TAM_4) {
 			var b1 = FireBall.getBall(tam + 1);

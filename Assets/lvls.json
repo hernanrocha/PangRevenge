@@ -11,20 +11,49 @@
 							"size":3,
 							"spawn":{
 								"x":0,
-								"y":0,
+								"y":25,
 								"angulo":0,
-								"radio":1
+								"radio":2
+							},
+							"powerup":{}
+						},
+						{ 
+							"tipo":"fuego",
+							"size":3,
+							"spawn":{
+								"x":100,
+								"y":25,
+								"angulo":180,
+								"radio":2,
+								"inv":"true"
+							},
+							"powerup":{}
+						},
+					],
+				},
+				{
+					"msj":"Segundo Nivel!",
+					"players":40,
+					"bolas":[
+						{ 
+							"tipo":"hielo",
+							"size":2,
+							"spawn":{
+								"x":0,
+								"y":25,
+								"angulo":-45,
+								"radio":2
 							},
 							"powerup":{}
 						},
 						{ 
 							"tipo":"normal",
-							"size":3,
+							"size":2,
 							"spawn":{
 								"x":100,
-								"y":0,
-								"angulo":180,
-								"radio":1,
+								"y":25,
+								"angulo":-135,
+								"radio":2,
 								"inv":"true"
 							},
 							"powerup":{}

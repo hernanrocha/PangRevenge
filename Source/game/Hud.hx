@@ -68,9 +68,9 @@ class Hud extends GameElement
 		this.graphics.endFill();
 		
 		//Text Format Score
-		var tf=new TextFormat(openfl.Assets.getFont('fonts/menu.ttf').fontName);
+		var tf=new TextFormat(openfl.Assets.getFont('fonts/ARCADE.TTF').fontName);
 		tf.size=50;
-		tf.color=0xBBBBBB;
+		tf.color=0xFFFFFF;
 		tf.bold=true;
 		tf.align=flash.text.TextFormatAlign.CENTER;
 		
@@ -82,7 +82,7 @@ class Hud extends GameElement
 		this.score1.height=50;
 		this.score1.text = "000000";
 		this.score1.x = 10;
-		this.score1.y = 3;
+		this.score1.y = 2;
 		this.score1.setTextFormat(tf);
 		this.addChild(score1);
 		
@@ -94,7 +94,7 @@ class Hud extends GameElement
 		this.score2.height=50;
 		this.score2.text = "000000";
 		this.score2.x = w - this.score2.width - 10;
-		this.score2.y = 3;
+		this.score2.y = 2;
 		this.score2.setTextFormat(tf);
 		this.addChild(score2);
 		
@@ -201,9 +201,9 @@ class Hud extends GameElement
 		//addScore(1, 123);
 		//addScore(2, 12548);
 		//addScore(1, 5);
-		setEscena(2, 4);
-		setVidas1(3);
-		setVidas2(3);
+		//setEscena(2, 4);
+		/*setVidas1(3);
+		setVidas2(3);*/
 		/*unsetElemento(ESCUDO, 1);
 		setElemento(DOBLE_TIRO, 1);
 		setElemento(GANCHO,1);*/
@@ -331,16 +331,15 @@ class Hud extends GameElement
 	
 	public function init() {	
 		//Cantidad de Jugadores
-		cantJugadores = GameScene.PLAYER_CANT;
-		trace ("cantidad de jugares macho ! " + cantJugadores);
+		//cantJugadores = GameScene.PLAYER_CANT;
 		
-		setVidas1(3);
-		setVidas2(3);
+		/*setVidas1(3);
+		setVidas2(3);*/
 		
-		for ( i in 0...3 ) {
+		/*for ( i in 0...3 ) {
 			unsetElemento(i, 1);
 			unsetElemento(i, 2);
-		}
+		}*/
 	}
 	
 }

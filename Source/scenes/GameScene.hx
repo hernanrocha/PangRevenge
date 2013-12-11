@@ -150,16 +150,16 @@ class GameScene extends Scene {
 		
 		screen.enJuego = false;
 		if ( ! level.nextLevel() ) {
+			if ( ! level.nextSeason() ) {
+				PangRevenge.sm.switchScene('wingame');
+				return;
+			}else {
+				GameScene.Session_season++;
+			}
 			PangRevenge.sm.switchScene('levelselect');
 			return;
-		}
-		
+		}		
 		level.load();
-	
-		// Cargar pelotas
-		//cargarPelotas(GameScene.CURRENT_LEVEL);
-		//screen.showLevelName("Nivel " + GameScene.CURRENT_LEVEL );
-		//screen.game.hud.setEscena(GameScene.CURRENT_SCENE, GameScene.CURRENT_LEVEL);
 	}
 	
 	public function finalizarNivel() {
@@ -178,8 +178,8 @@ class GameScene extends Scene {
 	
 	private function pasaNivel():Bool {
 		return (
-			(screen.pelotasCantidad == 0 && GameScene.CURRENT_LEVEL != bossLevel) || 
-			bossDead || 
+			( level.ballCount == 0 && !level.lvl_boss ) || 
+			(level.lvl_boss && level.boss_dead) || 
 			PangRevenge.inputManager.keyCodePressed(InputManager.config.get("DEBUG_END_LEVEL"))
 		);
 	}
@@ -205,9 +205,8 @@ class GameScene extends Scene {
 			super.updateLogic(time);
 			
 			// Detectar fin de nivel (No anima la ultima pelota)
-			if (pasaNivel()) {
+			if (pasaNivel())
 				finalizarNivel();
-			}
 		}       	
 	}
 	
