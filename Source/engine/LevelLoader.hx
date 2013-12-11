@@ -108,6 +108,8 @@ class LevelLoader
 			default: boss = new FireBoss(season.boss.name, season.boss.hits);
 		}		
 		boss.init(250, false);
+		GameScene.screen.setHudBoss(boss);
+		GameScene.screen.ubicarPlayers(season.boss.players);
 		GameScene.screen.showLevelName(0, season.boss.msj);
 		return boss;
 	}

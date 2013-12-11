@@ -2,7 +2,7 @@ package game.ball;
 
 import engine.GameElement;
 import engine.InputManager;
-import engine.Animation;
+import engine.graphics.Animation;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.geom.Rectangle;
@@ -195,7 +195,6 @@ class Ball extends GameElement
 		
 		// Determinar si es necesario crear otras bolas
 		if (tam != TAM_4 && dividir) {
-			//trace("Crear pelotas");
 			var b1 = Ball.getBall(tam + 1);
 			b1.spawn(x, y, Ball.VX, -2, false);
 			b1.setPowerUp(powerup);
@@ -206,9 +205,7 @@ class Ball extends GameElement
 			GameScene.screen.agregarPelota(b2);
 			
 		}else {
-			//trace("Verificar powerup");
 			if (powerup != null) {
-				//trace("Tirar powerup");
 				powerup.spawn(x, y);
 			}
 		}
@@ -244,7 +241,6 @@ class Ball extends GameElement
 			vy = -vyRebote;
 		}else if ( (y <= 0) && (vy < 0) ){
 			//subiendo = false;
-			//trace("Comienza a caer de nuevo");
 			sy = y = 0;
 			vy = -vy;
 		}
@@ -268,6 +264,7 @@ class Ball extends GameElement
 			trace(getCentroX());
 			trace(p.getCentroX());
 		}
+		
 		if ( ( (getCentroX() - p.getCentroX()) * (getCentroX() - p.getCentroX()) + (getCentroY() - p.getCentroY()) * (getCentroY() - p.getCentroY()) ) < ( (radio + p.radio) * (radio + p.radio)) ) {
 			return true;
 		}

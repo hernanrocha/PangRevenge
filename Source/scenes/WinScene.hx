@@ -2,20 +2,16 @@ package scenes;
 
 import engine.Scene;
 import engine.SceneManager;
-import flash.events.Event;
-import motion.Actuate;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import engine.Button;
-import flash.events.Event;
-
 import engine.AudioManager;
 import engine.Sonido;
+import engine.graphics.Button;
+import flash.events.Event;
+import flash.text.TextField;
+import flash.text.TextFormat;
+import flash.events.Event;
+import motion.Actuate;
 
-/**
- * ...
- * @author CAIMMI, Brian
- */
+
 class WinScene extends Scene
 {
 	

@@ -1,4 +1,4 @@
-package engine;
+package engine.graphics;
 
 import flash.display.Sprite;
 import flash.events.MouseEvent;
@@ -27,23 +27,23 @@ class Button extends Sprite{
 		boton.addEventListener(MouseEvent.CLICK, onClick);	*/
 		
 		this.graphics.beginFill(0xCCFF00);
-		this.graphics.drawRect(0,0,300,46);
+		this.graphics.drawRect(0,0,80,30);
 		this.graphics.endFill();
 		this.addEventListener(flash.events.MouseEvent.CLICK,onClick);
 
 		this.text=new TextField();
 		var tf=new TextFormat(openfl.Assets.getFont('fonts/menu.ttf').fontName);
-		tf.size= 40;
+		tf.size= 30;
 		tf.color=0x000000;
 		tf.bold = true;
 		tf.align=flash.text.TextFormatAlign.CENTER;
-		this.text.width=300;
-		this.text.selectable=false;
-		this.text.height=40;
-		this.text.text="Menu Principal";
+		this.text.width = 80;
+		this.text.height = 30;
+		this.text.selectable = false;
+		this.text.text="Volver";
 		this.text.setTextFormat(tf);
 		this.addChild(text);
-		this.text.y=3;
+		this.text.y=0;
 	
 		
 	}		

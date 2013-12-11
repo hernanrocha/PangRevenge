@@ -2,7 +2,9 @@ package scenes;
 
 import engine.Scene;
 import engine.SceneManager;
-import engine.BallButton;
+import engine.AudioManager;
+import engine.Sonido;
+import engine.graphics.BallButton;
 import flash.display.Bitmap;
 import flash.events.Event;
 import motion.Actuate;
@@ -12,8 +14,6 @@ import motion.MotionPath;
 import openfl.Assets;
 import motion.easing.*;
 
-import engine.AudioManager;
-import engine.Sonido;
 
 class MenuScene extends Scene {
 

@@ -21,7 +21,8 @@ class Level {
 	public function load() {
 		ballCount = 0;
 		// Load level
-		if ( ! lvl_boss ){
+		if ( ! lvl_boss ) {
+			boss_dead = false;
 			GameScene.lvlLoader.loadLevel(this.level);
 			GameScene.hud.setEscena(level+1, season);
 		}else {

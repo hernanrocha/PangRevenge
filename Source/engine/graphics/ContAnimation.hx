@@ -1,5 +1,6 @@
-package engine;
+package engine.graphics;
 
+import engine.GameElement;
 import flash.display.Sprite;
 import flash.display.BitmapData;
 import openfl.display.Tilesheet;

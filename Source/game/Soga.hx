@@ -1,5 +1,5 @@
 package game;
-import engine.ContAnimation;
+import engine.graphics.ContAnimation;
 import engine.GameElement;
 import engine.InputManager;
 import flash.display.Bitmap;

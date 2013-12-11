@@ -5,7 +5,7 @@ import game.Screen;
 import motion.easing.Bounce;
 import scenes.GameScene;
 import engine.InputManager;
-import engine.Animation;
+import engine.graphics.Animation;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.geom.Rectangle;
@@ -121,6 +121,8 @@ class FireBoss extends Boss
 			Actuate.timer(0.1).onComplete(function(){spriteRight.visible = true;
 			spritedamage_r.visible = false; } );
 		}
+		
+		super.getDamage();
 		
 		if (health == 0)
 			die();

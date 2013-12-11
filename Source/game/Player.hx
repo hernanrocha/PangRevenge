@@ -1,20 +1,17 @@
 package game;
-import engine.ContAnimation;
+
 import engine.GameElement;
+import engine.InputManager;
+import engine.AudioManager;
+import engine.Sonido;
+import engine.graphics.ContAnimation;
 import flash.display.Bitmap;
 import flash.geom.Rectangle;
 import game.ball.Ball;
 import motion.Actuate;
 import openfl.Assets;
-import engine.InputManager;
-import engine.AudioManager;
-import engine.Sonido;
 import scenes.GameScene;
 
-/**
- * ...
- * @author ...
- */
 class Player extends GameElement
 {
 	// Constantes

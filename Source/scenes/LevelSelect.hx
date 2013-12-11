@@ -1,14 +1,14 @@
 package scenes;
 import engine.SceneManager;
-import flash.events.Event;
-import game.Screen;
-import openfl.Assets;
-import engine.LevelButton;
-import engine.Scene;
-import motion.Actuate;
-import engine.Button;
 import engine.AudioManager;
 import engine.Sonido;
+import engine.Scene;
+import engine.graphics.Button;
+import engine.graphics.LevelButton;
+import flash.events.Event;
+import openfl.Assets;
+import motion.Actuate;
+import game.Screen;
 
 
 class LevelSelect extends Scene
@@ -47,7 +47,7 @@ class LevelSelect extends Scene
 		
 		// Agregar boton de Regresar
 		var backButton:Button=new Button(goBack);
-		backButton.x=500;
+		backButton.x=700;
 		backButton.y=20;
 		this.addChild(backButton);
 	}

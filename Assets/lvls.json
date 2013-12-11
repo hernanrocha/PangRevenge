@@ -26,7 +26,8 @@
 				"name":"SummerBoss",
 				"msj":"Destruyelo y venceras!",
 				"id":1,
-				"hits":5
+				"hits":3,
+				"players":50,
 			},
 		},
 		"summer":{

@@ -5,11 +5,11 @@ import engine.LevelLoader;
 import engine.Scene;
 import engine.SceneManager;
 import engine.GameElement;
-import engine.Button;
 import engine.InputManager;
 import engine.AudioManager;
 import engine.Sonido;
 import engine.Save;
+import engine.graphics.Button;
 import game.bosses.Boss;
 import game.bosses.FireBoss;
 import game.Hud;
@@ -75,7 +75,7 @@ class GameScene extends Scene {
 		
 		// Boton de Regreso
 		backButton = new Button(this.goBack);
-		backButton.x=500;
+		backButton.x = 700;
 		backButton.y = 20;
 		
 		bordeIzq = new Sprite();
@@ -154,7 +154,7 @@ class GameScene extends Scene {
 				PangRevenge.sm.switchScene('wingame');
 				return;
 			}else {
-				GameScene.Session_season++;
+				GameScene.Session_season = level.season+1;
 			}
 			PangRevenge.sm.switchScene('levelselect');
 			return;

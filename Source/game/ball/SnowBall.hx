@@ -1,6 +1,6 @@
 package game.ball;
 
-import engine.Animation;
+import engine.graphics.Animation;
 import flash.display.Bitmap;
 import openfl.Assets;
 import engine.InputManager;

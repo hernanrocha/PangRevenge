@@ -19,8 +19,8 @@ class Boss extends GameElement {
 	
 	var radio:Float = 100;
 	
-	private var health:Int;
-	private var max_health:Int;
+	public var health(default, null):Int;
+	public var max_health(default, null):Int;
 	private var onScreen:Bool = false;
 	
 	public function new( name:String , hits:Int ) {
@@ -43,6 +43,7 @@ class Boss extends GameElement {
 	public function end() {
 		if ( !onScreen ) return;
 		
+		GameScene.screen.destroyHudBoss();
 		GameScene.screen.removeChild(this);
 		GameScene.screen.hijos.remove(this);
 		onScreen = false;
@@ -71,11 +72,12 @@ class Boss extends GameElement {
 		
 	public function disparar(time:Float) {}
 		
-	public function getDamage() {}
+	public function getDamage() {
+		GameScene.screen.updateHudBoss();
+	}
 		
 	public function die() {
-		trace("Explotar pelotas");
-		GameScene.screen.ballsEsplode();
+		GameScene.screen.ballsExplode();
 	}
 	
 	override function updateLogic(time:Float){

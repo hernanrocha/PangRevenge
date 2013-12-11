@@ -1,15 +1,16 @@
 package scenes;
-import engine.Button;
+
 import engine.SceneManager;
+import engine.Scene;
+import engine.AudioManager;
+import engine.Sonido;
+import engine.graphics.Button;
 import flash.display.Bitmap;
 import flash.events.Event;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import motion.Actuate;
 import openfl.Assets;
-import engine.Scene;
-import engine.AudioManager;
-import engine.Sonido;
 
 
 /**

@@ -1,15 +1,12 @@
-package engine;
+package engine.graphics;
 
+import engine.GameElement;
 import flash.display.Sprite;
 import flash.display.BitmapData;
 import openfl.display.Tilesheet;
 import flash.geom.Rectangle;
 import flash.geom.Point;
 
-/**
- * ...
- * @author fbricker
- */
 class Animation extends GameElement {
 	var t:Tilesheet;
 	var totalTime:Float;

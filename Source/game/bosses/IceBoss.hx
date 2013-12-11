@@ -1,20 +1,17 @@
 package game.bosses;
-import engine.Animation;
-import engine.ContAnimation;
-import flash.display.Bitmap;
+
+import engine.graphics.Animation;
+import engine.graphics.ContAnimation;
 import game.Screen;
+import game.ball.Ball;
+import game.ball.SnowBall;
 import scenes.GameScene;
 import openfl.Assets;
 import flash.geom.Rectangle;
-import game.ball.Ball;
+import flash.display.Bitmap;
 import motion.Actuate;
 import motion.easing.Bounce;
-import game.ball.SnowBall;
 
-/**
- * ...
- * @author ...
- */
 class IceBoss extends Boss
 {
 	public static var TIMER_B :Int = 10;
@@ -31,8 +28,6 @@ class IceBoss extends Boss
 	public function new( name:String , hits:Int ){
 		super(name,hits);
 		
-		trace("Creando boss");
-		
 		bossAnimation = new ContAnimation(Assets.getBitmapData("images/boss2_anim.png"), 1, 5);
 		this.addChild(bossAnimation);
 		bossAnimation.visible = true;
@@ -45,9 +40,7 @@ class IceBoss extends Boss
 		dmg.visible = false;
 		this.addChild(dmg);
 		dmg.x = 0;
-		dmg.y = 0;
-		
-		
+		dmg.y = 0;		
 	}
 	
 	override public function initConfig(x0, dirIzquierda:Bool, y0:Float = -1.0)
@@ -159,6 +152,8 @@ class IceBoss extends Boss
 		
 		dmg.visible = true;
 		Actuate.timer(0.2).onComplete(function() { dmg.visible = false; } );
+		
+		super.getDamage();
 		
 		if (health == 0)
 			die();

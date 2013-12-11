@@ -1,4 +1,4 @@
-package engine;
+package engine.graphics;
 
 import flash.display.Sprite;
 import flash.events.MouseEvent;

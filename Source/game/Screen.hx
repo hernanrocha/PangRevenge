@@ -1,19 +1,19 @@
 package game;
 
-import engine.Button;
 import engine.GameElement;
+import engine.graphics.Button;
+import engine.InputManager;
+import engine.AudioManager;
+import engine.Sonido;
 import flash.display.Bitmap;
 import flash.display.Sprite;
 import flash.text.TextField;
 import flash.text.TextFormat;
-import game.bosses.Boss;
 import openfl.Assets;
+import game.bosses.Boss;
+import game.ball.*;
 import motion.Actuate;
 import scenes.GameScene;
-import engine.InputManager;
-import game.ball.*;
-import engine.AudioManager;
-import engine.Sonido;
 
 class Screen extends GameElement
 {	
@@ -38,6 +38,11 @@ class Screen extends GameElement
 	private var text_subtitle:TextField;
 	private var text_message:TextField;
 	private var text_success:TextField;
+	
+	// Boss life
+	private var boss_life_back:Bitmap = null;
+	private var boss_life_front:Bitmap = null;
+	private var boss_name:TextField;
 
 	public function new(x:Float,y:Float){
 		super();
@@ -53,25 +58,20 @@ class Screen extends GameElement
 	}
 	
 	public function init() {
-		// Fondo
-		addChild(fondo);
+		addChild(fondo); // Fondo
 		
-		// Jugador
-		for ( it in 0 ... GameScene.PLAYER_CANT )
+		for ( it in 0 ... GameScene.PLAYER_CANT ) // Jugador
 			jugadores[it].init();
 		
-		// PowerUp
-		loadPowerUps();
+		loadPowerUps(); // PowerUp
 	}
 	
 	public function end() {
-		// Fondo
-		removeChild(fondo);
+		removeChild(fondo);// Fondo
 		
 		resetLevel();
 		
-		// Jugador
-		for ( it in 0 ... GameScene.PLAYER_CANT )
+		for ( it in 0 ... GameScene.PLAYER_CANT )// Jugador
 			jugadores[it].end();
 			
 		if ( GameScene.level.lvl_boss ) GameScene.level.boss.end();
@@ -160,32 +160,28 @@ class Screen extends GameElement
 		hijos.remove(b);
 		GameScene.level.ballCounter(false); // Restar cantidad
 	}
-	public function ballsEsplode() {
+	public function ballsExplode() {
+		// Por bug extraño, este for no recorre todas las pelotas!! No sé qué onda!!!
 		for ( p in pelotas ) {
 			p.reventar(false);
 			desactivarPelota(p);			
 		}
-		for ( p in pelotas )
-			p.reventar(false);
-		// Por bug extraño, tengo que recorrer 2 veces o más! No sé qué onda!!!
 	}
 	
 	// Manejo de niveles
 	public function resetLevel() {
-		// Eliminar pelotas que quedan (no borra de pelotas)
-		for (p in pelotas){
+		for (p in pelotas){ // Eliminar pelotas que quedan (no borra de pelotas)
 			eliminarPelota(p);
 			desactivarPelota(p);
 		}
 		
-		// Reestablecer jugador y eliminar sogas
-		for (p in jugadores)
+		for (p in jugadores)// Reestablecer jugador y eliminar sogas
 			p.resetLevel();
 			
-		// Eliminar powerups
-		PowerUp.reset();
+		PowerUp.reset();// Eliminar powerups
 	}
 	
+	// Mensajes
 	private function textAdjustPos(text:TextField) {
 		text.x = (SCREEN_WIDTH - text.width) / 2;
 		text.y = (SCREEN_HEIGHT - text.height) / 2;
@@ -235,6 +231,7 @@ class Screen extends GameElement
 		});
 	}
 	
+	// Game Options
 	public function startLevel() {
 		enJuego = true;
 	}
@@ -298,5 +295,50 @@ class Screen extends GameElement
 	
 	public function gameOver() {		
 		PangRevenge.sm.switchScene('gameover');
+	}
+	
+	// Bos HUD
+	// Boss
+	public function setHudBoss(boss:Boss) {
+		// Create life bar.
+		if ( boss_life_back == null ) {
+			boss_life_back = new Bitmap ( Assets.getBitmapData("images/hud_boss_life_back.png") );
+			boss_life_front = new Bitmap ( Assets.getBitmapData("images/hud_boss_life_front.png") );
+			boss_life_back.y = boss_life_front.y = 25;
+			boss_life_back.x = boss_life_front.x = ( ( Screen.SCREEN_WIDTH - boss_life_back.width ) / 2);
+					
+			//Formato Jefe
+			var tfB=new TextFormat(openfl.Assets.getFont('fonts/ARCADE.TTF').fontName);
+			tfB.size=40;
+			tfB.color=0xd300b6;
+			tfB.bold=true;
+			tfB.align = flash.text.TextFormatAlign.CENTER;
+			
+			//Jug1
+			boss_name = new TextField();
+			boss_name.width=550;
+			boss_name.selectable=false;
+			boss_name.height = 10;
+			boss_name.x = ( ( Screen.SCREEN_WIDTH - boss_name.width ) / 2);
+			boss_name.y = -10;
+			boss_name.setTextFormat(tfB);
+		
+		}
+		boss_name.text = boss.nombre;
+		boss_name.x = ( ( Screen.SCREEN_WIDTH - boss_name.width ) / 2);
+		boss_life_front.width = boss_life_back.width;
+		
+		addChild(boss_name);
+		addChild(boss_life_back);
+		addChild(boss_life_front);
+	}
+	public function updateHudBoss() {
+		var porc:Float = GameScene.level.boss.health / GameScene.level.boss.max_health;
+		boss_life_front.width = boss_life_back.width * porc;
+	}
+	public function destroyHudBoss() {
+		removeChild(boss_name);
+		removeChild(boss_life_back);
+		removeChild(boss_life_front);		
 	}
 }
