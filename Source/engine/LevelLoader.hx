@@ -75,8 +75,8 @@ class LevelLoader
 	// Levels
 	public function loadLevel(lvl:Int) {
 		GameScene.screen.ubicarPlayers(level.players);
-		GameScene.screen.showLevelName(lvl + 1, level.msj);
 		this.spawnBalls(level.bolas);
+		GameScene.screen.showLevelName(lvl + 1, level.msj);
 	}	
 	private function spawnBalls(ballsArray:Array<Dynamic>) {
 		for ( ball in ballsArray)
@@ -108,7 +108,7 @@ class LevelLoader
 			default: boss = new FireBoss(season.boss.name, season.boss.hits);
 		}		
 		boss.init(250, false);
-		
+		GameScene.screen.showLevelName(0, season.boss.msj);
 		return boss;
 	}
 }

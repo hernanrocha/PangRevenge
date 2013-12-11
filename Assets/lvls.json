@@ -17,52 +17,17 @@
 							},
 							"powerup":{}
 						},
-						{ 
-							"tipo":"fuego",
-							"size":3,
-							"spawn":{
-								"x":100,
-								"y":25,
-								"angulo":180,
-								"radio":2,
-								"inv":"true"
-							},
-							"powerup":{}
-						},
-					],
-				},
-				{
-					"msj":"Segundo Nivel!",
-					"players":40,
-					"bolas":[
-						{ 
-							"tipo":"hielo",
-							"size":2,
-							"spawn":{
-								"x":0,
-								"y":25,
-								"angulo":-45,
-								"radio":2
-							},
-							"powerup":{}
-						},
-						{ 
-							"tipo":"normal",
-							"size":2,
-							"spawn":{
-								"x":100,
-								"y":25,
-								"angulo":-135,
-								"radio":2,
-								"inv":"true"
-							},
-							"powerup":{}
-						},
 					],
 				},
 			],
 			"background":"primavera.jpg",
 			"sound":"level1.mp3",
+			"boss":{
+				"name":"SummerBoss",
+				"msj":"Destruyelo y venceras!",
+				"id":1,
+				"hits":5
+			},
 		},
 		"summer":{
 			"lvls":[
@@ -89,6 +54,18 @@
 								"y":40,
 								"angulo":180,
 								"radio":1,
+								"inv":"true"
+							},
+							"powerup":{}
+						},
+						{ 
+							"tipo":"fuego",
+							"size":3,
+							"spawn":{
+								"x":100,
+								"y":25,
+								"angulo":-135,
+								"radio":4,
 								"inv":"true"
 							},
 							"powerup":{}

@@ -61,7 +61,7 @@ class FireBoss extends Boss
 	}
 	
 	override public function actualizarPosicion(incremento:Float) {
-		if (!died) {
+		if (!dead) {
 			// Actualizar posicion X
 			vx += ax * incremento;
 			sx += 0.5 * ax * incremento * incremento + vx * incremento;
@@ -84,7 +84,8 @@ class FireBoss extends Boss
 		}
 	}
 	
-	override public function disparar(time:Float){
+	override public function disparar(time:Float) {
+		if ( dead ) return;
 		timerchico += time ;
 		timergrande += time;
 		if (timerchico >=TIEMPO_B_CHICA) {
@@ -126,6 +127,9 @@ class FireBoss extends Boss
 	}
 	
 	override public function die() {
+		this.dead = true;
+		super.die();
+		
 		//explosiones
 		BossExplode1 = new Animation(Assets.getBitmapData("images/boss_explosion.png"), 5, 5);
 		BossExplode1.visible = true;
@@ -151,7 +155,7 @@ class FireBoss extends Boss
 			BossExplode3.x = 100;
 			BossExplode3.y = 80;
 			BossExplode3.activateAnimation(); } );
-		this.died = true;
+		
 		Actuate.tween(this, 3, { alpha:0 } ).ease(Bounce.easeIn).onComplete(function() { 
 			GameScene.level.killBoss(); 
 			this.end();

@@ -31,12 +31,11 @@ class SnowBall extends Ball {
 		addChild(ballSprite);
 	}
 	
-	override public function reventar() {
+	override public function reventar(dividir:Bool = true) {		
 		exploto = true;
 		ballSprite.visible = false;
 		GameScene.screen.desactivarPelota(this);
 		
-		//GameScene.screen.eliminarPelota(this);
 		if (ballAnimation == null) {
 			ballAnimation = new Animation(Assets.getBitmapData("images/explosionnieve" + tam + ".png"), 1, 3);
 		}
@@ -46,7 +45,7 @@ class SnowBall extends Ball {
 		ballAnimation.activateAnimation();
 		
 		// Determinar si es necesario crear otras bolas
-		if (tam != Ball.TAM_4) {
+		if (tam != Ball.TAM_4 && dividir) {
 			var b1 = SnowBall.getBall(tam + 1);
 			b1.spawn(x, y, vx, vy);
 			b1.setPowerUp(powerup);			

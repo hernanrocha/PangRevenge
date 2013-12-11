@@ -11,7 +11,7 @@ class Boss extends GameElement {
 	
 	public var nombre(default, null):String;
 	
-	private var died:Bool;
+	private var dead:Bool;
 	private var ax:Float;
 	private var vx:Float;
 	private var sx:Float;
@@ -21,6 +21,7 @@ class Boss extends GameElement {
 	
 	private var health:Int;
 	private var max_health:Int;
+	private var onScreen:Bool = false;
 	
 	public function new( name:String , hits:Int ) {
 		super();
@@ -34,20 +35,23 @@ class Boss extends GameElement {
 		initConfig(p_x0, dirIzquierda, p_y);
 		
 		// Init logico y grafico
+		onScreen = true;
 		GameScene.screen.addChild(this);
 		GameScene.screen.hijos.push(this);
 	}
 	
 	public function end() {
-		// Init logico y grafico
+		if ( !onScreen ) return;
+		
 		GameScene.screen.removeChild(this);
 		GameScene.screen.hijos.remove(this);
+		onScreen = false;
 	}
 	
 	
 	public function initConfig(x0, dirIzquierda:Bool, y0:Float = -1.0)	{
 		
-		died = false;
+		dead = false;
 		// Datos en X
 		ax = 0;
 		vx = 3;
@@ -69,14 +73,20 @@ class Boss extends GameElement {
 		
 	public function getDamage() {}
 		
-	public function die() { }
-		
+	public function die() {
+		trace("Explotar pelotas");
+		GameScene.screen.ballsEsplode();
+	}
+	
 	override function updateLogic(time:Float){
 		super.updateLogic(time);
 		var incremento = time * 50;	
 		actualizarPosicion(incremento);		
-		disparar(time);
-		actualizarColision();
+		if ( !dead ) {
+			disparar(time);
+			actualizarColision();
+		}
+		
 	}
 	
 	public function colisionJugador(p:Player):Bool {

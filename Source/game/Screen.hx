@@ -31,7 +31,6 @@ class Screen extends GameElement
 	public var jugadores(default, null):Array<Player>;
 	
 	public var pelotas(default, null):Array<Ball>;
-	public var boss(default, null):Boss;
 	public var powerups(default, null):Array<PowerUp>;
 	
 	public var btnLevel:Button;
@@ -69,9 +68,13 @@ class Screen extends GameElement
 		// Fondo
 		removeChild(fondo);
 		
+		resetLevel();
+		
 		// Jugador
 		for ( it in 0 ... GameScene.PLAYER_CANT )
 			jugadores[it].end();
+			
+		if ( GameScene.level.lvl_boss ) GameScene.level.boss.end();
 	}
 	
 	private function initFonts() {
@@ -157,12 +160,23 @@ class Screen extends GameElement
 		hijos.remove(b);
 		GameScene.level.ballCounter(false); // Restar cantidad
 	}
+	public function ballsEsplode() {
+		for ( p in pelotas ) {
+			p.reventar(false);
+			desactivarPelota(p);			
+		}
+		for ( p in pelotas )
+			p.reventar(false);
+		// Por bug extraño, tengo que recorrer 2 veces o más! No sé qué onda!!!
+	}
 	
 	// Manejo de niveles
 	public function resetLevel() {
 		// Eliminar pelotas que quedan (no borra de pelotas)
-		for (p in pelotas)
+		for (p in pelotas){
 			eliminarPelota(p);
+			desactivarPelota(p);
+		}
 		
 		// Reestablecer jugador y eliminar sogas
 		for (p in jugadores)
@@ -179,7 +193,10 @@ class Screen extends GameElement
 	
 	public function showLevelName(str:Int , subtitle:String) {
 		// Setear texto
-		text_message.text = "Nivel " + str;		
+		if ( str != 0 )
+			text_message.text = "Nivel " + str;		
+		else
+			text_message.text = "Boss Fight!";
 		text_message.alpha = 0;
 		textAdjustPos(text_message);
 		
@@ -250,21 +267,21 @@ class Screen extends GameElement
 								}
 							}
 							
-							if (boss != null && !colisiona && soga.collisionBoss(boss)) {
+							if (GameScene.level.lvl_boss && !colisiona && soga.collisionBoss(GameScene.level.boss)) {
 								colisiona = true;
 								soga.colision();
-								boss.getDamage();
+								GameScene.level.boss.getDamage();
 								GameScene.hud.addScore(j.id, 50);
 							}
 						}
 					}
-					// COLISION DE POWERUPS !!!
+					// Colision de PowerUps
 					for (pu in powerups)
 						if ( j.collisionTest(pu) )
 							pu.action(j);
 					
 					// Colision jugador - boss
-					if (boss != null && boss.colisionJugador(j))
+					if (GameScene.level.lvl_boss && GameScene.level.boss.colisionJugador(j))
 						j.colision(null);
 				}
 			}

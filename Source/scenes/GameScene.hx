@@ -179,7 +179,7 @@ class GameScene extends Scene {
 	private function pasaNivel():Bool {
 		return (
 			( level.ballCount == 0 && !level.lvl_boss ) || 
-			(level.lvl_boss && level.boss_dead) || 
+			(level.lvl_boss && level.boss_dead ) || 
 			PangRevenge.inputManager.keyCodePressed(InputManager.config.get("DEBUG_END_LEVEL"))
 		);
 	}

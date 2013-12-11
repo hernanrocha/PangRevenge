@@ -304,10 +304,8 @@ class Player extends GameElement
 				b.reventar();
 		}else{
 			PangRevenge.audioManager.justPlay(Sonido.GOLPE);
-			trace("El personaje murio");
 			if (b != null)
-				b.reventar();
-			
+				b.reventar();			
 			actionDamage();
 		}		
 	}

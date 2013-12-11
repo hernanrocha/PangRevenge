@@ -11,8 +11,8 @@ class Level {
 	public var lvl_boss(default, null):Bool = false;
 	
 	// Variables
-	public var boss_dead(default, null):Bool = true;
-	private var boss:Boss;
+	public var boss_dead(default, null):Bool = false;
+	public var boss(default, null):Boss;
 	public var ballCount(default, null):Int = 0;
 	public var time(default, null):Float = 0;
 
@@ -24,8 +24,11 @@ class Level {
 		if ( ! lvl_boss ){
 			GameScene.lvlLoader.loadLevel(this.level);
 			GameScene.hud.setEscena(level+1, season);
-		}else
+		}else {
+			boss_dead = false;
 			boss = GameScene.lvlLoader.loadBossLevel();
+			GameScene.hud.setEscena(level+2, season);
+		}
 	}
 	
 	// Nexts:
@@ -34,7 +37,7 @@ class Level {
 		
 		if ( (level+1) < GameScene.lvlLoader.getLevels() ) { // Quedan más niveles
 			setLevel(level+1);
-		} else if ( GameScene.lvlLoader.hasBoss() ) // No quedan más niveles pero hay jefe
+		} else if ( GameScene.lvlLoader.hasBoss() && !boss_dead ) // No quedan más niveles pero hay jefe
 			lvl_boss = true;
 		else
 			return false;

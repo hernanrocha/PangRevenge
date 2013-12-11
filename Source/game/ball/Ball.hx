@@ -155,7 +155,6 @@ class Ball extends GameElement
 	}
 	
 	public function setPowerUp(pu:PowerUp) {
-		//trace("Set powerup");
 		powerup = pu;
 	}
 	
@@ -180,12 +179,11 @@ class Ball extends GameElement
 		}
 	}
 	
-	public function reventar() {
+	public function reventar(dividir:Bool = true) {
 		exploto = true;
 		ballSprite.visible = false;
 		GameScene.screen.desactivarPelota(this);
 		
-		//GameScene.screen.eliminarPelota(this);
 		if (ballAnimation == null) {
 			ballAnimation = new Animation(Assets.getBitmapData("images/explosion" + tam + ".png"), 1, 5);
 		}
@@ -196,7 +194,7 @@ class Ball extends GameElement
 		ballAnimation.activateAnimation();
 		
 		// Determinar si es necesario crear otras bolas
-		if (tam != TAM_4) {
+		if (tam != TAM_4 && dividir) {
 			//trace("Crear pelotas");
 			var b1 = Ball.getBall(tam + 1);
 			b1.spawn(x, y, Ball.VX, -2, false);

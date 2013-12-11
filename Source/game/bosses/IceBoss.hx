@@ -88,7 +88,7 @@ class IceBoss extends Boss
 		}
 		
 	override public function actualizarPosicion(incremento:Float)	{
-		if (!died){
+		if (!dead){
 			// Actualizar posicion X 
 			
 			// usar GameScene.scree.jugadores !!!
@@ -139,7 +139,8 @@ class IceBoss extends Boss
 		}
 		}
 		
-	override public function disparar(time:Float) { 
+	override public function disparar(time:Float) {
+		if ( dead ) return;
 		timer += time;
 		if (timer >= TIMER_B) {
 			var b1:Ball = SnowBall.getBall(Ball.TAM_3); 
@@ -163,8 +164,10 @@ class IceBoss extends Boss
 			die();
 	}
 		
-	override public function die() { 
-		died = true;
+	override public function die() {
+		dead = true;
+		super.die();
+		
 		var explosion1 = new Animation(Assets.getBitmapData("images/boss2_explode.png"), 5, 2);
 		explosion1.visible = true;
 		this.addChild(explosion1);
