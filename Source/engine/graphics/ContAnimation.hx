@@ -1,11 +1,9 @@
 package engine.graphics;
 
 import engine.GameElement;
-import flash.display.Sprite;
 import flash.display.BitmapData;
 import openfl.display.Tilesheet;
 import flash.geom.Rectangle;
-import flash.geom.Point;
 
 class ContAnimation extends GameElement {
 	var t:Tilesheet;

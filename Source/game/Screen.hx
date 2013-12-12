@@ -38,6 +38,7 @@ class Screen extends GameElement
 	private var text_subtitle:TextField;
 	private var text_message:TextField;
 	private var text_success:TextField;
+	private var message_board:Bitmap;
 	
 	// Boss life
 	private var boss_life_back:Bitmap = null;
@@ -81,23 +82,35 @@ class Screen extends GameElement
 		var font = openfl.Assets.getFont('fonts/JOINTBYPIZZADUDE.ttf').fontName;
 		
 		var text_format_subtitle:TextFormat = new TextFormat(font);
-		text_format_subtitle.size = 40*0.8;
-		text_format_subtitle.color = 0x000000;
+		text_format_subtitle.size = 30*0.8;
+		text_format_subtitle.color = 0x532b00;
 		text_format_subtitle.bold = true;
+		text_format_subtitle.align = flash.text.TextFormatAlign.CENTER;
+		
+		message_board = new Bitmap ( Assets.getBitmapData( "images/message_board.png" ));
+		message_board.y = 113;
+		message_board.x = 217;
 		
 		text_subtitle=new TextField();
-		text_subtitle.selectable=false;
-		text_subtitle.height=40;
+		text_subtitle.selectable = false;
+		text_subtitle.width = 290;
+		text_subtitle.height = 45;
 		text_subtitle.setTextFormat(text_format_subtitle);
+		text_subtitle.x = message_board.x + 25;
+		text_subtitle.y = message_board.y + 175;		
 		
 		var text_format_message:TextFormat = new TextFormat(font);
-		text_format_message.size = 100*0.8;
-		text_format_message.color = 0x000000;
+		text_format_message.size = 75*0.8;
+		text_format_message.color = 0xc99964;
+		text_format_message.align = flash.text.TextFormatAlign.CENTER;
 		
 		text_message=new TextField();
-		text_message.selectable=false;
-		text_message.height = 100;
+		text_message.selectable = false;
+		text_message.width = 235;
+		text_message.height = 75;
 		text_message.setTextFormat(text_format_message);
+		text_message.x = message_board.x + 50;
+		text_message.y = message_board.y + 37;
 		
 		var text_format_success:TextFormat = new TextFormat(font);
 		text_format_success.size = 100*0.8;
@@ -108,7 +121,10 @@ class Screen extends GameElement
 		text_success.height = 100;
 		text_success.setTextFormat(text_format_success);
 		text_success.text = "Nivel superado";
-		textAdjustPos(text_success);
+		
+		text_success.x = (SCREEN_WIDTH - text_success.width) / 2;
+		text_success.y = (SCREEN_HEIGHT - text_success.height) / 2;
+		
 	}
 
 	public function setBackground(img:String) {
@@ -182,26 +198,23 @@ class Screen extends GameElement
 	}
 	
 	// Mensajes
-	private function textAdjustPos(text:TextField) {
-		text.x = (SCREEN_WIDTH - text.width) / 2;
-		text.y = (SCREEN_HEIGHT - text.height) / 2;
-	}
-	
 	public function showLevelName(str:Int , subtitle:String) {
 		// Setear texto
 		if ( str != 0 )
 			text_message.text = "Nivel " + str;		
 		else
-			text_message.text = "Boss Fight!";
+			text_message.text = "Boss!";
 		text_message.alpha = 0;
-		textAdjustPos(text_message);
+		message_board.alpha = 0;
 		
-		addChild(text_message);		
+		addChild(message_board);
+		addChild(text_message);
+		
+		Actuate.tween(message_board, 1, { alpha: 1 } ).delay(1);
 		Actuate.tween(text_message, 1, { alpha: 1 } ).delay(1).onComplete(function() {
 			showSubtitle(subtitle, function() {
-				Actuate.tween(text_subtitle, 1, { alpha: 0 } ).delay(3).onComplete(function() {
-					removeChild(text_subtitle);
-				});
+				Actuate.tween(text_subtitle, 1, { alpha: 0 } ).delay(3).onComplete(function(){removeChild(text_subtitle);});
+				Actuate.tween(message_board, 1, { alpha: 0 } ).delay(3).onComplete(function(){removeChild(message_board);});
 				Actuate.tween(text_message, 1, { alpha: 0 } ).delay(3).onComplete(function() {
 					removeChild(text_message);
 					startLevel();
@@ -214,8 +227,6 @@ class Screen extends GameElement
 		
 		text_subtitle.text = msj;
 		text_subtitle.alpha = 0;
-		textAdjustPos(text_subtitle);
-		text_subtitle.y += 60;
 		
 		addChild(text_subtitle);
 		

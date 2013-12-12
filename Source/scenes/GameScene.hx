@@ -75,7 +75,7 @@ class GameScene extends Scene {
 		
 		// Boton de Regreso
 		backButton = new Button(this.goBack);
-		backButton.x = 700;
+		backButton.x = 20;
 		backButton.y = 20;
 		
 		bordeIzq = new Sprite();
@@ -151,10 +151,11 @@ class GameScene extends Scene {
 		screen.enJuego = false;
 		if ( ! level.nextLevel() ) {
 			if ( ! level.nextSeason() ) {
+				// Soporte para multiples años if ( ! level.nextYear() )
 				PangRevenge.sm.switchScene('wingame');
 				return;
-			}else {
-				GameScene.Session_season = level.season+1;
+			} else {
+				GameScene.Session_season = level.season;
 			}
 			PangRevenge.sm.switchScene('levelselect');
 			return;

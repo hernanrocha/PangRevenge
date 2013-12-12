@@ -1,32 +1,31 @@
 package engine.graphics;
 
+import engine.GameElement;
+import openfl.Assets;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
 import flash.display.Bitmap;
-import openfl.Assets;
 import flash.text.TextField;
 import flash.text.TextFormat;
 
 
-class Button extends Sprite{
+class Button extends GameElement{
 
-	//var boton:Bitmap;
+	var boton:Bitmap;
 	var text:TextField;
 	
 	public function new (onClick:Dynamic) {
 		super();
-		/*
-		boton = new Bitmap(Assets.getBitmapData("images/menu.png"));
+		
+		boton = new Bitmap(Assets.getBitmapData("images/back.png"));
 		boton.visible = true;
 		this.addChild(boton);
-		this.x = 640; 
-		this.y = 20;
-		this.width = 140;
-		this.height = 41;
+		this.width = 120;
+		this.height = 33;
 		this.visible = true;
-		boton.addEventListener(MouseEvent.CLICK, onClick);	*/
+		boton.addEventListener(MouseEvent.CLICK, onClick);
 		
-		this.graphics.beginFill(0xCCFF00);
+		/*this.graphics.beginFill(0xCCFF00);
 		this.graphics.drawRect(0,0,80,30);
 		this.graphics.endFill();
 		this.addEventListener(flash.events.MouseEvent.CLICK,onClick);
@@ -43,9 +42,7 @@ class Button extends Sprite{
 		this.text.text="Volver";
 		this.text.setTextFormat(tf);
 		this.addChild(text);
-		this.text.y=0;
-	
-		
+		this.text.y=0;*/		
 	}		
 
 }

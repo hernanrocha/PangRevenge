@@ -57,7 +57,7 @@ class PangRevenge extends Sprite {
 		sm.suscribeScene('gameover', new GameOverScene(sm));
 		sm.suscribeScene('winner', new WinScene(sm));
 		
-		sm.switchScene('menu');
+		sm.switchScene('levelselect');
 		this.addChild(sm);
 		
 		inputManager.suscribe(stage);

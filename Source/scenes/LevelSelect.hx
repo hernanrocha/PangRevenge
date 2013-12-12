@@ -1,41 +1,36 @@
 package scenes;
+
+import engine.graphics.DynamicButton;
 import engine.SceneManager;
 import engine.AudioManager;
 import engine.Sonido;
 import engine.Scene;
 import engine.graphics.Button;
-import engine.graphics.LevelButton;
 import flash.events.Event;
 import openfl.Assets;
 import motion.Actuate;
 import game.Screen;
 
-
 class LevelSelect extends Scene
 {
 
 	// Botones de Escena
-	var levelSpring:LevelButton;
-	var levelSummer:LevelButton;
-	var levelAutumn:LevelButton;
-	var levelWinter:LevelButton;
+	private var levelSpring:DynamicButton;
+	private var levelSummer:DynamicButton;
+	private var levelAutumn:DynamicButton;
+	private var levelWinter:DynamicButton;
 	
+	private var currentScene:Int;
+	private var xPos:Float;
 	
-	var currentScene:Int;
-	var xPos:Float;
-	
-	public function new(sm:SceneManager) 
-	{
+	public function new(sm:SceneManager){
 		super(sm);
 		
 		// Cargar botones
-		levelSpring = new LevelButton(Assets.getBitmapData("images/springMenu.png"), playSpring, true);
-		levelSummer = new LevelButton(Assets.getBitmapData("images/summerMenu.png"), playSummer);
-		levelAutumn = new LevelButton(Assets.getBitmapData("images/autumnMenu.png"), playAutumn);
-		levelWinter = new LevelButton(Assets.getBitmapData("images/winterMenu.png"), playWinter);
-		
-		levelSpring.width = levelSummer.width = levelAutumn.width = levelWinter.width = 200;
-		levelSpring.height = levelSummer.height = levelAutumn.height = levelWinter.height = 350;
+		levelSpring = new DynamicButton(Assets.getBitmapData("images/LevelSpring.jpg"), playSpring);
+		levelSummer = new DynamicButton(Assets.getBitmapData("images/LevelSummer.jpg"), playSummer);
+		levelAutumn = new DynamicButton(Assets.getBitmapData("images/LevelAutumn.jpg"), playAutumn);
+		levelWinter = new DynamicButton(Assets.getBitmapData("images/LevelWinter.jpg"), playWinter);
 		
 		// Agregar a pantalla
 		this.addChild(levelSpring);
@@ -47,7 +42,7 @@ class LevelSelect extends Scene
 		
 		// Agregar boton de Regresar
 		var backButton:Button=new Button(goBack);
-		backButton.x=700;
+		backButton.x=20;
 		backButton.y=20;
 		this.addChild(backButton);
 	}
@@ -55,6 +50,7 @@ class LevelSelect extends Scene
 	
 	public function playSpring(e:Event) {
 		GameScene.level.setSeason(1);
+		allPause(true);
 		Actuate.tween(levelSummer, 1, { alpha:0 } );
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -63,6 +59,7 @@ class LevelSelect extends Scene
 	
 	public function playSummer(e:Event) {
 		GameScene.level.setSeason(2);
+		allPause(true);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -71,6 +68,7 @@ class LevelSelect extends Scene
 	
 	public function playAutumn(e:Event) {
 		GameScene.level.setSeason(3);
+		allPause(true);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelSummer, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -79,6 +77,7 @@ class LevelSelect extends Scene
 	
 	public function playWinter(e:Event) {
 		GameScene.level.setSeason(4);
+		allPause(true);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelSummer, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.2);
@@ -89,47 +88,45 @@ class LevelSelect extends Scene
 		sm.switchScene('game');
 	}
 	
+	private function allPause(v:Bool) {
+		levelSpring.pause(v);
+		levelSummer.pause(v);
+		levelAutumn.pause(v);
+		levelWinter.pause(v);
+	}
+	
 	override public function init() {
 		super.init();
 		
 		// Mostrar escena
-		this.alpha = 0;		
+		this.alpha = 0;
 		Actuate.tween(this, 1, { alpha:1 } );
+		
+		allPause(false);
 		
 		// Desactivar todos los botones excepto el primero
 		levelSpring.alpha = levelSummer.alpha = levelAutumn.alpha = levelWinter.alpha = 1;
-		levelSpring.setEnabled(true);
-		levelSummer.setEnabled(false);
-		levelAutumn.setEnabled(false);
-		levelWinter.setEnabled(false);
+		
+		levelSpring.enable();
+		levelSummer.disable();
+		levelAutumn.disable();
+		levelWinter.disable();
 		
 		// Activar botones correspondientes
 		if (GameScene.Session_season > 1)
-			levelSummer.setEnabled(true);
+			levelSummer.enable();
 		if (GameScene.Session_season > 2)
-			levelAutumn.setEnabled(true);
+			levelAutumn.enable();
 		if (GameScene.Session_season > 3)
-			levelWinter.setEnabled(true);
+			levelWinter.enable();
+			
+		// Posicionar
+		levelSpring.y = levelSummer.y = levelAutumn.y = levelWinter.y = 60;
 		
-		// Mostrar Escena Primavera
-		levelSpring.x = -200;
-		levelSpring.y = 100;		
-		Actuate.tween(levelSpring, 2, { x:0, y:100 } );
-		
-		// Mostrar Escena Verano
-		levelSummer.x = 200;
-		levelSummer.y = -300;		
-		Actuate.tween(levelSummer, 2, { x:200, y:100 } ).delay(0.15);
-		
-		// Mostrar Escena Otonio
-		levelAutumn.x = 400;
-		levelAutumn.y = 650;		
-		Actuate.tween(levelAutumn, 2, { x:400, y:100 } ).delay(0.30);
-		
-		// Mostrar Escena Invierno
-		levelWinter.x = 850;
-		levelWinter.y = 100;
-		Actuate.tween(levelWinter, 2, { x:600, y:100 } ).delay(0.45);
+		levelSpring.x = 38;
+		levelSummer.x = levelSpring.x + levelSpring.w;
+		levelAutumn.x = levelSummer.x + levelSummer.w;
+		levelWinter.x = levelAutumn.x + levelAutumn.w;
 	}
 	
 	override public function end(onComplete:Dynamic) {
