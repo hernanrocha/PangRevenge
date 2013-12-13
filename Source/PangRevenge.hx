@@ -62,9 +62,9 @@ class PangRevenge extends Sprite {
 		
 		inputManager.suscribe(stage);
 		stage.addEventListener(flash.events.Event.ENTER_FRAME,gameLoop);
-		//stage.addEventListener(flash.events.Event.RESIZE,onResize);
+		stage.addEventListener(flash.events.Event.RESIZE,onResize);
 		
-		//onResize(null);
+		onResize(null);
 		
 		addBorders();
 	}
