@@ -22,9 +22,9 @@ class DynamicButton extends Sprite{
 	private static inline var ENABLED:Int = 1;
 	private static inline var MOUSEOVER:Int = 2;
 	
-	private var isEnabled:Bool;
 	private var paused:Bool = false;
 	
+	public var isEnabled(default, null):Bool;
 	public var w(default, null):Int;
 	public var h(default, null):Int;
 	
@@ -73,6 +73,7 @@ class DynamicButton extends Sprite{
 	public function pause(v:Bool) {
 		paused = v;
 		if ( paused ) {
+			useHandCursor = false;
 			if ( isEnabled )
 				draw(DynamicButton.ENABLED);
 			else
@@ -81,13 +82,17 @@ class DynamicButton extends Sprite{
 	}
 	
 	private function onMouseOver(e) {
-		if ( isEnabled && !paused )
+		if ( isEnabled && !paused ) {
+			useHandCursor = true;
 			draw(DynamicButton.MOUSEOVER);
+		}
 	}
 	
 	private function onMouseOut(e) {
-		if ( isEnabled && !paused )
+		if ( isEnabled && !paused ) {
+			useHandCursor = false;
 			draw(DynamicButton.ENABLED);
+		}
 	}
 	
 	

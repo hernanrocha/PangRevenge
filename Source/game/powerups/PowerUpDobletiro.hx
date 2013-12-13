@@ -1,6 +1,4 @@
 package game.powerups;
-import game.PowerUp;
-import game.Screen;
 
 /**
  * ...
@@ -9,8 +7,8 @@ import game.Screen;
 class PowerUpDobletiro extends PowerUp
 {
 
-	public function new(screen:Screen){
-		super(screen);
+	public function new(){
+		super();
 		cargarBitmap("doble_tiro_up");
 	}
 	

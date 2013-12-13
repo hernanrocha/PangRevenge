@@ -42,12 +42,6 @@ class HelpScene extends Scene
 		controls.y = 100;
 		this.addChild(controls);
 		
-		//VOLVER
-		boton = new Button(volver);
-		boton.x = 500;
-		boton.y = 20;
-		this.addChild(boton);
-		
 		//TEXTO
 		this.text=new TextField();
 		var tf=new TextFormat(openfl.Assets.getFont('fonts/menu.ttf').fontName);
@@ -64,6 +58,11 @@ class HelpScene extends Scene
 		this.text.y = 20;
 		this.addChild(text);
 		
+		//VOLVER
+		boton = new Button("images/back.png" , volver);
+		boton.x = 10;
+		boton.y = 10;
+		addChild(boton);		
 	}
 	
 	override public function init() {

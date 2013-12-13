@@ -6,6 +6,7 @@ import engine.graphics.Animation;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.geom.Rectangle;
+import game.powerups.PowerUp;
 import game.Screen;
 import openfl.Assets;
 import scenes.GameScene;
@@ -37,7 +38,7 @@ class Ball extends GameElement
 	var h:Float;
 	var vyRebote:Float;
 		
-	public var powerup:PowerUp = null;
+	private var powerups:Array<String> = null;
 	public var exploto:Bool;
 	private var mantener = false;
 	
@@ -63,8 +64,7 @@ class Ball extends GameElement
 	private static var balls:Map < Int, Array<Ball> > = new Map < Int, Array<Ball> > ();
 	private static var bitmapData:Map < Int, BitmapData > = new Map < Int, BitmapData > ();
 	
-	public function new(tam:Int) 
-	{
+	public function new(tam:Int){
 		super();
 		
 		// Configurar
@@ -81,7 +81,6 @@ class Ball extends GameElement
 		}
 		ballSprite.visible = true;		
 		exploto = false;
-		powerup = null;
 		this.mantener = mantener;
 				
 		// Datos en X
@@ -154,8 +153,9 @@ class Ball extends GameElement
 		}	
 	}
 	
-	public function setPowerUp(pu:PowerUp) {
-		powerup = pu;
+	public function setPowerUps(pwups:Array<String>) {
+		if ( pwups == null ) powerups = null;
+		else this.powerups = pwups.copy();
 	}
 	
 	public static function putBall(b:Ball) {
@@ -195,20 +195,45 @@ class Ball extends GameElement
 		
 		// Determinar si es necesario crear otras bolas
 		if (tam != TAM_4 && dividir) {
+			trace("Total de "+powerups.length+" powerups. Tam: "+(4 - tam));
+			
+			if ( powerups.length >= (4 - tam) ) {
+				GameScene.powerupManager.spawnPowerUp( powerups[0], x, y);	
+				powerups.remove(powerups[0]);
+			}
+			
+			var pu1:Array<String> = new Array<String>();
+			var pu2:Array<String> = new Array<String>();
+			
+			var cursor:Int = 1;
+			if ( powerups.length >= 2 ) {
+				for ( pu in powerups ) {
+					if ( cursor == 1 ) pu1.push(pu);
+					else pu2.push(pu);
+					cursor = -cursor;
+				}
+			} else {
+				if ( Math.random() < 0.5 )
+					pu1.push(powerups[0]);
+				else
+					pu2.push(powerups[0]);
+			}
+				
 			var b1 = Ball.getBall(tam + 1);
 			b1.spawn(x, y, Ball.VX, -2, false);
-			b1.setPowerUp(powerup);
-			
+			b1.setPowerUps(pu1);
 			GameScene.screen.agregarPelota(b1);
+			
 			var b2 = Ball.getBall(tam + 1);
 			b2.spawn(x, y, -Ball.VX, -2, false);
+			b2.setPowerUps(pu2);
 			GameScene.screen.agregarPelota(b2);
 			
 		}else {
-			if (powerup != null) {
-				powerup.spawn(x, y);
-			}
+			if ( powerups.length > 0 )
+				GameScene.powerupManager.spawnPowerUp( powerups[0], x, y); // Max 1 powerup.
 		}
+		powerups = null;
 	}
 	
 	public function actualizarPosicion(incremento:Float) {

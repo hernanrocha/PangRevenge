@@ -58,6 +58,9 @@ class Player extends GameElement
 	private var playerQuieto:Bitmap;
 	private var playerDisparo:Bitmap;
 	
+	public var w(default, null):Float;
+	public var h(default, null):Float;
+	
 	private var inmunidad:Int;
 	public static inline var TIEMPO_INMUNIDAD:Int = 200;
 	
@@ -74,6 +77,9 @@ class Player extends GameElement
 		playerQuieto = new Bitmap ( this.getPlayerAsset("") );
 		addChild(playerQuieto);
 		playerQuieto.visible = true;
+		
+		h = playerQuieto.height;
+		w = playerQuieto.width;
 		
 		playerDisparo = new Bitmap ( this.getPlayerAsset("disparo") );
 		addChild(playerDisparo);
@@ -129,9 +135,10 @@ class Player extends GameElement
 		this.velocidad_saltoX = VX_SALTO_INICIAL;
 		this.velocidad_saltoY = VY_SALTO_INICIAL;
 		
-		this.resetSpeed();		
+		this.resetSpeed();
 		this.setWeapon(0);
 		this.setShield(false);
+		this.resetMunicion();
 		
 		this.lives = 3;
 		GameScene.hud.mostrarVidas(this);
@@ -146,7 +153,6 @@ class Player extends GameElement
 		this.pausa = 0;
 		
 		this.sogasUnset();
-		this.resetMunicion();
 		
 		this.aterrizar(); // Por si estaba en el aire
 		this.noAction(); // Por si se estaba moviendo
@@ -389,6 +395,8 @@ class Player extends GameElement
 
 	// PowerUp/Down Municion
 	public function incrementarMunicion(i:Int) {
+		trace("Incrementar municion. Municion_disp: " + municion_disp + ". Municion Max: "+municion_max);
+		
 		var r = municion_max + i;
 		if ( r > 2 || r < 1 ) return;
 		municion_max = r;
@@ -398,6 +406,8 @@ class Player extends GameElement
 			GameScene.hud.setElemento(Hud.DOBLE_TIRO , this.id);
 		else
 			GameScene.hud.unsetElemento(Hud.DOBLE_TIRO , this.id);
+			
+		trace("R: " + r);
 	}
 	// Reset
 	public function resetMunicion() {

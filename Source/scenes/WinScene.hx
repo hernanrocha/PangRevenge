@@ -42,9 +42,9 @@ class WinScene extends Scene
 		this.addChild(text);
 		
 		// Boton de Regreso
-		backButton = new Button(this.goBack);
-		backButton.x=500;
-		backButton.y = 20;
+		backButton = new Button("images/back.png" , this.goBack);
+		backButton.x = 10;
+		backButton.y = 10;
 		addChild(backButton);
 		
 	}

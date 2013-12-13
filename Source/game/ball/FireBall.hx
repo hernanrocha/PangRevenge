@@ -60,7 +60,7 @@ class FireBall extends Ball {
 		if (tam != Ball.TAM_4 && dividir) {
 			var b1 = FireBall.getBall(tam + 1);
 			b1.spawn(x, y, -vx, -vy);
-			b1.setPowerUp(powerup);			
+			//b1.setPowerUps(powerup);			
 			GameScene.screen.agregarPelota(b1);
 			
 			var b2 = FireBall.getBall(tam + 1);			
@@ -68,9 +68,9 @@ class FireBall extends Ball {
 			GameScene.screen.agregarPelota(b2);
 			
 		}else {
-			if (powerup != null) {
+			/*if (powerup != null) {
 				powerup.spawn(x, y);
-			}
+			}*/
 		}
 	}
 	

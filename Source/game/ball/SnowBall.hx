@@ -48,13 +48,13 @@ class SnowBall extends Ball {
 		if (tam != Ball.TAM_4 && dividir) {
 			var b1 = SnowBall.getBall(tam + 1);
 			b1.spawn(x, y, vx, vy);
-			b1.setPowerUp(powerup);			
+			//b1.setPowerUp(powerup);			
 			GameScene.screen.agregarPelota(b1);
 			
 		}else {
-			if (powerup != null) {
+			/*if (powerup != null) {
 				powerup.spawn(x, y);
-			}
+			}*/
 		}
 	}
 		

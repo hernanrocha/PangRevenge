@@ -41,9 +41,9 @@ class LevelSelect extends Scene
 		xPos = (Screen.SCREEN_WIDTH - 210 ) / 2;
 		
 		// Agregar boton de Regresar
-		var backButton:Button=new Button(goBack);
-		backButton.x=20;
-		backButton.y=20;
+		var backButton:Button = new Button("images/back.png", goBack, 2);
+		backButton.x=10;
+		backButton.y=10;
 		this.addChild(backButton);
 	}
 	
@@ -54,34 +54,37 @@ class LevelSelect extends Scene
 		Actuate.tween(levelSummer, 1, { alpha:0 } );
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
-		Actuate.tween(levelSpring, 2, { x:xPos, y:100 } ).delay(0.5).onComplete(playScene);
+		Actuate.tween(levelSpring, 2, { x:xPos } ).delay(0.5).onComplete(playScene);
 	}
 	
 	public function playSummer(e:Event) {
+		if ( ! levelSummer.isEnabled ) return;
 		GameScene.level.setSeason(2);
 		allPause(true);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
-		Actuate.tween(levelSummer, 2, { x:xPos, y:100 } ).delay(0.5).onComplete(playScene);
+		Actuate.tween(levelSummer, 2, { x:xPos } ).delay(0.5).onComplete(playScene);
 	}
 	
 	public function playAutumn(e:Event) {
+		if ( ! levelAutumn.isEnabled ) return;
 		GameScene.level.setSeason(3);
 		allPause(true);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelSummer, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
-		Actuate.tween(levelAutumn, 2, { x:xPos, y:100 } ).delay(0.5).onComplete(playScene);
+		Actuate.tween(levelAutumn, 2, { x:xPos } ).delay(0.5).onComplete(playScene);
 	}
 	
 	public function playWinter(e:Event) {
+		if ( ! levelWinter.isEnabled ) return;
 		GameScene.level.setSeason(4);
 		allPause(true);
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelSummer, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.2);
-		Actuate.tween(levelWinter, 2, { x:xPos, y:100 } ).delay(0.5).onComplete(playScene);
+		Actuate.tween(levelWinter, 2, { x:xPos} ).delay(0.5).onComplete(playScene);
 	}
 	
 	public function playScene() {
@@ -106,6 +109,7 @@ class LevelSelect extends Scene
 		
 		// Desactivar todos los botones excepto el primero
 		levelSpring.alpha = levelSummer.alpha = levelAutumn.alpha = levelWinter.alpha = 1;
+		levelSpring.visible = levelSummer.visible = levelAutumn.visible = levelWinter.visible = true;
 		
 		levelSpring.enable();
 		levelSummer.disable();
@@ -130,7 +134,7 @@ class LevelSelect extends Scene
 	}
 	
 	override public function end(onComplete:Dynamic) {
-		Actuate.tween(this, 1, {alpha:0});
+		Actuate.tween(this, 1, { alpha:0 } );
 		onComplete();
 	}
 	

@@ -13,6 +13,7 @@ import engine.graphics.Button;
 import game.bosses.Boss;
 import game.bosses.FireBoss;
 import game.Hud;
+import game.PowerupManager;
 import game.Screen;
 import game.ball.*;
 import flash.display.Sprite;
@@ -31,6 +32,7 @@ class GameScene extends Scene {
 	public static var screen(default, null):Screen;
 	public static var hud(default, null):Hud;
 	public static var level(default, null):Level;
+	public static var powerupManager(default, null):PowerupManager;
 	public static var inst(default, null):GameScene;
 	
 	// Boss
@@ -44,7 +46,7 @@ class GameScene extends Scene {
 	var bordeArriba:Sprite;
 	var bordeAbajo:Sprite;
 	
-	private var inmunidad:Int;
+	private var endTime:Float;
 	private var totalTime:Float;
 	
 	public static var enPausa:Bool;
@@ -54,15 +56,12 @@ class GameScene extends Scene {
 	
 	public static var PLAYER_CANT(default, null):Int;
 	
-	public static var FIN_ETAPA:Int = 5;
-	public static var CURRENT_SCENE:Int;
-	public static var CURRENT_LEVEL:Int;
-	
 	public static var Session_year:Int = 0;
 	public static var Session_season:Int = 1;
 	
 	// Constantes:
 	public static inline var MAX_PLAYERS:Int = 2;
+	public static inline var END_TIME:Float = 2;
 	
 	public function new (sm:SceneManager) {
 		super(sm);
@@ -72,11 +71,12 @@ class GameScene extends Scene {
 		hud = new Hud(720, 100, 40, 30+Screen.SCREEN_HEIGHT );
 		screen = new Screen(20, 20);
 		level = new Level();
+		powerupManager = new PowerupManager();
 		
 		// Boton de Regreso
-		backButton = new Button(this.goBack);
-		backButton.x = 20;
-		backButton.y = 20;
+		backButton = new Button( "images/back.png" , this.goBack, 2);
+		backButton.x = 10;
+		backButton.y = 10;
 		
 		bordeIzq = new Sprite();
 		bordeIzq.graphics.beginFill(0x000000);
@@ -115,11 +115,11 @@ class GameScene extends Scene {
 		// Agregar a pantalla
 		addChild(screen);
 		hijos.push(screen);
-		addChild(backButton);
 		addChild(bordeIzq);
 		addChild(bordeDer);
 		addChild(bordeArriba);
 		addChild(bordeAbajo);
+		addChild(backButton); // Visible fuera de los bordes
 		addChild(hud);
 		
 		// Cargar cosas de Screen
@@ -127,6 +127,7 @@ class GameScene extends Scene {
 		hud.init();
 		hud.resetScore();
 		
+		endTime = END_TIME;
 		iniciarNivel();
 	}
 	
@@ -206,8 +207,12 @@ class GameScene extends Scene {
 			super.updateLogic(time);
 			
 			// Detectar fin de nivel (No anima la ultima pelota)
-			if (pasaNivel())
-				finalizarNivel();
+			if (pasaNivel()) {
+				if ( endTime < 0 )
+					finalizarNivel();
+				else
+					endTime -= time;
+			}
 		}       	
 	}
 	

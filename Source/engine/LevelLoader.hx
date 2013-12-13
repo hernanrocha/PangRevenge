@@ -77,7 +77,8 @@ class LevelLoader
 		GameScene.screen.ubicarPlayers(level.players);
 		this.spawnBalls(level.bolas);
 		GameScene.screen.showLevelName(lvl + 1, level.msj);
-	}	
+	}
+	
 	private function spawnBalls(ballsArray:Array<Dynamic>) {
 		for ( ball in ballsArray)
 			spawnBall(ball);
@@ -96,7 +97,7 @@ class LevelLoader
 		
 		b.spawnPolares(x0,y0,ball.spawn.angulo,ball.spawn.radio);
 		
-		//b.setPowerUp(PowerUp.get(PowerUp.POWERUP_SH));
+		b.setPowerUps(ball.powerups);
 		GameScene.screen.agregarPelota(b);
 	}
 	

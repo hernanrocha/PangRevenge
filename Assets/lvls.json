@@ -15,7 +15,7 @@
 								"angulo":0,
 								"radio":2
 							},
-							"powerup":{}
+							"powerups":[ "DobleTiro", "Shield" ],
 						},
 					],
 				},

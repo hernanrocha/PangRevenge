@@ -31,14 +31,13 @@ class Screen extends GameElement
 	public var jugadores(default, null):Array<Player>;
 	
 	public var pelotas(default, null):Array<Ball>;
-	public var powerups(default, null):Array<PowerUp>;
 	
 	public var btnLevel:Button;
 	
 	private var text_subtitle:TextField;
 	private var text_message:TextField;
-	private var text_success:TextField;
 	private var message_board:Bitmap;
+	private var message_board_success:Bitmap;
 	
 	// Boss life
 	private var boss_life_back:Bitmap = null;
@@ -64,7 +63,7 @@ class Screen extends GameElement
 		for ( it in 0 ... GameScene.PLAYER_CANT ) // Jugador
 			jugadores[it].init();
 		
-		loadPowerUps(); // PowerUp
+		GameScene.powerupManager.init(); // PowerUp
 	}
 	
 	public function end() {
@@ -112,19 +111,9 @@ class Screen extends GameElement
 		text_message.x = message_board.x + 50;
 		text_message.y = message_board.y + 37;
 		
-		var text_format_success:TextFormat = new TextFormat(font);
-		text_format_success.size = 100*0.8;
-		text_format_success.color = 0x00FF00;
-		
-		text_success=new TextField();
-		text_success.selectable=false;
-		text_success.height = 100;
-		text_success.setTextFormat(text_format_success);
-		text_success.text = "Nivel superado";
-		
-		text_success.x = (SCREEN_WIDTH - text_success.width) / 2;
-		text_success.y = (SCREEN_HEIGHT - text_success.height) / 2;
-		
+		message_board_success = new Bitmap ( Assets.getBitmapData( "images/message_board_success.png" ));
+		message_board_success.x = (SCREEN_WIDTH - message_board_success.width) / 2;
+		message_board_success.y = (SCREEN_HEIGHT - message_board_success.height) / 2;		
 	}
 
 	public function setBackground(img:String) {
@@ -144,20 +133,17 @@ class Screen extends GameElement
 	public function ubicarPlayers(distancia:Float = -1) { // No soporta más de 2 players
 		if ( distancia == -1 ) distancia = Player.POS_INICIAL;
 		
+		
+		
 		for ( player in jugadores ){
-			player.y = Screen.SCREEN_HEIGHT - player.height;
+			player.y = Screen.SCREEN_HEIGHT - player.h;
 			if ( player.id == 1 ) 
 				player.x = (distancia/100) * Screen.SCREEN_WIDTH;
 			else
-				player.x = Screen.SCREEN_WIDTH * (1-distancia/100) - player.width;
+				player.x = Screen.SCREEN_WIDTH * (1 - distancia / 100) - player.w;
 		}
 	}
 		
-	public function loadPowerUps() {
-		powerups = new Array<PowerUp>();
-		PowerUp.init(this);
-	}
-	
 	// Pelotas
 	public function agregarPelota(b:Ball) {
 		// Agregar a pelotas comunes
@@ -194,7 +180,7 @@ class Screen extends GameElement
 		for (p in jugadores)// Reestablecer jugador y eliminar sogas
 			p.resetLevel();
 			
-		PowerUp.reset();// Eliminar powerups
+		GameScene.powerupManager.reset();// Eliminar powerups
 	}
 	
 	// Mensajes
@@ -234,11 +220,15 @@ class Screen extends GameElement
 	}
 	
 	public function showScore(callback:Dynamic) {
-		text_success.alpha = 0;
+		message_board_success.alpha = 0;
+		message_board_success.visible = true;
 		
-		addChild(text_success);
-		Actuate.tween(text_success, 1, { alpha: 1 } ).delay(0).onComplete(function() {
-			Actuate.tween(text_success, 1, { alpha: 0 } ).delay(1).onComplete( callback );
+		addChild(message_board_success);
+		Actuate.tween(message_board_success, 1, { alpha: 1 } ).delay(0).onComplete(function() {
+			Actuate.tween(message_board_success, 1, { alpha: 0 } ).delay(1).onComplete( function() {
+				removeChild(message_board_success);
+				callback();
+			} );
 		});
 	}
 	
@@ -284,7 +274,7 @@ class Screen extends GameElement
 						}
 					}
 					// Colision de PowerUps
-					for (pu in powerups)
+					for (pu in GameScene.powerupManager.powerups)
 						if ( j.collisionTest(pu) )
 							pu.action(j);
 					

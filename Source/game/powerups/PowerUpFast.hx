@@ -1,7 +1,4 @@
 package game.powerups;
-import game.Hud;
-import game.PowerUp;
-import game.Screen;
 
 /**
  * ...
@@ -11,8 +8,8 @@ class PowerUpFast extends PowerUp
 {
 	public static inline var DURACION = 3;
 
-	public function new(screen:Screen){
-		super(screen);
+	public function new(){
+		super();
 		cargarBitmap("fast");
 	}
 	
