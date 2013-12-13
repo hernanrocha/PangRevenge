@@ -1,28 +1,40 @@
 package scenes;
 
+import engine.Level;
+import engine.LevelLoader;
 import engine.Scene;
 import engine.SceneManager;
 import engine.GameElement;
-import engine.Button;
 import engine.InputManager;
+import engine.AudioManager;
+import engine.Sonido;
+import engine.Save;
+import engine.graphics.Button;
+import game.bosses.Boss;
+import game.bosses.FireBoss;
+import game.Hud;
+import game.PowerupManager;
+import game.Screen;
+import game.ball.*;
 import flash.display.Sprite;
 import flash.Lib;
 import flash.display.Bitmap;
 import flash.text.TextFormat;
-import game.bosses.Boss;
-import game.bosses.FireBoss;
-import game.Hud;
-import game.Screen;
-import openfl.Assets;
 import flash.media.Sound;
 import flash.events.Event;
-import game.ball.*;
-import engine.AudioManager;
-import engine.Sonido;
-import engine.Save;
+import openfl.Assets;
+
+// única instancia
 
 class GameScene extends Scene {
-
+	
+	public static var lvlLoader(default, null):LevelLoader;
+	public static var screen(default, null):Screen;
+	public static var hud(default, null):Hud;
+	public static var level(default, null):Level;
+	public static var powerupManager(default, null):PowerupManager;
+	public static var inst(default, null):GameScene;
+	
 	// Boss
 	private var bossLevel:Int=5;
 	private var bossDead:Bool;
@@ -34,40 +46,37 @@ class GameScene extends Scene {
 	var bordeArriba:Sprite;
 	var bordeAbajo:Sprite;
 	
-	private var inmunidad:Int;
+	private var endTime:Float;
 	private var totalTime:Float;
 	
-	private var screen:Screen;
-	public var hud:Hud;
-	public var enPausa:Bool;
+	public static var enPausa:Bool;
 	private var btnPause:Bool;
 	
 	private var backButton:Button;
 	
-	public static var PLAYER_CANT:Int = 1;	
-	public static var FIN_ETAPA:Int = 5;
-	public static var CURRENT_SCENE:Int;
-	public static var CURRENT_LEVEL:Int;
-	public static var MAX_SCENE:Int;
+	public static var PLAYER_CANT(default, null):Int;
+	
+	public static var Session_year:Int = 0;
+	public static var Session_season:Int = 1;
+	
+	// Constantes:
+	public static inline var MAX_PLAYERS:Int = 2;
+	public static inline var END_TIME:Float = 2;
 	
 	public function new (sm:SceneManager) {
 		super(sm);
 		
-		// Crear HUD
-		hud = new Hud(720,100);
-		hud.x = 40;
-		hud.y = 30 + Screen.SCREEN_HEIGHT;
-		
-		// Agrego la pantalla de juego
-		screen = new Screen(this);
-		screen.x = 20;
-		screen.y = 20;
-		hud.setScreen(screen);
+		inst = this;
+		lvlLoader = new LevelLoader("lvls.json");
+		hud = new Hud(720, 100, 40, 30+Screen.SCREEN_HEIGHT );
+		screen = new Screen(20, 20);
+		level = new Level();
+		powerupManager = new PowerupManager();
 		
 		// Boton de Regreso
-		backButton = new Button(this.goBack);
-		backButton.x=500;
-		backButton.y = 20;
+		backButton = new Button( "images/back.png" , this.goBack, 2);
+		backButton.x = 10;
+		backButton.y = 10;
 		
 		bordeIzq = new Sprite();
 		bordeIzq.graphics.beginFill(0x000000);
@@ -89,30 +98,37 @@ class GameScene extends Scene {
 		bordeAbajo.graphics.beginFill(0x000000);
 		bordeAbajo.graphics.drawRect(0, 0, 800, 400);
 		bordeAbajo.y = Screen.SCREEN_HEIGHT + 20;
-		bordeAbajo.graphics.endFill();		
+		bordeAbajo.graphics.endFill();
 	}
 	
 	override function init() {
 		super.init();
-				
+		
+		// Cargar fondo:
+		lvlLoader.setLevel(0);
+		lvlLoader.loadSound();
+		lvlLoader.setBackground();
+		
 		// Inicializar valores
 		totalTime = 0;
-		bossDead = false;
 		
 		// Agregar a pantalla
 		addChild(screen);
 		hijos.push(screen);
-		addChild(backButton);
 		addChild(bordeIzq);
 		addChild(bordeDer);
 		addChild(bordeArriba);
 		addChild(bordeAbajo);
+		addChild(backButton); // Visible fuera de los bordes
 		addChild(hud);
 		
 		// Cargar cosas de Screen
 		screen.init();
 		hud.init();
 		hud.resetScore();
+		
+		endTime = END_TIME;
+		iniciarNivel();
 	}
 	
 	override public function end(onComplete:Dynamic) {	
@@ -131,73 +147,78 @@ class GameScene extends Scene {
 		onComplete();
 	}
 	
-	public function cargarPelotas(nivel:Int) {	}
-	
-	public function loadLevel() {
+	public function iniciarNivel() {
+		
 		screen.enJuego = false;
-		screen.restablecerPosiciones();
-		if (GameScene.CURRENT_LEVEL == FIN_ETAPA) {
-			GameScene.MAX_SCENE = Std.int(Math.max(GameScene.MAX_SCENE, GameScene.CURRENT_SCENE));
-			Save.getInstance().setLevel(GameScene.MAX_SCENE);
-			// Cambiar de escena
-			if (GameScene.CURRENT_SCENE == 4) {
-				sm.switchScene('winner');
-			}else{
-				sm.switchScene('levelselect');
+		if ( ! level.nextLevel() ) {
+			if ( ! level.nextSeason() ) {
+				// Soporte para multiples años if ( ! level.nextYear() )
+				PangRevenge.sm.switchScene('wingame');
+				return;
+			} else {
+				GameScene.Session_season = level.season;
 			}
-		}else{
-			// Cargar pelotas
-			cargarPelotas(GameScene.CURRENT_LEVEL);
-			screen.showLevelName("Nivel " + GameScene.CURRENT_LEVEL );
-			screen.game.hud.setEscena(GameScene.CURRENT_SCENE, GameScene.CURRENT_LEVEL);
-		}
+			PangRevenge.sm.switchScene('levelselect');
+			return;
+		}		
+		level.load();
 	}
 	
 	public function finalizarNivel() {
-		trace("Finalizar nivel");
 		screen.enJuego = false;		
 		screen.resetLevel();
 		
-		GameScene.CURRENT_LEVEL++;
-		trace("Mostrar puntajes y cargar siguiente nivel");	
-		screen.showScore();
+		screen.showScore(iniciarNivel);
+	}
+	
+	public static function setTwoPlayers(b:Bool) {
+		if ( b )
+			PLAYER_CANT = 2;
+		else
+			PLAYER_CANT = 1;
+	}
+	
+	private function pasaNivel():Bool {
+		return (
+			( level.ballCount == 0 && !level.lvl_boss ) || 
+			(level.lvl_boss && level.boss_dead ) || 
+			PangRevenge.inputManager.keyCodePressed(InputManager.config.get("DEBUG_END_LEVEL"))
+		);
 	}
 	
 	// Nuestro gameLoop (se ejecuta antes de cada cuadro).
 	override public function updateLogic(time:Float) {
 		
-		if (screen.enJuego && !enPausa ) {
+		if(PangRevenge.inputManager.keyPressed(String.fromCharCode(27))){
+       		goBack();
+			return;
+       	}
+		
+		if (PangRevenge.inputManager.keyCodePressed(InputManager.config.get("PAUSE")) )
+			if (!btnPause) { // Anti-rebote
+				btnPause = true;
+				enPausa = !enPausa;
+			}
+		else
+			btnPause = false;
+		
+		if ( screen.enJuego && !enPausa ) {
 			totalTime += time;
 			super.updateLogic(time);
 			
 			// Detectar fin de nivel (No anima la ultima pelota)
-			if ((screen.pelotasCantidad == 0 && GameScene.CURRENT_LEVEL != bossLevel) || bossDead || InputManager.getInstance().keyCodePressed(InputManager.config.get("DEBUG_END_LEVEL"))) {
-				finalizarNivel();
+			if (pasaNivel()) {
+				if ( endTime < 0 )
+					finalizarNivel();
+				else
+					endTime -= time;
 			}
-		}
-		
-       	if (InputManager.getInstance().keyCodePressed(InputManager.config.get("PAUSE")) ) {
-			if (!btnPause) {
-				btnPause = true;
-				enPausa = !enPausa;				
-			}
-		}else {
-			btnPause = false;	
-		}
-       	
-       	if(InputManager.getInstance().keyPressed(String.fromCharCode(27))){
-       		goBack();
-       	}
+		}       	
 	}
 	
 	private function goBack() {
-		AudioManager.getInstance().justPlay(Sonido.VOLVER);
+		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('menu');
-	}
-	
-	public function killBoss () { 
-		bossDead = true; 
-		screen.removeChild(boss);
 	}
 	
 	/*override public function end(onComplete:Dynamic){

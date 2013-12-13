@@ -2,12 +2,14 @@ package game.ball;
 
 import engine.GameElement;
 import engine.InputManager;
-import engine.Animation;
+import engine.graphics.Animation;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.geom.Rectangle;
+import game.powerups.PowerUp;
 import game.Screen;
 import openfl.Assets;
+import scenes.GameScene;
 
 /**
  * ...
@@ -36,8 +38,7 @@ class Ball extends GameElement
 	var h:Float;
 	var vyRebote:Float;
 		
-	var screen:Screen;
-	public var powerup:PowerUp = null;
+	private var powerups:Array<String> = null;
 	public var exploto:Bool;
 	private var mantener = false;
 	
@@ -63,12 +64,10 @@ class Ball extends GameElement
 	private static var balls:Map < Int, Array<Ball> > = new Map < Int, Array<Ball> > ();
 	private static var bitmapData:Map < Int, BitmapData > = new Map < Int, BitmapData > ();
 	
-	public function new(screen:Screen, tam:Int) 
-	{
+	public function new(tam:Int){
 		super();
 		
 		// Configurar
-		this.screen = screen;
 		this.tam = tam;
 		initSprite();
 		configBoundingBox();
@@ -82,7 +81,6 @@ class Ball extends GameElement
 		}
 		ballSprite.visible = true;		
 		exploto = false;
-		powerup = null;
 		this.mantener = mantener;
 				
 		// Datos en X
@@ -103,10 +101,10 @@ class Ball extends GameElement
 	}
 
 	// Spawn con velocidad en coordenadas polares
-	public function spawnPolares(x0:Float, y0:Float, angulo:Float=270, radio:Float=0, mantener:Bool=true) {
-		vx = radio * Math.cos( angulo );
-		vy = radio * Math.sin( -angulo );
-		this.spawn(x0 ,y0 ,vx, vy, mantener);		
+	public function spawnPolares(x0:Float, y0:Float, angulo:Float = 270, radio:Float = 0, mantener:Bool = true) {
+		var vx:Float = radio * Math.cos( Math.PI / 180 * angulo );
+		var vy:Float = radio * Math.sin( - ( Math.PI / 180 * angulo ) );
+		this.spawn(x0 ,y0 ,vx, vy, mantener);
 	}
 	
 	public function initSprite() {
@@ -155,9 +153,9 @@ class Ball extends GameElement
 		}	
 	}
 	
-	public function setPowerUp(pu:PowerUp) {
-		//trace("Set powerup");
-		powerup = pu;
+	public function setPowerUps(pwups:Array<String>) {
+		if ( pwups == null ) powerups = null;
+		else this.powerups = pwups.copy();
 	}
 	
 	public static function putBall(b:Ball) {
@@ -171,49 +169,71 @@ class Ball extends GameElement
 		}
 	}
 	
-	public static function getBall(screen:Screen, tam:Int):Ball {
+	public static function getBall(tam:Int):Ball {
 		if (balls.exists(tam) && balls.get(tam).length > 0) {
 			var b =  balls.get(tam).pop();
 			
 			return b;
 		}else {
-			return new Ball(screen, tam);
+			return new Ball(tam);
 		}
 	}
 	
-	public function reventar() {
+	public function reventar(dividir:Bool = true) {
 		exploto = true;
 		ballSprite.visible = false;
-		screen.desactivarPelota(this);
+		GameScene.screen.desactivarPelota(this);
 		
-		//screen.eliminarPelota(this);
 		if (ballAnimation == null) {
 			ballAnimation = new Animation(Assets.getBitmapData("images/explosion" + tam + ".png"), 1, 5);
 		}
+		
 		addChild(ballAnimation);
-		hijos.push(ballAnimation);
+		hijos.push(ballAnimation);		
 		ballAnimation.visible = true;
 		ballAnimation.activateAnimation();
 		
 		// Determinar si es necesario crear otras bolas
-		if (tam != TAM_4) {
-			//trace("Crear pelotas");
-			var b1 = Ball.getBall(screen, tam + 1);
-			b1.spawn(x, y, Ball.VX, -2, false);
-			b1.setPowerUp(powerup);
+		if (tam != TAM_4 && dividir) {
+			trace("Total de "+powerups.length+" powerups. Tam: "+(4 - tam));
 			
-			screen.agregarPelota(b1);
-			var b2 = Ball.getBall(screen, tam + 1);
+			if ( powerups.length >= (4 - tam) ) {
+				GameScene.powerupManager.spawnPowerUp( powerups[0], x, y);	
+				powerups.remove(powerups[0]);
+			}
+			
+			var pu1:Array<String> = new Array<String>();
+			var pu2:Array<String> = new Array<String>();
+			
+			var cursor:Int = 1;
+			if ( powerups.length >= 2 ) {
+				for ( pu in powerups ) {
+					if ( cursor == 1 ) pu1.push(pu);
+					else pu2.push(pu);
+					cursor = -cursor;
+				}
+			} else {
+				if ( Math.random() < 0.5 )
+					pu1.push(powerups[0]);
+				else
+					pu2.push(powerups[0]);
+			}
+				
+			var b1 = Ball.getBall(tam + 1);
+			b1.spawn(x, y, Ball.VX, -2, false);
+			b1.setPowerUps(pu1);
+			GameScene.screen.agregarPelota(b1);
+			
+			var b2 = Ball.getBall(tam + 1);
 			b2.spawn(x, y, -Ball.VX, -2, false);
-			screen.agregarPelota(b2);
+			b2.setPowerUps(pu2);
+			GameScene.screen.agregarPelota(b2);
 			
 		}else {
-			//trace("Verificar powerup");
-			if (powerup != null) {
-				//trace("Tirar powerup");
-				powerup.spawn(x, y);
-			}
+			if ( powerups.length > 0 )
+				GameScene.powerupManager.spawnPowerUp( powerups[0], x, y); // Max 1 powerup.
 		}
+		powerups = null;
 	}
 	
 	public function actualizarPosicion(incremento:Float) {
@@ -246,7 +266,6 @@ class Ball extends GameElement
 			vy = -vyRebote;
 		}else if ( (y <= 0) && (vy < 0) ){
 			//subiendo = false;
-			//trace("Comienza a caer de nuevo");
 			sy = y = 0;
 			vy = -vy;
 		}
@@ -260,12 +279,17 @@ class Ball extends GameElement
 		return y + radio;
 	}
 	
+	public function getWidth():Float {
+		return radio*2;
+	}
+	
 	public function colisionJugador(p:Player):Bool {
-		if (InputManager.getInstance().keyPressed("D")) {
+		if (PangRevenge.inputManager.keyPressed("D")) {
 			trace(this);
 			trace(getCentroX());
 			trace(p.getCentroX());
 		}
+		
 		if ( ( (getCentroX() - p.getCentroX()) * (getCentroX() - p.getCentroX()) + (getCentroY() - p.getCentroY()) * (getCentroY() - p.getCentroY()) ) < ( (radio + p.radio) * (radio + p.radio)) ) {
 			return true;
 		}
@@ -273,7 +297,7 @@ class Ball extends GameElement
 	}
 	
 	override function updateLogic(time:Float) {
-		//if (InputManager.getInstance().keyPressed("A")) {
+		//if (PangRevenge.inputManager.keyPressed("A")) {
 		super.updateLogic(time);
 		
 		// Actualizar posicion
@@ -282,7 +306,7 @@ class Ball extends GameElement
 		actualizarColision();
 		
 		if (exploto && ballAnimation.finalizo()) {
-			screen.eliminarPelota(this);
+			GameScene.screen.eliminarPelota(this);
 		}
 		//}			
 	}

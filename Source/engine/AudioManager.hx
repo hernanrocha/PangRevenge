@@ -19,20 +19,12 @@ class AudioManager
 	private var libreria : Map<String,Sonido>;
 	private var sonidoActual : Sonido;
 	private var canal : SoundChannel;
-	private static var audioM:AudioManager;
+	private var enabled:Bool = false;
 	//private static inline var server: String = "http://bcaimmi.com.ar/sonidos/";
 	private static inline var server: String = "http://localhost/PangRevenge/stream/";
 	
 	
-	public static function getInstance():AudioManager {
-		if (audioM == null) {
-			audioM = new AudioManager();
-		}
-		return audioM;
-	}
-	
-	private function new() 
-	{
+	public function new(){
 		//Creo el hash.	
 		libreria=new Map<String,Sonido>();		
 		//No reproduzco nada.
@@ -40,42 +32,41 @@ class AudioManager
 	}
 	
 	public function addLibreria(sonido:String) {
+		if ( ! enabled ) return;
 		var son:Sonido = new Sonido(server + sonido);	
 		libreria.set(sonido,son);
 	}
 	
-	public function setSound(sonido:String,principio:Bool) {
+	public function setSound(sonido:String,principio:Bool=false) {
 		var son : Sonido = libreria.get(sonido);
-		if ( son != null && son != sonidoActual) {
-		
+		if ( son != null && son != sonidoActual) {		
 			pause();
 			sonidoActual = son;
-			play(principio);	
+			play(principio);
 		}
 	}
 	
 	private function pause() {
-		if ( sonidoActual != null ) { 
+		if ( sonidoActual != null )
 			sonidoActual.pauseSound();
-		}
 	}
 	
 	private function play(principio:Bool) {
-		if ( sonidoActual != null ) { 
+		if ( sonidoActual != null && enabled )
 			sonidoActual.playSound(principio);
-		}
 	}
 	
 	public function justPlay(sonido:String) {
 		var son = libreria.get(sonido);
-		if ( son != null ) { 
+		if ( son != null && enabled )
 			son.justPlay();
-		}
 	}
 	
-	private function onPlaybackComplete(event:Event) 
-	{ 
+	private function onPlaybackComplete(event:Event){ 
 		sonidoActual.playSound(true);
 	}
+	
+	public function enable() { enabled = true; }
+	public function disable() { enabled = false; pause(); }
 	
 }

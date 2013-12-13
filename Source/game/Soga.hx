@@ -1,10 +1,11 @@
 package game;
-import engine.ContAnimation;
+import engine.graphics.ContAnimation;
 import engine.GameElement;
 import engine.InputManager;
 import flash.display.Bitmap;
 import flash.geom.Rectangle;
 import openfl.Assets;
+import scenes.GameScene;
 
 /**
  * ...
@@ -122,7 +123,7 @@ class Soga extends GameElement
 	}
 	
 	public function disparar(posX:Float) {
-		player.screen.addChild(this);
+		GameScene.screen.addChild(this);
 		player.hijos.push(this);
 		
 		enTecho = false;
@@ -196,17 +197,16 @@ class Soga extends GameElement
 	public function unset() {
 		if (onScreen) {
 			player.finalizarDisparo();
-			player.screen.removeChild(this);
+			GameScene.screen.removeChild(this);
 		}
 			
 		enTecho = false;
 		onScreen = false;
 		this.visible = false;
-		player.hijos.remove(this); // No más update Logic.
+		player.hijos.remove(this);
 	}
 	
 	private function hook() {
-		trace("El gancho llegó al techo");
 		timer = DURACION;
 	}
 	

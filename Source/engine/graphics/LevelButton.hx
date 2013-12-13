@@ -1,4 +1,5 @@
-package engine;
+package engine.graphics;
+
 import flash.display.Sprite;
 import flash.display.BitmapData;
 import flash.display.Bitmap;
@@ -40,7 +41,6 @@ class LevelButton extends Sprite
 	
 	public function setEnabled(enabled:Bool) {
 		if (!enabled) {
-			trace("Desactivar");
 			this.visible = true;
 			this.alpha = 0.5;
 			this.enabled = false;

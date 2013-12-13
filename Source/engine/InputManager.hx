@@ -11,16 +11,7 @@ class InputManager {
 	public static inline var LEFT_ARROW:Int = 37;
 	public static inline var RIGHT_ARROW:Int = 39;
 	
-	private static var instance:InputManager=null;
-	
-	public static function getInstance():InputManager{
-		if(instance==null){
-			instance=new InputManager();
-		}
-		return instance;
-	} 
-	
-	private function new () {
+	public function new () {
 		teclas=new Array<Bool>();
 		
 		config = new Map<String, Int>();

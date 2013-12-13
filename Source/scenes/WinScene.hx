@@ -2,20 +2,16 @@ package scenes;
 
 import engine.Scene;
 import engine.SceneManager;
-import flash.events.Event;
-import motion.Actuate;
-import flash.text.TextField;
-import flash.text.TextFormat;
-import engine.Button;
-import flash.events.Event;
-
 import engine.AudioManager;
 import engine.Sonido;
+import engine.graphics.Button;
+import flash.events.Event;
+import flash.text.TextField;
+import flash.text.TextFormat;
+import flash.events.Event;
+import motion.Actuate;
 
-/**
- * ...
- * @author CAIMMI, Brian
- */
+
 class WinScene extends Scene
 {
 	
@@ -46,9 +42,9 @@ class WinScene extends Scene
 		this.addChild(text);
 		
 		// Boton de Regreso
-		backButton = new Button(this.goBack);
-		backButton.x=500;
-		backButton.y = 20;
+		backButton = new Button("images/back.png" , this.goBack);
+		backButton.x = 10;
+		backButton.y = 10;
 		addChild(backButton);
 		
 	}
@@ -73,7 +69,7 @@ class WinScene extends Scene
 	}
 	
 	public function goBack(ev:Event) {
-		AudioManager.getInstance().justPlay(Sonido.VOLVER);
+		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('menu');
 	}
 	

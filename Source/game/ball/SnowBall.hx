@@ -1,10 +1,11 @@
 package game.ball;
 
-import engine.Animation;
+import engine.graphics.Animation;
 import flash.display.Bitmap;
 import openfl.Assets;
 import engine.InputManager;
 import flash.display.BitmapData;
+import scenes.GameScene;
 
 /**
  * ...
@@ -16,9 +17,9 @@ class SnowBall extends Ball {
 	private static var snowballs:Map < Int, Array<SnowBall> > = new Map < Int, Array<SnowBall> > ();
 	private static var bitmapData:Map < Int, BitmapData > = new Map < Int, BitmapData > ();
 	
-	public function new(screen:Screen, tam:Int) 
+	public function new(tam:Int) 
 	{
-		super(screen, tam);
+		super(tam);
 	}
 	
 	override public function initSprite() {
@@ -30,12 +31,11 @@ class SnowBall extends Ball {
 		addChild(ballSprite);
 	}
 	
-	override public function reventar() {
+	override public function reventar(dividir:Bool = true) {		
 		exploto = true;
 		ballSprite.visible = false;
-		screen.desactivarPelota(this);
+		GameScene.screen.desactivarPelota(this);
 		
-		//screen.eliminarPelota(this);
 		if (ballAnimation == null) {
 			ballAnimation = new Animation(Assets.getBitmapData("images/explosionnieve" + tam + ".png"), 1, 3);
 		}
@@ -44,19 +44,17 @@ class SnowBall extends Ball {
 		ballAnimation.visible = true;
 		ballAnimation.activateAnimation();
 		
-		trace("SnowBall reventada");
-		
 		// Determinar si es necesario crear otras bolas
-		if (tam != Ball.TAM_4) {
-			var b1 = SnowBall.getBall(screen, tam + 1);
+		if (tam != Ball.TAM_4 && dividir) {
+			var b1 = SnowBall.getBall(tam + 1);
 			b1.spawn(x, y, vx, vy);
-			b1.setPowerUp(powerup);			
-			screen.agregarPelota(b1);
+			//b1.setPowerUp(powerup);			
+			GameScene.screen.agregarPelota(b1);
 			
 		}else {
-			if (powerup != null) {
+			/*if (powerup != null) {
 				powerup.spawn(x, y);
-			}
+			}*/
 		}
 	}
 		
@@ -71,12 +69,12 @@ class SnowBall extends Ball {
 		}
 	}
 	
-	public static function getBall(screen:Screen, tam:Int):SnowBall {
+	public static function getBall(tam:Int):SnowBall {
 		if (snowballs.exists(tam) && snowballs.get(tam).length > 0) {
 			var b =  snowballs.get(tam).pop();
 			return b;
 		}else {
-			return new SnowBall(screen, tam);
+			return new SnowBall(tam);
 		}
 	}
 }

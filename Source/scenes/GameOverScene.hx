@@ -2,13 +2,13 @@ package scenes;
 
 import engine.Scene;
 import engine.SceneManager;
+import engine.graphics.Button;
+import flash.display.Sprite;
 import flash.events.Event;
-import motion.Actuate;
 import flash.text.TextField;
 import flash.text.TextFormat;
-import engine.Button;
 import flash.events.Event;
-import engine.BackToLevelSelectButton;
+import motion.Actuate;
 
 import engine.AudioManager;
 import engine.Sonido;
@@ -23,7 +23,7 @@ class GameOverScene extends Scene
 	var text:TextField;
 	private var backButton:Button;
 	
-	private var levelSelectButton:BackToLevelSelectButton;
+	private var levelSelectButton:Sprite;
 	
 	public function new(sm:SceneManager) 
 	{
@@ -48,17 +48,38 @@ class GameOverScene extends Scene
 		this.text.y=250;
 		this.addChild(text);
 		
-		// Boton de Regreso
-		backButton = new Button(this.goBack);
-		backButton.x=500;
-		backButton.y = 20;
-		addChild(backButton);
+		// Back To Level Button
+		levelSelectButton = new Sprite();
 		
-		levelSelectButton = new BackToLevelSelectButton(this.goSelect);
+		levelSelectButton.graphics.beginFill(0xCCFF00);
+		levelSelectButton.graphics.drawRect(0,0,300,46);
+		levelSelectButton.graphics.endFill();
+		levelSelectButton.addEventListener(flash.events.MouseEvent.CLICK,goSelect);
+
+		var text:TextField = new TextField();
+		var tf:TextFormat = new TextFormat(openfl.Assets.getFont('fonts/menu.ttf').fontName);
+		tf.size= 40;
+		tf.color=0x000000;
+		tf.bold = true;
+		tf.align = flash.text.TextFormatAlign.CENTER;
+		
+		text.width=300;
+		text.selectable=false;
+		text.height=40;
+		text.text="Volver a Escenas";
+		text.setTextFormat(tf);
+		text.y=3;
+		levelSelectButton.addChild(text);
+		
 		levelSelectButton.x=0;
 		levelSelectButton.y = 20;
 		addChild(levelSelectButton);
 		
+		// Boton de Regreso
+		backButton = new Button("images/back.png" , this.goBack);
+		backButton.x = 10;
+		backButton.y = 10;
+		addChild(backButton);
 	}
 	
 	
@@ -82,12 +103,12 @@ class GameOverScene extends Scene
 	}
 	
 	public function goBack(ev:Event) {
-		AudioManager.getInstance().justPlay(Sonido.VOLVER);
+		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('menu');
 	}
 	
 	public function goSelect(ev:Event) {
-		AudioManager.getInstance().justPlay(Sonido.VOLVER);
+		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('levelselect');
 	}
 	

@@ -25,8 +25,7 @@ class SceneManager extends Sprite{
 			this.currentScene.end(function(){setScene(s);});
 			return;
 		}
-		setScene(s);
-		
+		setScene(s);		
 	}
 	
 	private function setScene(s:Scene){

@@ -7,42 +7,52 @@ import game.Screen;
  * ...
  * @author ...
  */
-class Boss extends GameElement
-{
-
+class Boss extends GameElement {	
 	
+	public var nombre(default, null):String;
 	
-	var died:Bool;
-	var screen:Screen;
-	var ax:Float;
-	var vx:Float;
-	var sx:Float;
-	private var damage:Int = 0;
-	var h:Float;
-	var scene:GameScene;
+	private var dead:Bool;
+	private var ax:Float;
+	private var vx:Float;
+	private var sx:Float;
+	private var h:Float;
 	
 	var radio:Float = 100;
 	
-	public function new(p_scene:GameScene) 
-	{
+	public var health(default, null):Int;
+	public var max_health(default, null):Int;
+	private var onScreen:Bool = false;
+	
+	public function new( name:String , hits:Int ) {
 		super();
+		this.nombre = name;
+		this.health = hits;
+		this.max_health = hits;
 	}
 	
-	public function init(p_screen:Screen, p_x0:Int, dirIzquierda:Bool, p_y:Float = -1.0) {
-		// Referencia
-		screen = p_screen;
-		
+	public function init(p_x0:Int, dirIzquierda:Bool, p_y:Float = -1.0) {
 		// Configurar datos de control
 		initConfig(p_x0, dirIzquierda, p_y);
 		
+		// Init logico y grafico
+		onScreen = true;
+		GameScene.screen.addChild(this);
+		GameScene.screen.hijos.push(this);
+	}
+	
+	public function end() {
+		if ( !onScreen ) return;
+		
+		GameScene.screen.destroyHudBoss();
+		GameScene.screen.removeChild(this);
+		GameScene.screen.hijos.remove(this);
+		onScreen = false;
 	}
 	
 	
-	public function initConfig(x0, dirIzquierda:Bool, y0:Float = -1.0)
+	public function initConfig(x0, dirIzquierda:Bool, y0:Float = -1.0)	{
 		
-		{
-		
-		died = false;
+		dead = false;
 		// Datos en X
 		ax = 0;
 		vx = 3;
@@ -54,31 +64,34 @@ class Boss extends GameElement
 		
 		// Datos en Y	
 		h = Screen.SCREEN_HEIGHT;
+	}
+		
+	public function actualizarPosicion(incremento:Float){}
+		
+	public function actualizarColision() {}
+		
+	public function disparar(time:Float) {}
+		
+	public function getDamage() {
+		GameScene.screen.updateHudBoss();
+	}
+		
+	public function die() {
+		GameScene.screen.ballsExplode();
+	}
+	
+	override function updateLogic(time:Float){
+		super.updateLogic(time);
+		var incremento = time * 50;	
+		actualizarPosicion(incremento);		
+		if ( !dead ) {
+			disparar(time);
+			actualizarColision();
 		}
 		
-		public function actualizarPosicion(incremento:Float)
-		{
-			
-		}
-		
-		public function actualizarColision() { }
-		
-		public function disparar(time:Float) { }
-		
-		public function getDamage() { }
-		
-		public function die() { }
-		
-		override function updateLogic(time:Float) 
-		{
-				super.updateLogic(time);
-				var incremento = time * 50;	
-				actualizarPosicion(incremento);		
-				disparar(time);
-				actualizarColision();
-		}
-		
-		public function colisionJugador(p:Player):Bool {
-			return false;
-		}
+	}
+	
+	public function colisionJugador(p:Player):Bool {
+		return false;
+	}
 }

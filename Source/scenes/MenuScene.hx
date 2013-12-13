@@ -2,7 +2,9 @@ package scenes;
 
 import engine.Scene;
 import engine.SceneManager;
-import engine.BallButton;
+import engine.AudioManager;
+import engine.Sonido;
+import engine.graphics.BallButton;
 import flash.display.Bitmap;
 import flash.events.Event;
 import motion.Actuate;
@@ -12,8 +14,6 @@ import motion.MotionPath;
 import openfl.Assets;
 import motion.easing.*;
 
-import engine.AudioManager;
-import engine.Sonido;
 
 class MenuScene extends Scene {
 
@@ -55,19 +55,19 @@ class MenuScene extends Scene {
 	}
 	
 	public function play1(event:Event) {
-		AudioManager.getInstance().justPlay(Sonido.EXPLO1);
-		GameScene.PLAYER_CANT = 1;	
+		PangRevenge.audioManager.justPlay(Sonido.EXPLO1);
+		GameScene.setTwoPlayers(false);
 		this.sm.switchScene('levelselect');
 	}
 	
 	public function play2(event:Event) {
-		AudioManager.getInstance().justPlay(Sonido.EXPLO1);
-		GameScene.PLAYER_CANT = 2;
+		PangRevenge.audioManager.justPlay(Sonido.EXPLO1);
+		GameScene.setTwoPlayers(true);
 		this.sm.switchScene('levelselect');
 	}
 	
 	public function help(event:Event) {	
-		AudioManager.getInstance().justPlay(Sonido.EXPLO1);
+		PangRevenge.audioManager.justPlay(Sonido.EXPLO1);
 		this.sm.switchScene('help');
 	}
 	
@@ -82,7 +82,7 @@ class MenuScene extends Scene {
 		b3.y = - 400;		
 		
 		//SONIDO
-		AudioManager.getInstance().setSound(Sonido.MENU,true);
+		PangRevenge.audioManager.setSound(Sonido.MENU,true);
 		
 		//TARDANZA AL ENTRAR
 		Actuate.tween(this, 0.2, { alpha:1 } );

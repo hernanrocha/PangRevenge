@@ -1,19 +1,16 @@
 package;
 
 import engine.AudioManager;
+import engine.LevelLoader;
 import engine.Scene;
 import engine.SceneManager;
 import engine.InputManager;
 import engine.GameElement;
-import scenes.AutumnScene;
 import scenes.GameOverScene;
 import scenes.GameScene;
 import scenes.HelpScene;
 import scenes.LevelSelect;
-import scenes.SpringScene;
-import scenes.SummerScene;
 import scenes.WinScene;
-import scenes.WinterScene;
 
 import flash.display.Sprite;
 import flash.Lib;
@@ -26,37 +23,36 @@ import engine.Save;
 
 class PangRevenge extends Sprite {
 
-	private var sm:SceneManager;
-	private var audioManager : AudioManager;
+	public static var sm(default, null):SceneManager;
+	public static var inputManager(default,null):InputManager;
+	public static var audioManager(default,null):AudioManager;
 	
 	public function new () {
 		super();
 		
-		//engine.Stats.init('UA-27265081-3','testing.sempaigames.com');
+		sm = new SceneManager(stage, audioManager);
+		inputManager = new InputManager();
+		audioManager = new AudioManager();		
 		
-		// Audio Manager
-		AudioManager.getInstance().addLibreria(Sonido.DISPARO);
-		AudioManager.getInstance().addLibreria(Sonido.POWERUP);
-		AudioManager.getInstance().addLibreria(Sonido.EXPLO1);
-		AudioManager.getInstance().addLibreria(Sonido.GOLPE);
-		AudioManager.getInstance().addLibreria(Sonido.VOLVER);
-		AudioManager.getInstance().addLibreria(Sonido.MENU);		
-		AudioManager.getInstance().addLibreria(Sonido.HELP);
-		AudioManager.getInstance().addLibreria(Sonido.LEVEL1);
+		// Audio Manager		
+		audioManager.addLibreria(Sonido.DISPARO);
+		audioManager.addLibreria(Sonido.POWERUP);
+		audioManager.addLibreria(Sonido.EXPLO1);
+		audioManager.addLibreria(Sonido.GOLPE);
+		audioManager.addLibreria(Sonido.VOLVER);
+		audioManager.addLibreria(Sonido.MENU);		
+		audioManager.addLibreria(Sonido.HELP);
+		audioManager.addLibreria(Sonido.LEVEL1);
 		
 		// Cargar datos
 		//Save.getInstance().sessionBegin();
 		//GameScene.MAX_SCENE = Save.getInstance().lastLevel;
-		GameScene.MAX_SCENE = 3;
+		//GameScene.MAX_SCENE = 3;
 		
 		// Scene Manager
-		sm=new SceneManager(stage,audioManager);
 		sm.suscribeScene('menu',new scenes.MenuScene(sm));
+		sm.suscribeScene('game', new GameScene(sm));
 		sm.suscribeScene("levelselect", new LevelSelect(sm));
-		sm.suscribeScene('scene1', new SpringScene(sm)); 
-		sm.suscribeScene('scene2', new SummerScene(sm));
-		sm.suscribeScene('scene3', new AutumnScene(sm));		
-		sm.suscribeScene('scene4', new WinterScene(sm));
 		sm.suscribeScene('help', new HelpScene(sm));
 		sm.suscribeScene('gameover', new GameOverScene(sm));
 		sm.suscribeScene('winner', new WinScene(sm));
@@ -64,29 +60,13 @@ class PangRevenge extends Sprite {
 		sm.switchScene('menu');
 		this.addChild(sm);
 		
-		//var borders1 = new Sprite();
-		var borders1 = new Bitmap(Assets.getBitmapData("images/bordeVertical.jpg"));
-		borders1.x = -500;		
-		addChild(borders1);
-		
-		var borders2 = new Bitmap(Assets.getBitmapData("images/bordeVertical.jpg"));
-		borders2.x = 800;		
-		addChild(borders2);
-		
-		var borders3 = new Bitmap(Assets.getBitmapData("images/bordeHorizontal.jpg"));
-		borders3.y = -500;		
-		addChild(borders3);
-		
-		var borders4 = new Bitmap(Assets.getBitmapData("images/bordeHorizontal.jpg"));
-		borders4.y = 600;		
-		addChild(borders4);
-		
-		InputManager.getInstance().suscribe(stage);
+		inputManager.suscribe(stage);
 		stage.addEventListener(flash.events.Event.ENTER_FRAME,gameLoop);
-		stage.addEventListener(flash.events.Event.RESIZE,onResize);
+		//stage.addEventListener(flash.events.Event.RESIZE,onResize);
 		
-		onResize(null);
+		//onResize(null);
 		
+		addBorders();
 	}
 	
 	function onResize(e:Event){
@@ -103,5 +83,22 @@ class PangRevenge extends Sprite {
 		sm.updateLogic(time);
 	}
 
+	private function addBorders() {
+		//var borders1 = new Sprite();
+		var borders1 = new Bitmap(Assets.getBitmapData("images/bordeVertical.jpg"));
+		borders1.x = -500;		
+		addChild(borders1);
 		
+		var borders2 = new Bitmap(Assets.getBitmapData("images/bordeVertical.jpg"));
+		borders2.x = 800;		
+		addChild(borders2);
+		
+		var borders3 = new Bitmap(Assets.getBitmapData("images/bordeHorizontal.jpg"));
+		borders3.y = -500;		
+		addChild(borders3);
+		
+		var borders4 = new Bitmap(Assets.getBitmapData("images/bordeHorizontal.jpg"));
+		borders4.y = 600;		
+		addChild(borders4);
+	}
 }

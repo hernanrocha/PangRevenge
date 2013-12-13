@@ -1,15 +1,19 @@
 package game;
 
 import flash.display.Bitmap;
+import flash.display.BitmapData;
 import flash.display.GraphicsSolidFill;
 import flash.display.InteractiveObject;
+import flash.geom.Rectangle;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import engine.GameElement;
+import game.bosses.Boss;
 import haxe.ds.Vector.Vector;
 import openfl.Assets;
 import flash.display.Sprite;
 import flash.display.Bitmap;
+import openfl.display.Tilesheet;
 import scenes.GameScene;
 
 /**
@@ -36,22 +40,18 @@ class Hud extends GameElement
 	private var h : Int;
 	private var vidas1:Array<Bitmap>;
 	private var vidas2:Array<Bitmap>;
-	private var p1Lifes:Int;
-	private var p2Lifes:Int;
 	public static inline var MAX_VIDAS = 3;
 	public static inline var VIDAS_INICIALES = 3;
 	private var elementos1:Array<Bitmap>;
 	private var elementos2:Array<Bitmap>;
 	
-	private var cantJugadores:Int;
-	private var scr:Screen;
-	
-	public function new(w:Int,h:Int) 
-	{
+	public function new(w:Int,h:Int,x:Float,y:Float) {
 		super();
 		
 		this.w = w;
 		this.h = h;
+		this.x = x;
+		this.y = y;
 		
 		//Cuadrado
 		this.graphics.beginFill(0xFF0000);
@@ -67,9 +67,9 @@ class Hud extends GameElement
 		this.graphics.endFill();
 		
 		//Text Format Score
-		var tf=new TextFormat(openfl.Assets.getFont('fonts/menu.ttf').fontName);
+		var tf=new TextFormat(openfl.Assets.getFont('fonts/ARCADE.TTF').fontName);
 		tf.size=50;
-		tf.color=0xBBBBBB;
+		tf.color=0xFFFFFF;
 		tf.bold=true;
 		tf.align=flash.text.TextFormatAlign.CENTER;
 		
@@ -81,7 +81,7 @@ class Hud extends GameElement
 		this.score1.height=50;
 		this.score1.text = "000000";
 		this.score1.x = 10;
-		this.score1.y = 3;
+		this.score1.y = 2;
 		this.score1.setTextFormat(tf);
 		this.addChild(score1);
 		
@@ -93,7 +93,7 @@ class Hud extends GameElement
 		this.score2.height=50;
 		this.score2.text = "000000";
 		this.score2.x = w - this.score2.width - 10;
-		this.score2.y = 3;
+		this.score2.y = 2;
 		this.score2.setTextFormat(tf);
 		this.addChild(score2);
 		
@@ -144,11 +144,7 @@ class Hud extends GameElement
 		this.jug2.y = 5;
 		this.jug2.setTextFormat(tfj);
 		this.addChild(jug2);
-	
-		//Creo los corazones y los pongo invisibles
-		p1Lifes = VIDAS_INICIALES;
-		p2Lifes = VIDAS_INICIALES;
-		
+			
 		vidas1 = new Array<Bitmap>();
 		var pos1:Int = 14;
 		for( i in 0...3 ) {
@@ -174,12 +170,11 @@ class Hud extends GameElement
 			pos2 = pos2 - 40;
 		}
 		
-		//Creo los elementos PowerUps.
+		//Creo los elementos PowerUps
 		pos1 += 10;
 		pos2 -= 10;
 		elementos1 = new Array<Bitmap>();
 		elementos2 = new Array<Bitmap>();
-		//este seria el escudo. CAMBIAR POR EL PNG DEL ESCUDO
 		
 		crear("powerups/shield.png", pos1, pos2);
 		pos1 += 30;
@@ -191,25 +186,6 @@ class Hud extends GameElement
 		pos1 += 30;
 		pos2 -= 30;
 		crear("powerups/fast.png", pos1, pos2);
-		
-		//y asi crear los demas poweups!!
-		
-		//-------------------
-		
-		//Pruebas
-		//addScore(1, 123);
-		//addScore(2, 12548);
-		//addScore(1, 5);
-		setEscena(2, 4);
-		setVidas1(3);
-		setVidas2(3);
-		/*unsetElemento(ESCUDO, 1);
-		setElemento(DOBLE_TIRO, 1);
-		setElemento(GANCHO,1);*/
-	}
-	
-	public function setScreen(s : Screen) {
-		this.scr = s;
 	}
 	
 	public function addScore(jugador:Int, puntos:Int) {
@@ -256,70 +232,30 @@ class Hud extends GameElement
 			return digitos;
 	}
 	
-	public function restarVida(jugador:Int) {
-		if (jugador == 1) {
-			if (p1Lifes == 0) {
-				cantJugadores--;
-				scr.unload1();
-			}else {				
-				p1Lifes--;
-				setVidas1(p1Lifes);
-			}
-		}else if (jugador == 2) {
-			if (p2Lifes == 0) {
-				cantJugadores--;
-				scr.unload2();
-			}else {				
-				p2Lifes--;
-				setVidas2(p2Lifes);
-			}
-		}
-		
-		//Me fijo si llamar o no al GameOver
-		if ( cantJugadores == 0 ) {
-			trace("llamando al gameOver");
-			scr.gameOver();
-		}
+	public function mostrarVidas(jugador:Player) {
+		// Arreglar HUD lpm
+		if ( jugador.id == 1 )
+			setVidas1(jugador.lives);
+		else
+			setVidas2(jugador.lives);
 	}
 	
 	public function setVidas1(n:Int) {
-		for ( v in vidas1 ) {
+		for ( v in vidas1 )
 			v.visible = false;
-		}
 		
-		p1Lifes = n;
-		for ( i in 0...p1Lifes ) {
-			vidas1[i].visible = true;
-		}
-		
+		for ( i in 0...n )
+			vidas1[i].visible = true;		
 	}
 	
 	public function setVidas2(n:Int) {
-		for ( v in vidas2 ) {
+		for ( v in vidas2 )
 			v.visible = false;
-		}
 		
-		p2Lifes = n;
-		for ( i in 0...p2Lifes ) {
-			vidas2[i].visible = true;
-		}
+		for ( i in 0...n )
+			vidas2[i].visible = true;		
+	}
 		
-	}
-	
-	public function sumarVida(jugador:Int) {
-		if (jugador == 1) {
-			if (p1Lifes < MAX_VIDAS) {
-				p1Lifes++;
-				setVidas1(p1Lifes);
-			}
-		}else if (jugador == 2) {
-			if (p2Lifes < MAX_VIDAS) {
-				p2Lifes++;
-				setVidas2(p2Lifes);
-			}
-		}
-	}
-	
 	public function crear(dir:String, pos1:Int, pos2:Int ) {
 		var pw11:Bitmap = new Bitmap(Assets.getBitmapData("images/" + dir));
 		var pw12:Bitmap = new Bitmap(Assets.getBitmapData("images/" + dir));
@@ -350,18 +286,6 @@ class Hud extends GameElement
 			elementos2[el].alpha = 0.3;
 	}
 	
-	public function init() {	
-		//Cantidad de Jugadores
-		cantJugadores = GameScene.PLAYER_CANT;
-		trace ("cantidad de jugares macho ! " + cantJugadores);
-		
-		setVidas1(3);
-		setVidas2(3);
-		
-		for ( i in 0...3 ) {
-			unsetElemento(i, 1);
-			unsetElemento(i, 2);
-		}
-	}
+	public function init() {}
 	
 }

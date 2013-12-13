@@ -1,24 +1,20 @@
 package game;
-import engine.Button;
+
 import engine.GameElement;
+import engine.graphics.Button;
+import engine.InputManager;
+import engine.AudioManager;
+import engine.Sonido;
 import flash.display.Bitmap;
 import flash.display.Sprite;
 import flash.text.TextField;
 import flash.text.TextFormat;
-import game.bosses.Boss;
 import openfl.Assets;
+import game.bosses.Boss;
+import game.ball.*;
 import motion.Actuate;
 import scenes.GameScene;
-import engine.InputManager;
-import game.ball.*;
-import engine.AudioManager;
-import engine.Sonido;
 
-
-/**
- * ...
- * @author ...
- */
 class Screen extends GameElement
 {	
 	// Constantes
@@ -29,65 +25,95 @@ class Screen extends GameElement
 	private var fondo:Bitmap;
 	
 	// Estado del juego
-	public var pelotasCantidad:Int;
 	public var enJuego:Bool;
 	
-	// Objetos en pantalla
-	public var p1:Player;
-	public var p2:Player;
+	// Objetos en pantalla	
+	public var jugadores(default, null):Array<Player>;
 	
-	private var p1muerto:Bool;
-	private var p2muerto:Bool;
-	
-	var jugadores:Array<Player>;
-	public var pelotas:Array<Ball>;
-	public var boss:Boss;
-	public var powerups:Array<PowerUp>;
-	
-
+	public var pelotas(default, null):Array<Ball>;
 	
 	public var btnLevel:Button;
-	public var game:GameScene;
-	public var text:TextField;
+	
+	private var text_subtitle:TextField;
+	private var text_message:TextField;
+	private var message_board:Bitmap;
+	private var message_board_success:Bitmap;
+	
+	// Boss life
+	private var boss_life_back:Bitmap = null;
+	private var boss_life_front:Bitmap = null;
+	private var boss_name:TextField;
 
-	public function new(p_game:GameScene) 
-	{
+	public function new(x:Float,y:Float){
 		super();
 		
-		game = p_game;
+		this.x = x;
+		this.y = y;
 		
 		loadPlayers();
+		
+		// Fonts
+		initFonts();
+		pelotas = new Array<Ball>();
 	}
 	
 	public function init() {
-		// Fondo
-		addChild(fondo);
+		addChild(fondo); // Fondo
 		
-		// Jugador
-		jugadores.push(p1);
-		addChild(p1);
-		hijos.push(p1);
-		p1.reset();
+		for ( it in 0 ... GameScene.PLAYER_CANT ) // Jugador
+			jugadores[it].init();
 		
-		if (GameScene.PLAYER_CANT >= 2) {			
-			jugadores.push(p2);
-			addChild(p2);
-			hijos.push(p2);
-			p2.reset();
-		}
-		
-		// PowerUp
-		loadPowerUps();
+		GameScene.powerupManager.init(); // PowerUp
 	}
 	
 	public function end() {
-		// Fondo
-		removeChild(fondo);
+		removeChild(fondo);// Fondo
 		
-		// Jugador
-		unloadPlayers();
+		resetLevel();
 		
-		// PowerUp (nada)
+		for ( it in 0 ... GameScene.PLAYER_CANT )// Jugador
+			jugadores[it].end();
+			
+		if ( GameScene.level.lvl_boss ) GameScene.level.boss.end();
+	}
+	
+	private function initFonts() {
+		var font = openfl.Assets.getFont('fonts/JOINTBYPIZZADUDE.ttf').fontName;
+		
+		var text_format_subtitle:TextFormat = new TextFormat(font);
+		text_format_subtitle.size = 30*0.8;
+		text_format_subtitle.color = 0x532b00;
+		text_format_subtitle.bold = true;
+		text_format_subtitle.align = flash.text.TextFormatAlign.CENTER;
+		
+		message_board = new Bitmap ( Assets.getBitmapData( "images/message_board.png" ));
+		message_board.y = 113;
+		message_board.x = 217;
+		
+		text_subtitle=new TextField();
+		text_subtitle.selectable = false;
+		text_subtitle.width = 290;
+		text_subtitle.height = 45;
+		text_subtitle.setTextFormat(text_format_subtitle);
+		text_subtitle.x = message_board.x + 25;
+		text_subtitle.y = message_board.y + 175;		
+		
+		var text_format_message:TextFormat = new TextFormat(font);
+		text_format_message.size = 75*0.8;
+		text_format_message.color = 0xc99964;
+		text_format_message.align = flash.text.TextFormatAlign.CENTER;
+		
+		text_message=new TextField();
+		text_message.selectable = false;
+		text_message.width = 235;
+		text_message.height = 75;
+		text_message.setTextFormat(text_format_message);
+		text_message.x = message_board.x + 50;
+		text_message.y = message_board.y + 37;
+		
+		message_board_success = new Bitmap ( Assets.getBitmapData( "images/message_board_success.png" ));
+		message_board_success.x = (SCREEN_WIDTH - message_board_success.width) / 2;
+		message_board_success.y = (SCREEN_HEIGHT - message_board_success.height) / 2;		
 	}
 
 	public function setBackground(img:String) {
@@ -96,64 +122,29 @@ class Screen extends GameElement
 		fondo.height = SCREEN_HEIGHT;
 	}
 	
-	public function loadPlayers() {		
+	private function loadPlayers() {		
 		jugadores = new Array<Player>();
 		
 		// Agregar jugador 1
-		p1 = new Player(this, game.hud, 1);
-		
-		// Agregar jugador 2
-		p2 = new Player(this, game.hud, 2);	
-		
-		restablecerPosiciones();
+		for ( id in 0 ... GameScene.MAX_PLAYERS )
+			jugadores.push(new Player(id+1));
 	}
 	
-	public function restablecerPosiciones() {
-		p1.y = Screen.SCREEN_HEIGHT - p1.height;
-		p1.x = Player.P1_X_INICIAL;
-		p2.y = Screen.SCREEN_HEIGHT - p2.height;
-		p2.x = Player.P2_X_INICIAL - p2.width;
-	}
-	
-	public function unloadPlayers() {		
-		if ( !p1muerto ) {			
-			p1.reset();
-			jugadores.remove(p1);
-			removeChild(p1);
-			hijos.remove(p1);
-		}
+	public function ubicarPlayers(distancia:Float = -1) { // No soporta más de 2 players
+		if ( distancia == -1 ) distancia = Player.POS_INICIAL;
 		
 		
-		if (GameScene.PLAYER_CANT >= 2 &&  !p2muerto) {
-			p2.reset();
-			jugadores.remove(p2);
-			removeChild(p2);
-			hijos.remove(p2);
+		
+		for ( player in jugadores ){
+			player.y = Screen.SCREEN_HEIGHT - player.h;
+			if ( player.id == 1 ) 
+				player.x = (distancia/100) * Screen.SCREEN_WIDTH;
+			else
+				player.x = Screen.SCREEN_WIDTH * (1 - distancia / 100) - player.w;
 		}
 	}
-	
-	public function unload1() {		
-		p1.reset();
-		jugadores.remove(p1);
-		removeChild(p1);
-		hijos.remove(p1);
-		p1muerto = true;
-	}
-	
-	
-	public function unload2() {		
-		p2.reset();
-		jugadores.remove(p2);
-		removeChild(p2);
-		hijos.remove(p2);
-		p2muerto = true;
-	}
-	
-	public function loadPowerUps() {
-		powerups = new Array<PowerUp>();
-		PowerUp.init(this);
-	}
-	
+		
+	// Pelotas
 	public function agregarPelota(b:Ball) {
 		// Agregar a pelotas comunes
 		pelotas.push(b);
@@ -161,293 +152,194 @@ class Screen extends GameElement
 		hijos.push(b);
 		
 		// Sumar cantidad
-		pelotasCantidad++;
+		GameScene.level.ballCounter(true);
 	}	
-	
 	public function desactivarPelota(b:Ball) {
 		pelotas.remove(b);
-	}
-	
+	}	
 	public function eliminarPelota(b:Ball) {
 		removeChild(b);
-		hijos.remove(b);		
-		pelotasCantidad--;
+		hijos.remove(b);
+		GameScene.level.ballCounter(false); // Restar cantidad
+	}
+	public function ballsExplode() {
+		// Por bug extraño, este for no recorre todas las pelotas!! No sé qué onda!!!
+		for ( p in pelotas ) {
+			p.reventar(false);
+			desactivarPelota(p);			
+		}
 	}
 	
+	// Manejo de niveles
 	public function resetLevel() {
-		// Eliminar pelotas (no borra de pelotas)
-		for (p in pelotas) {
+		for (p in pelotas){ // Eliminar pelotas que quedan (no borra de pelotas)
 			eliminarPelota(p);
+			desactivarPelota(p);
 		}
 		
-		// Reestablecer jugador y eliminar sogas
-		for (p in jugadores) {
-			p.reset();
-		}
+		for (p in jugadores)// Reestablecer jugador y eliminar sogas
+			p.resetLevel();
 			
-		// Eliminar powerups
-		PowerUp.reset();
+		GameScene.powerupManager.reset();// Eliminar powerups
 	}
 	
-	public function showLevelName(str:String) {
-		// Setear fuente
-		var tf = new TextFormat(openfl.Assets.getFont('fonts/JOINTBYPIZZADUDE.ttf').fontName);
-		tf.size = 100*0.8;
-		tf.color = 0x000000;
-		//tf.bold = true;
-		
+	// Mensajes
+	public function showLevelName(str:Int , subtitle:String) {
 		// Setear texto
-		text=new TextField();
-		text.selectable=false;
-		text.height=100;
-		text.text= str;
-		text.setTextFormat(tf);
-		text.x = (SCREEN_WIDTH - text.width) / 2;
-		text.y = (SCREEN_HEIGHT - text.height) / 2;
-		text.alpha = 0;
+		if ( str != 0 )
+			text_message.text = "Nivel " + str;		
+		else
+			text_message.text = "Boss!";
+		text_message.alpha = 0;
+		message_board.alpha = 0;
 		
-		addChild(text);
+		addChild(message_board);
+		addChild(text_message);
 		
-		trace("GG " + GameScene.CURRENT_SCENE + " " + GameScene.CURRENT_LEVEL);
+		Actuate.tween(message_board, 1, { alpha: 1 } ).delay(1);
+		Actuate.tween(text_message, 1, { alpha: 1 } ).delay(1).onComplete(function() {
+			showSubtitle(subtitle, function() {
+				Actuate.tween(text_subtitle, 1, { alpha: 0 } ).delay(3).onComplete(function(){removeChild(text_subtitle);});
+				Actuate.tween(message_board, 1, { alpha: 0 } ).delay(3).onComplete(function(){removeChild(message_board);});
+				Actuate.tween(text_message, 1, { alpha: 0 } ).delay(3).onComplete(function() {
+					removeChild(text_message);
+					startLevel();
+				});
+			});
+		});
+	}
 		
+	public function showSubtitle(msj:String , callback:Dynamic) {
 		
-		Actuate.tween(text, 1, { alpha: 1 } ).delay(1).onComplete(hideLevelName);
+		text_subtitle.text = msj;
+		text_subtitle.alpha = 0;
+		
+		addChild(text_subtitle);
+		
+		Actuate.tween(text_subtitle, 1, { alpha: 1 } ).onComplete(callback);
 	}
 	
-	public function hideLevelName() {
-		//if (.....)
+	public function showScore(callback:Dynamic) {
+		message_board_success.alpha = 0;
+		message_board_success.visible = true;
 		
-		showAdvice();
-		
-		Actuate.tween(text, 1, { alpha: 0 } ).delay(3).onComplete(startLevel);
+		addChild(message_board_success);
+		Actuate.tween(message_board_success, 1, { alpha: 1 } ).delay(0).onComplete(function() {
+			Actuate.tween(message_board_success, 1, { alpha: 0 } ).delay(1).onComplete( function() {
+				removeChild(message_board_success);
+				callback();
+			} );
+		});
 	}
-		
-	public function showAdvice() {
-		// Setear fuente
-		var tf1 = new TextFormat(openfl.Assets.getFont('fonts/JOINTBYPIZZADUDE.ttf').fontName);
-		tf1.size = 40*0.8;
-		tf1.color = 0x000000;
-		tf1.bold = true;
-		
-		// Setear texto
-		var text2=new TextField();
-		text2.selectable=false;
-		text2.height=40;
-		text2.setTextFormat(tf1);
-		text2.alpha = 0;
-		
-		//ESCENA 1
-		if (GameScene.CURRENT_SCENE == 1 && GameScene.CURRENT_LEVEL == 1) {
-			text2.text = "Ojo con las bolas";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 80;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 1 && GameScene.CURRENT_LEVEL == 2) {
-			text2.text = "Trata de agarrar los Power Ups!";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 80;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 1 && GameScene.CURRENT_LEVEL == 3) {
-			text2.text = "Mas Grandes?";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 80;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 1 && GameScene.CURRENT_LEVEL == 4) {
-			text2.text = "Pensabas que era facil?";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 80;
-		}
-		
-		//ESCENA 2
-		if (GameScene.CURRENT_SCENE == 2 && GameScene.CURRENT_LEVEL == 1) {
-			text2.text = "Cuidado con estas peculiares bolas!";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 2 && GameScene.CURRENT_LEVEL == 2) {
-			text2.text = "De donde saldran?";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 2 && GameScene.CURRENT_LEVEL == 3) {
-			text2.text = "Nada es lo que parece";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 2 && GameScene.CURRENT_LEVEL == 4) {
-			text2.text = "CORRE!!!";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 2 && GameScene.CURRENT_LEVEL == 5) {
-			text2.text = "DESTRUILA CUANTO ANTES!!";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		//ESCENA 3
-		if (GameScene.CURRENT_SCENE == 3 && GameScene.CURRENT_LEVEL == 1) {
-			text2.text = "Preparado?";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 3 && GameScene.CURRENT_LEVEL == 2) {
-			text2.text = "Saltar es una posible solucion";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 3 && GameScene.CURRENT_LEVEL == 3) {
-			text2.text = "Este parece facil o no ?";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 3 && GameScene.CURRENT_LEVEL == 4) {
-			text2.text = "SON MUCHAS!!!";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		//ESCENA 4
-		if (GameScene.CURRENT_SCENE == 4 && GameScene.CURRENT_LEVEL == 1) {
-			text2.text = "Frio Invierno";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 4 && GameScene.CURRENT_LEVEL == 2) {
-			text2.text = "Salta y hacelo todo rapido";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 4 && GameScene.CURRENT_LEVEL == 3) {
-			text2.text = "Esto no te lo esperas";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 4 && GameScene.CURRENT_LEVEL == 4) {
-			text2.text = "TODO RAPIDO";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		
-		if (GameScene.CURRENT_SCENE == 4 && GameScene.CURRENT_LEVEL == 5) {
-			text2.text = "PERSEVERA Y TRIUNFARAS";
-			text2.x = (SCREEN_WIDTH - text2.width) / 2;
-			text2.y = ((SCREEN_HEIGHT - text2.height) / 2 ) + 60;
-		}
-		addChild(text2);
-		
-		Actuate.tween(text2, 2, { alpha: 1 } ).onComplete(function() { text2.alpha = 0; } );
-	}
-		
+	
+	// Game Options
 	public function startLevel() {
 		enJuego = true;
 	}
 	
-	public function showScore() {
-		// Setear fuente
-		var tf = new TextFormat(openfl.Assets.getFont('fonts/JOINTBYPIZZADUDE.ttf').fontName);
-		tf.size = 100*0.8;
-		tf.color = 0x000000;
-		//tf.bold = true;
-		
-		// Setear texto
-		text=new TextField();
-		text.selectable=false;
-		text.height=100;
-		text.text= "Nivel superado";
-		text.setTextFormat(tf);
-		text.x = (SCREEN_WIDTH - text.width) / 2;
-		text.y = (SCREEN_HEIGHT - text.height) / 2;
-		text.alpha = 0;
-		
-		addChild(text);
-		Actuate.tween(text, 1, { alpha: 1 } ).delay(0).onComplete(hideScore);
-	}
-	
-	public function hideScore() {
-		Actuate.tween(text, 1, { alpha: 0 } ).delay(1).onComplete(game.loadLevel);
-	}
-	
-	public function iniciarVida(p:Player) {
-		enJuego = true;
-	}
-	
 	override public function updateLogic(time:Float){
-		if (enJuego && !game.enPausa) {
+		if (enJuego && ! GameScene.enPausa) {
 			super.updateLogic(time);
 			
 			// Colisiones Pelota(normal, fuego) y boss - soga
 			for (j in jugadores) {
-				for (soga in j.sogas ) {
-					// Para cada soga de cada jugador, verificar si colisiona con alguna pelota
-					
-					if ( soga.isOnScreen() ) {
-						var colisiona = false;
-						for (b in pelotas) {
-							if (!colisiona && soga.collisionTest(b)) {
+				if ( j.alive ){
+					for (soga in j.sogas ) {
+						// Para cada soga de cada jugador, verificar si colisiona con alguna pelota
+						
+						if ( soga.isOnScreen() ) {
+							var colisiona = false;
+							for (b in pelotas) {
+								if (!colisiona && soga.collisionTest(b)) {
+									colisiona = true;
+									
+									// Eliminar soga
+									soga.colision();
+									
+									// Reventar pelot
+									PangRevenge.audioManager.justPlay(Sonido.EXPLO1);
+									b.reventar();
+									
+									// Sumar puntos
+									GameScene.hud.addScore(j.id, 50);
+								}
+							}
+							
+							if (GameScene.level.lvl_boss && !colisiona && soga.collisionBoss(GameScene.level.boss)) {
 								colisiona = true;
-								
-								// Eliminar soga
 								soga.colision();
-								
-								// Reventar pelot
-								AudioManager.getInstance().justPlay(Sonido.EXPLO1);
-								b.reventar();
-								
-								// Sumar puntos
-								game.hud.addScore(j.id, 50);
+								GameScene.level.boss.getDamage();
+								GameScene.hud.addScore(j.id, 50);
 							}
 						}
-						
-						if (boss != null && !colisiona && soga.collisionBoss(boss)) {
-							colisiona = true;
-							soga.colision();
-							boss.getDamage();
-							game.hud.addScore(j.id, 50);
-						}
 					}
-				}
-				// COLISION DE POWERUPS !!!
-				for (pu in powerups) {
-					if ( j.collisionTest(pu) ) {
-						pu.action(j);
-					}
-				}
-				
-				// Colision jugador - boss
-				if (boss != null && boss.colisionJugador(j)) {
-					j.actionMorir(null);
+					// Colision de PowerUps
+					for (pu in GameScene.powerupManager.powerups)
+						if ( j.collisionTest(pu) )
+							pu.action(j);
+					
+					// Colision jugador - boss
+					if (GameScene.level.lvl_boss && GameScene.level.boss.colisionJugador(j))
+						j.colision(null);
 				}
 			}
 			
 			// Colisiones Jugador - Pelota
-			for (b in pelotas) {
-				for (j in jugadores) {
-					if (b.colisionJugador(j)) {
-						j.actionMorir(b);
-					}
-				}
-			}
-			
-
+			for (b in pelotas)
+				for (j in jugadores)
+					if ( j.alive )
+						if (b.colisionJugador(j))
+							j.colision(b);
 			
 		}
 	}
 	
 	public function gameOver() {		
-		game.sm.switchScene('gameover');
+		PangRevenge.sm.switchScene('gameover');
+	}
+	
+	// Bos HUD
+	// Boss
+	public function setHudBoss(boss:Boss) {
+		// Create life bar.
+		if ( boss_life_back == null ) {
+			boss_life_back = new Bitmap ( Assets.getBitmapData("images/hud_boss_life_back.png") );
+			boss_life_front = new Bitmap ( Assets.getBitmapData("images/hud_boss_life_front.png") );
+			boss_life_back.y = boss_life_front.y = 25;
+			boss_life_back.x = boss_life_front.x = ( ( Screen.SCREEN_WIDTH - boss_life_back.width ) / 2);
+					
+			//Formato Jefe
+			var tfB=new TextFormat(openfl.Assets.getFont('fonts/ARCADE.TTF').fontName);
+			tfB.size=40;
+			tfB.color=0xd300b6;
+			tfB.bold=true;
+			tfB.align = flash.text.TextFormatAlign.CENTER;
+			
+			//Jug1
+			boss_name = new TextField();
+			boss_name.width=550;
+			boss_name.selectable=false;
+			boss_name.height = 10;
+			boss_name.x = ( ( Screen.SCREEN_WIDTH - boss_name.width ) / 2);
+			boss_name.y = -10;
+			boss_name.setTextFormat(tfB);
+		
+		}
+		boss_name.text = boss.nombre;
+		boss_name.x = ( ( Screen.SCREEN_WIDTH - boss_name.width ) / 2);
+		boss_life_front.width = boss_life_back.width;
+		
+		addChild(boss_name);
+		addChild(boss_life_back);
+		addChild(boss_life_front);
+	}
+	public function updateHudBoss() {
+		var porc:Float = GameScene.level.boss.health / GameScene.level.boss.max_health;
+		boss_life_front.width = boss_life_back.width * porc;
+	}
+	public function destroyHudBoss() {
+		removeChild(boss_name);
+		removeChild(boss_life_back);
+		removeChild(boss_life_front);		
 	}
 }

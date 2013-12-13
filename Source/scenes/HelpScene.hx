@@ -1,15 +1,16 @@
 package scenes;
-import engine.Button;
+
 import engine.SceneManager;
+import engine.Scene;
+import engine.AudioManager;
+import engine.Sonido;
+import engine.graphics.Button;
 import flash.display.Bitmap;
 import flash.events.Event;
 import flash.text.TextField;
 import flash.text.TextFormat;
 import motion.Actuate;
 import openfl.Assets;
-import engine.Scene;
-import engine.AudioManager;
-import engine.Sonido;
 
 
 /**
@@ -41,12 +42,6 @@ class HelpScene extends Scene
 		controls.y = 100;
 		this.addChild(controls);
 		
-		//VOLVER
-		boton = new Button(volver);
-		boton.x = 500;
-		boton.y = 20;
-		this.addChild(boton);
-		
 		//TEXTO
 		this.text=new TextField();
 		var tf=new TextFormat(openfl.Assets.getFont('fonts/menu.ttf').fontName);
@@ -63,13 +58,18 @@ class HelpScene extends Scene
 		this.text.y = 20;
 		this.addChild(text);
 		
+		//VOLVER
+		boton = new Button("images/back.png" , volver);
+		boton.x = 10;
+		boton.y = 10;
+		addChild(boton);		
 	}
 	
 	override public function init() {
-		AudioManager.getInstance().setSound(Sonido.HELP,true);
+		PangRevenge.audioManager.setSound(Sonido.HELP,true);
 		alpha = 0;
 		Actuate.tween(this, 1, { alpha:1 } );
-		}
+	}
 	
 	override public function end(onComplete:Dynamic){
 		this.alpha=1;
@@ -77,7 +77,7 @@ class HelpScene extends Scene
 	}
 	
 	public function volver(ev:Event) {
-		AudioManager.getInstance().justPlay(Sonido.VOLVER);
+		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('menu'); 
 	}
 }
