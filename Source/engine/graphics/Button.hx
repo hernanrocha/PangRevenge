@@ -1,6 +1,5 @@
 package engine.graphics;
 
-import engine.GameElement;
 import openfl.Assets;
 import flash.display.Sprite;
 import flash.events.MouseEvent;
@@ -9,7 +8,7 @@ import flash.text.TextField;
 import flash.text.TextFormat;
 
 
-class Button extends GameElement{
+class Button extends Rotable{
 
 	var boton:Bitmap;
 	var text:TextField;
@@ -19,12 +18,12 @@ class Button extends GameElement{
 		
 		boton = new Bitmap(Assets.getBitmapData(dir));
 		boton.visible = true;
-		this.addChild(boton);
-		this.visible = true;
+		
+		addChild(boton);
 		
 		boton.addEventListener(MouseEvent.CLICK, onClick);
-		boton.addEventListener(MouseEvent.MOUSE_OVER, function(e) { useHandCursor = true; boton.rotation = rot; } );
-		boton.addEventListener(MouseEvent.MOUSE_OUT, function(e) { useHandCursor = false; boton.rotation = 0; } );
+		boton.addEventListener(MouseEvent.MOUSE_OVER, function(e) { useHandCursor = true; rotate(rot); } );
+		boton.addEventListener(MouseEvent.MOUSE_OUT, function(e) { useHandCursor = false; rotate(0); } );
 	}	
 
 }

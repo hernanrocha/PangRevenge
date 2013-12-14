@@ -10,6 +10,7 @@ import scenes.GameOverScene;
 import scenes.GameScene;
 import scenes.HelpScene;
 import scenes.LevelSelect;
+import scenes.MenuScene;
 import scenes.WinScene;
 
 import flash.display.Sprite;
@@ -50,9 +51,9 @@ class PangRevenge extends Sprite {
 		//GameScene.MAX_SCENE = 3;
 		
 		// Scene Manager
-		sm.suscribeScene('menu',new scenes.MenuScene(sm));
 		sm.suscribeScene('game', new GameScene(sm));
 		sm.suscribeScene("levelselect", new LevelSelect(sm));
+		sm.suscribeScene('menu',new MenuScene(sm));
 		sm.suscribeScene('help', new HelpScene(sm));
 		sm.suscribeScene('gameover', new GameOverScene(sm));
 		sm.suscribeScene('winner', new WinScene(sm));
@@ -62,9 +63,9 @@ class PangRevenge extends Sprite {
 		
 		inputManager.suscribe(stage);
 		stage.addEventListener(flash.events.Event.ENTER_FRAME,gameLoop);
-		stage.addEventListener(flash.events.Event.RESIZE,onResize);
+		//stage.addEventListener(flash.events.Event.RESIZE,onResize);
 		
-		onResize(null);
+		//onResize(null);
 		
 		addBorders();
 	}

@@ -117,10 +117,6 @@ class Player extends GameElement
 		setAlive(false);
 	}
 	
-	// Metodo (HERNAN)
-	private function metodoVacio():Int { return 0; }
-	// Metodo (HERNAN)
-	
 	// Segun la organizacion de los archivos: images/player1der.png = id + nom + .png
 	private function getPlayerAsset(nom:String) {
 		return Assets.getBitmapData("images/player" + id + nom + ".png");
@@ -398,9 +394,7 @@ class Player extends GameElement
 // Efectos del Power UP
 
 	// PowerUp/Down Municion
-	public function incrementarMunicion(i:Int) {
-		trace("Incrementar municion. Municion_disp: " + municion_disp + ". Municion Max: "+municion_max);
-		
+	public function incrementarMunicion(i:Int) {		
 		var r = municion_max + i;
 		if ( r > 2 || r < 1 ) return;
 		municion_max = r;
@@ -410,8 +404,6 @@ class Player extends GameElement
 			GameScene.hud.setElemento(Hud.DOBLE_TIRO , this.id);
 		else
 			GameScene.hud.unsetElemento(Hud.DOBLE_TIRO , this.id);
-			
-		trace("R: " + r);
 	}
 	// Reset
 	public function resetMunicion() {
@@ -466,9 +458,5 @@ class Player extends GameElement
 	public function resetSpeed() {
 		speed = 1;
 		GameScene.hud.unsetElemento(Hud.SPEED , this.id);
-	}
-	
-	
-	
-	
+	}	
 }

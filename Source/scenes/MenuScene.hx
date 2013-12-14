@@ -1,58 +1,135 @@
 package scenes;
 
+import engine.graphics.BackgroundSidescroller;
+import engine.graphics.Button;
+import engine.graphics.ContAnimation;
+import engine.graphics.Transitioner;
 import engine.Scene;
 import engine.SceneManager;
 import engine.AudioManager;
 import engine.Sonido;
 import engine.graphics.BallButton;
+import flash.display.Sprite;
+
 import flash.display.Bitmap;
 import flash.events.Event;
-import motion.Actuate;
+import flash.events.MouseEvent;
 import flash.text.TextField;
 import flash.text.TextFormat;
-import motion.MotionPath;
 import openfl.Assets;
+
+import game.Screen;
+import motion.Actuate;
+import motion.MotionPath;
 import motion.easing.*;
 
 
 class MenuScene extends Scene {
 
-	private var b1:BallButton;
-	private var b2:BallButton;
-	private var b3:BallButton;
-	private var text:TextField;
-	private var fondo:Bitmap;
+	private var logo:Bitmap;
 	private var revenge:Bitmap;
+	private var transitioner:Transitioner;
 	
 	public function new (sm:SceneManager) {
 		super(sm);
+		
+		transitioner = new Transitioner();
+		
+		transitioner.push( new Bitmap( Assets.getBitmapData("images/fondos/BackSpring.jpg") ) );
+		transitioner.push( new Bitmap( Assets.getBitmapData("images/fondos/BackSummer.jpg") ) );
+		transitioner.push( new Bitmap( Assets.getBitmapData("images/fondos/BackAutumn.jpg") ) );
+		transitioner.push( new Bitmap( Assets.getBitmapData("images/fondos/BackWinter.jpg") ) );
+		
+		transitioner.onEvent = true;
+		transitioner.tiempo_trans = 6;
+		transitioner.init();
+		transitioner.x = (800 - transitioner.width) / 2;
+		transitioner.y = (600 - transitioner.height);
+		
+		addChild(transitioner);
+		hijos.push(transitioner);		
+		
+		var sidescroll:BackgroundSidescroller = new BackgroundSidescroller(800);
+		sidescroll.push( new Bitmap( Assets.getBitmapData("images/fondos/scroll_spring.png") ) );
+		sidescroll.push( new Bitmap( Assets.getBitmapData("images/fondos/scroll_summer.png") ) );
+		sidescroll.push( new Bitmap( Assets.getBitmapData("images/fondos/scroll_autumn.png") ) );
+		sidescroll.push( new Bitmap( Assets.getBitmapData("images/fondos/scroll_winter.png") ) );
+		sidescroll.merge = 50;
+		
+		sidescroll.init();
+		sidescroll.x = 0;
+		sidescroll.y = (600 - sidescroll.height); // 600 - 400 : Fondo de página
+		
+		sidescroll.subscribe(transitioner.onChange);
+		
+		addChild(sidescroll);
+		hijos.push(sidescroll);		
 		 
-		fondo = new Bitmap(Assets.getBitmapData("images/PangLogo.png"));
-		fondo.width = 800;
-		fondo.height = 300;
-		fondo.visible = true;
-		this.addChild(fondo);
+		logo = new Bitmap(Assets.getBitmapData("images/PangLogo.png"));
+		logo.x = (800 - logo.width);// / 2;
+		logo.visible = true;
+		addChild(logo);
+			
+		
+		var stick:Bitmap = new Bitmap ( Assets.getBitmapData("images/menu_stick.png") );
+		var btn_opciones:Button = new Button("images/menu_opciones.png", null, 2);
+		var btn_ayuda:Button = new Button("images/menu_ayuda.png", null, -2);
+		var btn_creditos:Button = new Button("images/menu_creditos.png", null, 2);
+		
+		stick.x = 676; stick.y = 595 - stick.height;
+		btn_opciones.x = stick.x - 76; btn_opciones.y = stick.y + 13;
+		btn_ayuda.x = stick.x - 81; btn_ayuda.y = stick.y + 61;
+		btn_creditos.x = stick.x - 51; btn_creditos.y = stick.y + 113;
+		
+		this.addChild(stick);
+		this.addChild(btn_opciones);
+		this.addChild(btn_ayuda);
+		this.addChild(btn_creditos);
+		
+		// Experimento botones
+		
+		var players:Bitmap = new Bitmap ( Assets.getBitmapData("images/menu_players.png") );
+		addChild(players);
+		players.x = 28;
+		players.y = -players.height; //50
+		
+		var link1p:Bitmap = new Bitmap ( Assets.getBitmapData("images/menu_players_boton.png") );
+		var link2p:Bitmap = new Bitmap ( Assets.getBitmapData("images/menu_players_boton.png") );
+		
+		link1p.addEventListener( MouseEvent.CLICK , play1 );
+		link2p.addEventListener( MouseEvent.CLICK , play2 );
+		
+		link1p.addEventListener( MouseEvent.MOUSE_OVER , function(e) { useHandCursor = true; } );
+		link2p.addEventListener( MouseEvent.MOUSE_OVER , function(e) { useHandCursor = true; } );
+		
+		link1p.addEventListener( MouseEvent.MOUSE_OUT , function(e){ useHandCursor = false; } );
+		link2p.addEventListener( MouseEvent.MOUSE_OUT , function(e) { useHandCursor = false; } );
 				
-		revenge = new Bitmap(Assets.getBitmapData("images/revenge.png"));
-		this.addChild(revenge);
-		
-		b1 = new BallButton(225, 200, play1, '1 Jugador');
-		b2 = new BallButton(225, 200, play2, '2 Jugadores');
-		b3 = new BallButton(225, 200, help, 'Ayuda');
-		b1.x=25;
-		b2.x=287;
-		b3.x = 550;
-		b1.y = - 400;
-		b2.y = - 400;
-		b3.y = - 400;
-		b1.visible = false;
-		b2.visible = false;
-		b3.visible = false;
-		
-		this.addChild(b1);
-		this.addChild(b2);
-		this.addChild(b3);
+		Actuate.tween(players, 2, { y:0 } ).onComplete(function() {
+			addChild(link1p);
+			addChild(link2p);
+			
+			link1p.x = link2p.x = players.x + 8;
+			link1p.y = players.y + 197; link2p.y = players.y + 340;
+		});
 	}
+	
+	override public function init(){
+		//SONIDO
+		PangRevenge.audioManager.setSound(Sonido.MENU,true);
+		
+		//TARDANZA AL ENTRAR
+		this.alpha = 0;
+		Actuate.tween(this, 0.2, { alpha:1 } );
+	}
+	
+	override public function end(onComplete:Dynamic){
+		Actuate.tween(this, 1, { alpha:0 } ).onComplete(onComplete);
+	}
+	
+	/*override public function updateLogic(time:Float) {
+		super.updateLogic(time);		
+	}*/
 	
 	public function play1(event:Event) {
 		PangRevenge.audioManager.justPlay(Sonido.EXPLO1);
@@ -74,50 +151,6 @@ class MenuScene extends Scene {
 	
 	public function exit(){
 		flash.system.System.exit(0);
-	}
-	
-	override public function init(){
-		b1.y = - 400;
-		b2.y = - 400;
-		b3.y = - 400;		
-		
-		//SONIDO
-		PangRevenge.audioManager.setSound(Sonido.MENU,true);
-		
-		//TARDANZA AL ENTRAR
-		Actuate.tween(this, 0.2, { alpha:1 } );
-		
-		//REVENGE
-		revenge.width = 80000;
-		revenge.height = 60000;
-		revenge.alpha = 0;
-		
-		//ANIMACION
-		Actuate.tween(revenge, 1.5, { alpha : 1, width : 600, height : 200, x: 100, y: 100 } ).delay(1).onComplete(function(){
-		
-		//Bola 1
-		b1.visible = true;
-		Actuate.tween (b1, 4, {  y: 350 } ).ease(Bounce.easeOut);
-		
-		//Bola 2
-		b2.visible = true;	
-		Actuate.tween (b2, 4, {  y: 350 } ).ease(Bounce.easeOut).delay(0.2);
-			
-		//Bola 3
-		b3.visible = true;	
-		Actuate.tween (b3, 4, {  y: 350 } ).ease(Bounce.easeOut).delay(0.3);
-		
-		});		
-		
-		
-	}
-	
-	override public function end(onComplete:Dynamic){
-		b1.y = - 400;
-		b2.y = - 400;
-		b3.y = - 400;
-		this.alpha=1;
-		Actuate.tween(this,1,{alpha:0}).onComplete(onComplete);
 	}
 
 }

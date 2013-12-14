@@ -195,30 +195,37 @@ class Ball extends GameElement
 		
 		// Determinar si es necesario crear otras bolas
 		if (tam != TAM_4 && dividir) {
-			trace("Total de "+powerups.length+" powerups. Tam: "+(4 - tam));
 			
-			if ( powerups.length >= (4 - tam) ) {
-				GameScene.powerupManager.spawnPowerUp( powerups[0], x, y);	
-				powerups.remove(powerups[0]);
-			}
+			var pu1:Array<String> = null;
+			var pu2:Array<String> = null;
 			
-			var pu1:Array<String> = new Array<String>();
-			var pu2:Array<String> = new Array<String>();
-			
-			var cursor:Int = 1;
-			if ( powerups.length >= 2 ) {
-				for ( pu in powerups ) {
-					if ( cursor == 1 ) pu1.push(pu);
-					else pu2.push(pu);
-					cursor = -cursor;
-				}
-			} else {
-				if ( Math.random() < 0.5 )
-					pu1.push(powerups[0]);
-				else
-					pu2.push(powerups[0]);
-			}
+			if ( powerups != null && powerups.length > 0 ) {
 				
+				if ( powerups.length > (4 - tam) || ( Math.random() < 0.25 ) ) {
+					GameScene.powerupManager.spawnPowerUp( powerups[0], x, y);	
+					powerups.remove(powerups[0]);
+				}
+				
+				pu1 = new Array<String>();
+				pu2 = new Array<String>();
+				
+				var cursor:Int;
+				if ( Math.random() < 0.5 ) cursor = 1; else cursor = -1; // Randomize izq o der
+				
+				if ( powerups.length >= 2 ) {
+					for ( pu in powerups ) {
+						if ( cursor == 1 ) pu1.push(pu);
+						else pu2.push(pu);
+						cursor = -cursor;
+					}
+				} else if ( powerups.length > 0 ) {
+					if ( Math.random() < 0.5 )
+						pu1.push(powerups[0]);
+					else
+						pu2.push(powerups[0]);
+				}
+			}
+			
 			var b1 = Ball.getBall(tam + 1);
 			b1.spawn(x, y, Ball.VX, -2, false);
 			b1.setPowerUps(pu1);
@@ -230,7 +237,7 @@ class Ball extends GameElement
 			GameScene.screen.agregarPelota(b2);
 			
 		}else {
-			if ( powerups.length > 0 )
+			if ( powerups != null && powerups.length > 0 )
 				GameScene.powerupManager.spawnPowerUp( powerups[0], x, y); // Max 1 powerup.
 		}
 		powerups = null;

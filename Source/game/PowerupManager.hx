@@ -37,18 +37,26 @@ class PowerupManager
 	}
 	
 	public function spawnPowerUp(nom:String , x:Float , y:Float) {
+		var pu:PowerUp = getPowerup(nom);
+		
+		if ( pu == null ) {
+			trace("ERROR!!!!");
+			return;
+		}
 		getPowerup(nom).spawn(x, y);
 	}
 	
 	private function getPowerup(nom:String):PowerUp {
-		var pups:Array<PowerUp> = libreria.get(nom);
+		if ( ! libreria.exists(nom) ) return null;
 		
+		var pups:Array<PowerUp> = libreria.get(nom);
+			
 		// Itero hasta encontrar un powerup disponible
 		for ( powerup in pups )
 			if ( ! powerup.visible ) return powerup;
 		
 		var newPowerup:PowerUp = getNewPowerUp(nom);
-		pups.push(newPowerup);
+		if ( newPowerup != null ) pups.push(newPowerup);
 		return newPowerup;
 	}
 	
