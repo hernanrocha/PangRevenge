@@ -11,6 +11,7 @@ class Transitioner extends GameElement
 {
 	private var sprites:Array<Bitmap>;
 	private var iterador:Int = 0;
+	private var next:Int = 1;
 	private var dyn_alpha:Float = 0;
 	private var hold_time:Float = 0;
 	
@@ -30,12 +31,15 @@ class Transitioner extends GameElement
 		sprites.push(btm);
 	}
 	
-	public function init() {
-		addChild(sprites[0]);
-		addChild(sprites[1]);
-		sprites[0].visible = sprites[1].visible = true;
-		sprites[0].alpha = 1;
-		sprites[1].alpha = 0;
+	public function init(it:Int = 0) {
+		iterador = it;
+		next = (it + 1) % sprites.length;
+		
+		addChild(sprites[iterador]);
+		addChild(sprites[next]);
+		sprites[iterador].visible = sprites[next].visible = true;
+		sprites[iterador].alpha = 1;
+		sprites[next].alpha = 0;
 		hold_time = tiempo_trans;
 		dyn_alpha = 0;
 	}
@@ -67,8 +71,7 @@ class Transitioner extends GameElement
 	private function transicion(time:Float) {
 		if ( hold_time <= 0 ) {
 			hold_time = 0;
-			var next:Int = (iterador + 1) % sprites.length;
-		
+			
 			if ( dyn_alpha < 1 ) {
 				
 				//sprites[iterador].visible = sprites[next].visible = true;
@@ -82,8 +85,9 @@ class Transitioner extends GameElement
 				removeChild(sprites[iterador]);
 				
 				iterador = next;
+				next = (iterador + 1) % sprites.length;
 				
-				var sig:Bitmap = sprites[(next + 1) % sprites.length];
+				var sig:Bitmap = sprites[next];
 				sig.alpha = 0;
 				addChild(sig);
 				
@@ -92,6 +96,5 @@ class Transitioner extends GameElement
 			}
 		} else
 				hold_time -= time;
-	}
-	
+	}	
 }

@@ -3,6 +3,7 @@ package scenes;
 import engine.graphics.BackgroundSidescroller;
 import engine.graphics.Button;
 import engine.graphics.ContAnimation;
+import engine.graphics.PopupWindow;
 import engine.graphics.Transitioner;
 import engine.Scene;
 import engine.SceneManager;
@@ -42,7 +43,10 @@ class MenuScene extends Scene {
 		
 		transitioner.onEvent = true;
 		transitioner.tiempo_trans = 6;
-		transitioner.init();
+		
+		
+		
+		transitioner.init(2);
 		transitioner.x = (800 - transitioner.width) / 2;
 		transitioner.y = (600 - transitioner.height);
 		
@@ -56,7 +60,7 @@ class MenuScene extends Scene {
 		sidescroll.push( new Bitmap( Assets.getBitmapData("images/fondos/scroll_winter.png") ) );
 		sidescroll.merge = 50;
 		
-		sidescroll.init();
+		sidescroll.init(2);
 		sidescroll.x = 0;
 		sidescroll.y = (600 - sidescroll.height); // 600 - 400 : Fondo de página
 		
@@ -69,14 +73,19 @@ class MenuScene extends Scene {
 		logo.x = (800 - logo.width);// / 2;
 		logo.visible = true;
 		addChild(logo);
-			
+		
+		var popup:PopupWindow = new PopupWindow(this, 800, 600);
+		
+		var sprOpciones:Sprite = this.showOptions();
+		var sprAyuda:Sprite = this.showHelp();
+		var sprCreditos:Sprite = this.showCredits();		
 		
 		var stick:Bitmap = new Bitmap ( Assets.getBitmapData("images/menu_stick.png") );
-		var btn_opciones:Button = new Button("images/menu_opciones.png", null, 2);
-		var btn_ayuda:Button = new Button("images/menu_ayuda.png", null, -2);
-		var btn_creditos:Button = new Button("images/menu_creditos.png", null, 2);
+		var btn_opciones:Button = new Button("images/menu_opciones.png", function() { popup.init(sprOpciones); }, 2);
+		var btn_ayuda:Button = new Button("images/menu_ayuda.png", function() { popup.init(sprAyuda); }, -2);
+		var btn_creditos:Button = new Button("images/menu_creditos.png", function() { popup.init(sprCreditos); }, 2);
 		
-		stick.x = 676; stick.y = 595 - stick.height;
+		stick.x = 676; stick.y = 605 - stick.height;
 		btn_opciones.x = stick.x - 76; btn_opciones.y = stick.y + 13;
 		btn_ayuda.x = stick.x - 81; btn_ayuda.y = stick.y + 61;
 		btn_creditos.x = stick.x - 51; btn_creditos.y = stick.y + 113;
@@ -143,11 +152,15 @@ class MenuScene extends Scene {
 		this.sm.switchScene('levelselect');
 	}
 	
-	public function help(event:Event) {	
-		PangRevenge.audioManager.justPlay(Sonido.EXPLO1);
-		this.sm.switchScene('help');
+	private function showOptions():Sprite {	
+		return new Sprite();
 	}
-	
+	private function showHelp():Sprite {	
+		return new Sprite();
+	}
+	private function showCredits():Sprite {	
+		return new Sprite();
+	}	
 	
 	public function exit(){
 		flash.system.System.exit(0);

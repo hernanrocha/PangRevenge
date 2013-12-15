@@ -27,8 +27,9 @@ class BackgroundSidescroller extends GameElement
 		sprites.push(btm);
 	}
 	
-	public function init() {
-		iterador = 0; // Se podría hacer random
+	public function init(it:Int = 0) {
+		iterador = it;
+		
 		addChild(sprites[iterador]);
 		sprites[iterador].x = sentido * merge;
 	}
