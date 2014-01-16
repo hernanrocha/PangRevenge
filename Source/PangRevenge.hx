@@ -31,19 +31,11 @@ class PangRevenge extends Sprite {
 	public function new () {
 		super();
 		
-		sm = new SceneManager(stage, audioManager);
+		// Input Manager
 		inputManager = new InputManager();
-		audioManager = new AudioManager();		
 		
-		// Audio Manager		
-		audioManager.addLibreria(Sonido.DISPARO);
-		audioManager.addLibreria(Sonido.POWERUP);
-		audioManager.addLibreria(Sonido.EXPLO1);
-		audioManager.addLibreria(Sonido.GOLPE);
-		audioManager.addLibreria(Sonido.VOLVER);
-		audioManager.addLibreria(Sonido.MENU);		
-		audioManager.addLibreria(Sonido.HELP);
-		audioManager.addLibreria(Sonido.LEVEL1);
+		// Audio Manager
+		audioManager = new AudioManager();			
 		
 		// Cargar datos
 		//Save.getInstance().sessionBegin();
@@ -51,23 +43,27 @@ class PangRevenge extends Sprite {
 		//GameScene.MAX_SCENE = 3;
 		
 		// Scene Manager
+		sm = new SceneManager(stage, audioManager);
 		sm.suscribeScene('game', new GameScene(sm));
 		sm.suscribeScene("levelselect", new LevelSelect(sm));
 		sm.suscribeScene('menu',new MenuScene(sm));
 		sm.suscribeScene('help', new HelpScene(sm));
 		sm.suscribeScene('gameover', new GameOverScene(sm));
 		sm.suscribeScene('winner', new WinScene(sm));
-		
-		sm.switchScene('menu');
+		// Agregar Pantalla Principal
 		this.addChild(sm);
 		
+		// Ajustar tamaño de pantalla y agregar bordes
+		addBorders();
+		onResize(null);
+		
+		// Agregar listeners
 		inputManager.suscribe(stage);
 		stage.addEventListener(flash.events.Event.ENTER_FRAME,gameLoop);
-		//stage.addEventListener(flash.events.Event.RESIZE,onResize);
+		stage.addEventListener(flash.events.Event.RESIZE,onResize);
 		
-		//onResize(null);
-		
-		addBorders();
+		// Mostrar menu en pantalla
+		sm.switchScene('menu');		
 	}
 	
 	function onResize(e:Event){
@@ -85,7 +81,6 @@ class PangRevenge extends Sprite {
 	}
 
 	private function addBorders() {
-		//var borders1 = new Sprite();
 		var borders1 = new Bitmap(Assets.getBitmapData("images/bordeVertical.jpg"));
 		borders1.x = -500;		
 		addChild(borders1);
