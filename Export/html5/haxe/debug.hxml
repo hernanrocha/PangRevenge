@@ -1,0 +1,24 @@
+-main ApplicationMain 
+-lib openfl
+-lib openfl-html5
+-lib actuate
+-cp Source
+-D tools=1
+-D openfl_ver=1.0.10
+-D openfl
+-D html5
+-D web
+-resource C:\Users\hernan\git\PangRevengeGitHub\Assets\fonts\7LED.ttf.hash@NME_fonts_7led_ttf
+-resource C:\Users\hernan\git\PangRevengeGitHub\Assets\fonts\AnglesOctagon.ttf.hash@NME_fonts_anglesoctagon_ttf
+-resource C:\Users\hernan\git\PangRevengeGitHub\Assets\fonts\ARCADE.TTF.hash@NME_fonts_arcade_ttf
+-resource C:\Users\hernan\git\PangRevengeGitHub\Assets\fonts\CHEESEBU.TTF.hash@NME_fonts_cheesebu_ttf
+-resource C:\Users\hernan\git\PangRevengeGitHub\Assets\fonts\Crasng.ttf.hash@NME_fonts_crasng_ttf
+-resource C:\Users\hernan\git\PangRevengeGitHub\Assets\fonts\Crasns.ttf.hash@NME_fonts_crasns_ttf
+-resource C:\Users\hernan\git\PangRevengeGitHub\Assets\fonts\JOINTBYPIZZADUDE.ttf.hash@NME_fonts_jointbypizzadude_ttf
+-resource C:\Users\hernan\git\PangRevengeGitHub\Assets\fonts\menu.ttf.hash@NME_fonts_menu_ttf
+-js Export/html5/bin/PangRevenge.js
+-cp Export/html5/haxe
+-D html5
+-D html
+--remap flash:flash
+-debug

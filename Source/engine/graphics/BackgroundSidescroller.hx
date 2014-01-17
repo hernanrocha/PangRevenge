@@ -1,6 +1,7 @@
 package engine.graphics;
 
 import engine.GameElement;
+import engine.InputManager;
 import flash.display.Bitmap;
 
 class BackgroundSidescroller extends GameElement
@@ -28,6 +29,7 @@ class BackgroundSidescroller extends GameElement
 	}
 	
 	public function init(it:Int = 0) {
+		trace("Init");
 		iterador = it;
 		
 		addChild(sprites[iterador]);
@@ -35,11 +37,15 @@ class BackgroundSidescroller extends GameElement
 	}
 	
 	override function updateLogic(time:Float) {
-		super.updateLogic(time);
+		//super.updateLogic(time);
+		//trace("Update");
 		
-		sprites[iterador].x = sprites[iterador].x + sentido * veloc;
+		if (InputManager.keyPressed("F")) {
+			trace(sprites[iterador].x);
+		}
+		sprites[iterador].x += -1;
 		
-		if ( next >= 0 ) {
+		/*if ( next >= 0 ) {
 			sprites[next].x = sprites[next].x + sentido * veloc;
 			if ( sprites[iterador].width + sprites[iterador].x <= 0 ) {
 				removeChild(sprites[iterador]);
@@ -50,13 +56,14 @@ class BackgroundSidescroller extends GameElement
 			// Revisa cuando está el siguiente
 			var btm:Bitmap = sprites[iterador];
 			var offset:Float = btm.width + btm.x - merge - w;
+
 			if ( offset <= 0 ) {
 				next = (iterador + 1) % sprites.length;
 				addChild(sprites[next]);
 				sprites[next].x = w - offset;
 				onChange();
 			}
-		}
+		}*/
 		
 	}
 	

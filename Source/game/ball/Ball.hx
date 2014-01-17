@@ -62,7 +62,7 @@ class Ball extends GameElement
 	private var gravedad:Float = 0.05;
 
 	private static var balls:Map < Int, Array<Ball> > = new Map < Int, Array<Ball> > ();
-	private static var bitmapData:Map < Int, BitmapData > = new Map < Int, BitmapData > ();
+	//private static var bitmapData:Map < Int, BitmapData > = new Map < Int, BitmapData > ();
 	
 	public function new(tam:Int){
 		super();
@@ -73,7 +73,7 @@ class Ball extends GameElement
 		configBoundingBox();
 	}
 	
-	public function spawn(x0:Float, y0:Float, vx:Float=Ball.VX, vy:Float=0, mantener:Bool=true) {
+	public function spawn(x0:Float, y0:Float, vx:Float=Ball.VX, vy:Float=0, mantenerAltura:Bool=true) {
 		
 		// Reiniciar animacion
 		if (ballAnimation != null) {
@@ -81,7 +81,7 @@ class Ball extends GameElement
 		}
 		ballSprite.visible = true;		
 		exploto = false;
-		this.mantener = mantener;
+		this.mantener = mantenerAltura;
 				
 		// Datos en X
 		ax = 0;
@@ -93,7 +93,7 @@ class Ball extends GameElement
 		ay = gravedad;
 		this.vy = vy;
 		sy = y0;
-		y = y0;		
+		y = y0;
 		
 		// Configurar datos de control
 		configRebote();
@@ -109,11 +109,11 @@ class Ball extends GameElement
 	
 	public function initSprite() {
 		// Explosion
-		if (!Ball.bitmapData.exists(tam)) {
-			Ball.bitmapData.set(tam, Assets.getBitmapData("images/bola" + tam + ".png"));
-		}
+		//if (!Ball.bitmapData.exists(tam)) {
+		//	Ball.bitmapData.set(tam, Assets.getBitmapData("images/bola" + tam + ".png"));
+		//}
 		
-		ballSprite =  new Bitmap(Ball.bitmapData.get(tam));
+		ballSprite =  new Bitmap(Assets.getBitmapData("images/bola" + tam + ".png"));
 		addChild(ballSprite);
 	}
 	
@@ -291,7 +291,7 @@ class Ball extends GameElement
 	}
 	
 	public function colisionJugador(p:Player):Bool {
-		if (PangRevenge.inputManager.keyPressed("D")) {
+		if(InputManager.keyActionPressed("DEBUG_BALL_POSITION")) {
 			trace(this);
 			trace(getCentroX());
 			trace(p.getCentroX());
@@ -304,7 +304,6 @@ class Ball extends GameElement
 	}
 	
 	override function updateLogic(time:Float) {
-		//if (PangRevenge.inputManager.keyPressed("A")) {
 		super.updateLogic(time);
 		
 		// Actualizar posicion
@@ -314,7 +313,6 @@ class Ball extends GameElement
 		
 		if (exploto && ballAnimation.finalizo()) {
 			GameScene.screen.eliminarPelota(this);
-		}
-		//}			
+		}		
 	}
 }

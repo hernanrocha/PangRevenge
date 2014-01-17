@@ -5,13 +5,14 @@ import flash.events.KeyboardEvent;
 
 class InputManager {
 	
-	var teclas:Array<Bool>;	
+	private var teclas:Array<Bool>;
+	private static var instancia:InputManager;
 	
 	public static var config:Map<String,Int> = null;
 	public static inline var LEFT_ARROW:Int = 37;
 	public static inline var RIGHT_ARROW:Int = 39;
 	
-	public function new () {
+	private function new () {
 		teclas=new Array<Bool>();
 		
 		config = new Map<String, Int>();
@@ -29,12 +30,18 @@ class InputManager {
 		config.set("P2_JUMP", "W".charCodeAt(0));
 		
 		config.set("PAUSE", "P".charCodeAt(0));
+		config.set("DEBUG_BALL_POSITION", "B".charCodeAt(0));
 		config.set("DEBUG_END_LEVEL", "N".charCodeAt(0));
 		config.set("DEBUG_UNLOCK_SCENES", "U".charCodeAt(0));
 	}
 	
-	// Suscribirse a los Eventos del Teclado
-	public function suscribe(stage:Stage){
+	public static function init(stage:Stage) {
+		instancia = new InputManager();
+		instancia.suscribe(stage);
+	}
+	
+	public function suscribe(stage:Stage) {		
+		// Suscribirse a los Eventos del Teclado
 		stage.addEventListener(flash.events.KeyboardEvent.KEY_UP, onKeyUp);
 		stage.addEventListener(flash.events.KeyboardEvent.KEY_DOWN, onKeyDown);
 	}
@@ -50,12 +57,16 @@ class InputManager {
     }
     
 	// Saber si una tecla esta presionada
-    public function keyPressed(key:String):Bool{
-    	return teclas[key.charCodeAt(0)];    
+    public static function keyPressed(key:String):Bool{
+    	return instancia.teclas[key.charCodeAt(0)];    
     }
 	   
-	public function keyCodePressed(keyCode:Int):Bool{
-    	return teclas[keyCode];    
-    }	
+	public static function keyCodePressed(keyCode:Int):Bool{
+    	return instancia.teclas[keyCode];    
+    }
+	
+	public static function keyActionPressed(keyAction:String):Bool{
+    	return InputManager.keyCodePressed(InputManager.config.get(keyAction));    
+    }
     
 }
