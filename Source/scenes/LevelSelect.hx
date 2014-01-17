@@ -1,6 +1,5 @@
 package scenes;
 
-import engine.GameState;
 import engine.graphics.DynamicButton;
 import engine.SceneManager;
 import engine.AudioManager;
@@ -67,16 +66,16 @@ class LevelSelect extends Scene
 		levelWinter.disable();
 		
 		// Obtener nivel actual
-		var maxEstacion = GameState.fbGetSeason();
+		GameScene.setSeason(fb_GetSeason());
 		
 		// Activar botones correspondientes
-		if (maxEstacion > 1)
+		if (GameScene.Session_season > 1)
 			levelSummer.enable();
 		
-		if (maxEstacion > 2)
+		if (GameScene.Session_season > 2)
 			levelAutumn.enable();
 		
-		if (maxEstacion > 3)
+		if (GameScene.Session_season > 3)
 			levelWinter.enable();
 			
 		// Posicionar
@@ -94,8 +93,8 @@ class LevelSelect extends Scene
 	}
 	
 	public function playSpring(e:Event) {
-		//GameScene.level.setSeason(1);
-		//allPause(true);
+		GameScene.level.setSeason(1);
+		allPause(true);
 		Actuate.tween(levelSummer, 1, { alpha:0 } );
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -139,7 +138,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playScene() {
-		//sm.switchScene('game');
+		sm.switchScene('game');
 	}
 	
 	private function allPause(v:Bool) {
@@ -153,5 +152,8 @@ class LevelSelect extends Scene
 		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('menu');
 	}
-
+	
+	private function fb_GetSeason() {
+		return 4;
+	}
 }

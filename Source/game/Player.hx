@@ -209,7 +209,7 @@ class Player extends GameElement
 	
 	//
 	private function getAction(action:String):Bool {
-		return InputManager.keyCodePressed(InputManager.config.get("P" + id + "_" + action));
+		return PangRevenge.inputManager.keyCodePressed(InputManager.config.get("P" + id + "_" + action));
 	}
 	
 	// Salto
@@ -344,7 +344,7 @@ class Player extends GameElement
 				return;
 			}			
 			
-			if (InputManager.keyCodePressed(InputManager.config.get("P" + id + "_FIRE"))) {
+			if (PangRevenge.inputManager.keyCodePressed(InputManager.config.get("P" + id + "_FIRE"))) {
 				
 				if ( !disparado_antiRebote )
 					iniciarDisparo();
