@@ -32,8 +32,7 @@ class LevelLoader
 	public function setYear(year:Int) {
 		if ( year < content.length )
 			this.year = content[year];
-	}
-	
+	}	
 	public function setSeason(season:Int) {
 		switch(season) {
 			case 2:
@@ -55,11 +54,9 @@ class LevelLoader
 	public function getLevels():Int {
 		return season.lvls.length;
 	}
-	
 	public function hasBoss():Bool {
 		return ( season.boss != null );
 	}
-	
 	public function getYears():Int {
 		return content.length;
 	}
@@ -68,11 +65,9 @@ class LevelLoader
 	public function loadSound() {
 		PangRevenge.audioManager.addLibreria(season.sound);
 	}
-	
 	public function playSound() {
 		//PangRevenge.audioManager.setSound(season.sound);
 	}
-	
 	public function setBackground() {
 		GameScene.screen.setBackground("images/fondos/" + season.background );
 	}

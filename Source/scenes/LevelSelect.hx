@@ -33,64 +33,20 @@ class LevelSelect extends Scene
 		levelWinter = new DynamicButton(Assets.getBitmapData("images/LevelWinter.jpg"), playWinter);
 		
 		// Agregar a pantalla
-		addChild(levelSpring);
-		addChild(levelSummer);
-		addChild(levelAutumn);
-		addChild(levelWinter);
+		this.addChild(levelSpring);
+		this.addChild(levelSummer);
+		this.addChild(levelAutumn);
+		this.addChild(levelWinter);
 		
 		xPos = (Screen.SCREEN_WIDTH - 210 ) / 2;
 		
 		// Agregar boton de Regresar
-		var backButton = new Button("images/back.png", goBack, 2);
+		var backButton:Button = new Button("images/back.png", goBack, 2);
 		backButton.x=10;
 		backButton.y=10;
-		addChild(backButton);
+		this.addChild(backButton);
 	}
 	
-	override public function init() {
-		super.init();
-		
-		// Mostrar Escena
-		this.alpha = 0;
-		Actuate.tween(this, 1, { alpha:1 } );
-		
-		allPause(false);
-		
-		// Desactivar todos los botones excepto el primero
-		levelSpring.alpha = levelSummer.alpha = levelAutumn.alpha = levelWinter.alpha = 1;
-		levelSpring.visible = levelSummer.visible = levelAutumn.visible = levelWinter.visible = true;
-		
-		levelSpring.enable();
-		levelSummer.disable();
-		levelAutumn.disable();
-		levelWinter.disable();
-		
-		// Obtener nivel actual
-		GameScene.setSeason(fb_GetSeason());
-		
-		// Activar botones correspondientes
-		if (GameScene.Session_season > 1)
-			levelSummer.enable();
-		
-		if (GameScene.Session_season > 2)
-			levelAutumn.enable();
-		
-		if (GameScene.Session_season > 3)
-			levelWinter.enable();
-			
-		// Posicionar
-		levelSpring.y = levelSummer.y = levelAutumn.y = levelWinter.y = 60;
-		
-		levelSpring.x = 38;
-		levelSummer.x = levelSpring.x + levelSpring.w;
-		levelAutumn.x = levelSummer.x + levelSummer.w;
-		levelWinter.x = levelAutumn.x + levelAutumn.w;
-	}
-	
-	override public function end(onComplete:Dynamic) {
-		Actuate.tween(this, 1, { alpha:0 } );
-		onComplete();
-	}
 	
 	public function playSpring(e:Event) {
 		GameScene.level.setSeason(1);
@@ -103,10 +59,8 @@ class LevelSelect extends Scene
 	
 	public function playSummer(e:Event) {
 		if ( ! levelSummer.isEnabled ) return;
-		
 		GameScene.level.setSeason(2);
 		allPause(true);
-		
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -115,10 +69,8 @@ class LevelSelect extends Scene
 	
 	public function playAutumn(e:Event) {
 		if ( ! levelAutumn.isEnabled ) return;
-		
 		GameScene.level.setSeason(3);
 		allPause(true);
-		
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelSummer, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelWinter, 1, { alpha:0 } ).delay(0.2);
@@ -127,10 +79,8 @@ class LevelSelect extends Scene
 	
 	public function playWinter(e:Event) {
 		if ( ! levelWinter.isEnabled ) return;
-		
 		GameScene.level.setSeason(4);
 		allPause(true);
-		
 		Actuate.tween(levelSpring, 1, { alpha:0 } );
 		Actuate.tween(levelSummer, 1, { alpha:0 } ).delay(0.1);
 		Actuate.tween(levelAutumn, 1, { alpha:0 } ).delay(0.2);
@@ -148,12 +98,49 @@ class LevelSelect extends Scene
 		levelWinter.pause(v);
 	}
 	
+	override public function init() {
+		super.init();
+		
+		// Mostrar escena
+		this.alpha = 0;
+		Actuate.tween(this, 1, { alpha:1 } );
+		
+		allPause(false);
+		
+		// Desactivar todos los botones excepto el primero
+		levelSpring.alpha = levelSummer.alpha = levelAutumn.alpha = levelWinter.alpha = 1;
+		levelSpring.visible = levelSummer.visible = levelAutumn.visible = levelWinter.visible = true;
+		
+		levelSpring.enable();
+		levelSummer.disable();
+		levelAutumn.disable();
+		levelWinter.disable();
+		
+		// Activar botones correspondientes
+		if (GameScene.Session_season > 1)
+			levelSummer.enable();
+		if (GameScene.Session_season > 2)
+			levelAutumn.enable();
+		if (GameScene.Session_season > 3)
+			levelWinter.enable();
+			
+		// Posicionar
+		levelSpring.y = levelSummer.y = levelAutumn.y = levelWinter.y = 60;
+		
+		levelSpring.x = 38;
+		levelSummer.x = levelSpring.x + levelSpring.w;
+		levelAutumn.x = levelSummer.x + levelSummer.w;
+		levelWinter.x = levelAutumn.x + levelAutumn.w;
+	}
+	
+	override public function end(onComplete:Dynamic) {
+		Actuate.tween(this, 1, { alpha:0 } );
+		onComplete();
+	}
+	
 	private function goBack(){
 		PangRevenge.audioManager.justPlay(Sonido.VOLVER);
 		sm.switchScene('menu');
 	}
 	
-	private function fb_GetSeason() {
-		return 4;
-	}
 }

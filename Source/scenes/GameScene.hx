@@ -65,7 +65,7 @@ class GameScene extends Scene {
 	
 	public function new (sm:SceneManager) {
 		super(sm);
-				
+		
 		inst = this;
 		lvlLoader = new LevelLoader("lvls.json");
 		hud = new Hud(720, 100, 40, 30+Screen.SCREEN_HEIGHT );
@@ -78,7 +78,6 @@ class GameScene extends Scene {
 		backButton.x = 10;
 		backButton.y = 10;
 		
-		// Bordes (internos)
 		bordeIzq = new Sprite();
 		bordeIzq.graphics.beginFill(0x000000);
 		bordeIzq.graphics.drawRect(0, 0, 20, 800);
@@ -100,15 +99,15 @@ class GameScene extends Scene {
 		bordeAbajo.graphics.drawRect(0, 0, 800, 400);
 		bordeAbajo.y = Screen.SCREEN_HEIGHT + 20;
 		bordeAbajo.graphics.endFill();
-		
 	}
 	
 	override function init() {
 		super.init();
 		
-		lvlLoader.setLevel(0); // Comenzar por el primer nivel de la estacion
-		lvlLoader.loadSound(); // Cargar sonido de la estacion
-		lvlLoader.setBackground(); // Cargar fondo de la estacion
+		// Cargar fondo:
+		lvlLoader.setLevel(0);
+		lvlLoader.loadSound();
+		lvlLoader.setBackground();
 		
 		// Inicializar valores
 		totalTime = 0;
@@ -121,7 +120,7 @@ class GameScene extends Scene {
 		addChild(bordeArriba);
 		addChild(bordeAbajo);
 		addChild(backButton); // Visible fuera de los bordes
-		addChild(hud); // Visible sobre los bordes
+		addChild(hud);
 		
 		// Cargar cosas de Screen
 		screen.init();
@@ -132,13 +131,13 @@ class GameScene extends Scene {
 		iniciarNivel();
 	}
 	
-	override public function end(onComplete:Dynamic) {
+	override public function end(onComplete:Dynamic) {	
 		screen.end();
 		
 		// Quitar elementos
 		removeChild(screen);
 		hijos.remove(screen);
-		removeChild(backButton);
+		removeChild(backButton);		
 		removeChild(bordeIzq);
 		removeChild(bordeDer);
 		removeChild(bordeArriba);
@@ -227,8 +226,4 @@ class GameScene extends Scene {
 		super.end(onComplete);
 		engine.Stats.track('game','finish','',200);
 	}*/
-	
-	public static function setSeason(season:Int) {
-		Session_season = season;
-	}
 }
