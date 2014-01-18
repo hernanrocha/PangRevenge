@@ -1,5 +1,6 @@
 package scenes;
 
+import engine.GameState;
 import engine.Level;
 import engine.LevelLoader;
 import engine.Scene;
@@ -57,7 +58,7 @@ class GameScene extends Scene {
 	public static var PLAYER_CANT(default, null):Int;
 	
 	public static var Session_year:Int = 0;
-	public static var Session_season:Int = 1;
+	public static var SEASON_UNBLOCKED:Int = 1;
 	
 	// Constantes:
 	public static inline var MAX_PLAYERS:Int = 2;
@@ -151,17 +152,21 @@ class GameScene extends Scene {
 	public function iniciarNivel() {
 		
 		screen.enJuego = false;
-		if ( ! level.nextLevel() ) {
-			if ( ! level.nextSeason() ) {
-				// Soporte para multiples años if ( ! level.nextYear() )
-				PangRevenge.sm.switchScene('wingame');
+		
+		// Verificar que haya siguiente nivel
+		if ( ! level.nextLevel() ) { // No hay mas niveles
+			if ( ! level.nextSeason() ) { // No hay mas temporadas
+				// Soporte para multiples años if ( ! level.nextYear() ) // No hay mas años
+				PangRevenge.sm.switchScene('wingame'); // El jugador gano
 				return;
 			} else {
-				GameScene.Session_season = level.season;
+				GameState.fbSetSeason(Std.int(Math.max(GameState.fbGetSeason(), level.season)));
+				PangRevenge.sm.switchScene('levelselect'); // Volver a seleccion de escena
+				return;
 			}
-			PangRevenge.sm.switchScene('levelselect');
-			return;
-		}		
+		}
+		
+		// Cargar Nivel
 		level.load();
 	}
 	
@@ -180,29 +185,33 @@ class GameScene extends Scene {
 	}
 	
 	private function pasaNivel():Bool {
-		return (
-			( level.ballCount == 0 && !level.lvl_boss ) || 
+		var ret = ( level.ballCount == 0 && !level.lvl_boss ) || 
 			(level.lvl_boss && level.boss_dead ) || 
-			PangRevenge.inputManager.keyCodePressed(InputManager.config.get("DEBUG_END_LEVEL"))
-		);
+			InputManager.keyActionPressed("DEBUG_END_LEVEL");
+		
+		return ret;
 	}
 	
 	// Nuestro gameLoop (se ejecuta antes de cada cuadro).
 	override public function updateLogic(time:Float) {
 		
-		if(PangRevenge.inputManager.keyPressed(String.fromCharCode(27))){
+		// Boton de escape
+		if(InputManager.keyPressed(String.fromCharCode(27))){
        		goBack();
 			return;
        	}
 		
-		if (PangRevenge.inputManager.keyCodePressed(InputManager.config.get("PAUSE")) )
+		// Boton de pausa
+		if (InputManager.keyActionPressed("PAUSE")){
 			if (!btnPause) { // Anti-rebote
 				btnPause = true;
 				enPausa = !enPausa;
 			}
-		else
+		}else{
 			btnPause = false;
+		}
 		
+		// Procesar juego
 		if ( screen.enJuego && !enPausa ) {
 			totalTime += time;
 			super.updateLogic(time);
@@ -228,7 +237,7 @@ class GameScene extends Scene {
 		engine.Stats.track('game','finish','',200);
 	}*/
 	
-	public static function setSeason(season:Int) {
-		Session_season = season;
-	}
+	//public static function setSeason(season:Int) {
+	//	Session_season = season;
+	//}
 }
