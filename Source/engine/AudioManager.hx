@@ -24,11 +24,23 @@ class AudioManager
 	private static inline var server: String = "http://localhost/PangRevenge/stream/";
 	
 	
-	public function new(){
+	public function new() {
+		
 		//Creo el hash.	
-		libreria=new Map<String,Sonido>();		
+		libreria = new Map<String,Sonido>();
+		
 		//No reproduzco nada.
-		sonidoActual = null;		
+		sonidoActual = null;
+		
+		
+		addLibreria(Sonido.DISPARO);
+		addLibreria(Sonido.POWERUP);
+		addLibreria(Sonido.EXPLO1);
+		addLibreria(Sonido.GOLPE);
+		addLibreria(Sonido.VOLVER);
+		addLibreria(Sonido.MENU);		
+		addLibreria(Sonido.HELP);
+		addLibreria(Sonido.LEVEL1);
 	}
 	
 	public function addLibreria(sonido:String) {
