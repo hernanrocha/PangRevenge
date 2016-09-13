@@ -2,11 +2,11 @@ package engine.graphics;
 
 import engine.GameElement;
 import flash.display.BitmapData;
-import openfl.display.Tilesheet;
+//import openfl.display.Tilesheet;
 import flash.geom.Rectangle;
 
 class Animation extends GameElement {
-	var t:Tilesheet;
+	//var t:Tilesheet;
 	var totalTime:Float;
 	var cant:Int;
 	
@@ -22,17 +22,17 @@ class Animation extends GameElement {
 		var w:Int=Math.round(img.width/cols);
 		var h:Int=Math.round(img.height/rows);
 
-		t = new Tilesheet(img);
+		/*t = new Tilesheet(img);
 		for(row in 0 ... rows){
 			for(col in 0 ... cols){
 				t.addTileRect(new Rectangle(col * w, row * h, w, h));
 			}
-		}
+		}*/
 		
 		this.width=w;
 		this.height=h;
 		cant=cols*rows;
-		t.drawTiles(graphics, [0, 0, 0]);
+		//t.drawTiles(graphics, [0, 0, 0]);
 		totalTime=0;
 	}
 	
@@ -53,7 +53,7 @@ class Animation extends GameElement {
 		graphics.clear();
 		
 		if (!activada) {
-			t.drawTiles(graphics, [0, 0, 0]);
+			//t.drawTiles(graphics, [0, 0, 0]);
 		}else{		
 			totalTime+=time;
 			if (totalTime > 0.05) {
@@ -64,7 +64,7 @@ class Animation extends GameElement {
 			//pos++;
 			
 			if (pos < cant) {
-				t.drawTiles(graphics, [0, 0, pos]);						
+				//t.drawTiles(graphics, [0, 0, pos]);						
 			}else {
 				finalizeAnimation();
 			}		

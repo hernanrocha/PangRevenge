@@ -80,11 +80,11 @@ class Screen extends GameElement
 	private function initFonts() {
 		var font = openfl.Assets.getFont('fonts/JOINTBYPIZZADUDE.ttf').fontName;
 		
-		var text_format_subtitle:TextFormat = new TextFormat(font);
+		/*var text_format_subtitle:TextFormat = new TextFormat(font);
 		text_format_subtitle.size = 30*0.8;
 		text_format_subtitle.color = 0x532b00;
 		text_format_subtitle.bold = true;
-		text_format_subtitle.align = flash.text.TextFormatAlign.CENTER;
+		text_format_subtitle.align = flash.text.TextFormatAlign.CENTER;*/
 		
 		message_board = new Bitmap ( Assets.getBitmapData( "images/message_board.png" ));
 		message_board.y = 113;
@@ -94,20 +94,20 @@ class Screen extends GameElement
 		text_subtitle.selectable = false;
 		text_subtitle.width = 290;
 		text_subtitle.height = 45;
-		text_subtitle.setTextFormat(text_format_subtitle);
+		//text_subtitle.setTextFormat(text_format_subtitle);
 		text_subtitle.x = message_board.x + 25;
 		text_subtitle.y = message_board.y + 175;		
 		
-		var text_format_message:TextFormat = new TextFormat(font);
+		/*var text_format_message:TextFormat = new TextFormat(font);
 		text_format_message.size = 75*0.8;
 		text_format_message.color = 0xc99964;
-		text_format_message.align = flash.text.TextFormatAlign.CENTER;
+		text_format_message.align = flash.text.TextFormatAlign.CENTER;*/
 		
 		text_message=new TextField();
 		text_message.selectable = false;
 		text_message.width = 235;
 		text_message.height = 75;
-		text_message.setTextFormat(text_format_message);
+		//text_message.setTextFormat(text_format_message);
 		text_message.x = message_board.x + 50;
 		text_message.y = message_board.y + 37;
 		

@@ -2,11 +2,11 @@ package engine.graphics;
 
 import engine.GameElement;
 import flash.display.BitmapData;
-import openfl.display.Tilesheet;
+//import openfl.display.Tilesheet;
 import flash.geom.Rectangle;
 
 class ContAnimation extends GameElement {
-	var t:Tilesheet;
+	//var t:Tilesheet;
 	var totalTime:Float;
 	var cant:Int;
 	var lastPos:Int;
@@ -22,14 +22,14 @@ class ContAnimation extends GameElement {
 		lWidth=Math.round(img.width/cols);
 		lHeight=Math.round(img.height/rows);
 
-		t=new Tilesheet(img);
+		/*t=new Tilesheet(img);
 		for(row in 0 ... rows){
 			for(col in 0 ... cols){
 				t.addTileRect(new Rectangle(col*lWidth,row*lHeight,lWidth,lHeight));
 			}
-		}
+		}*/
 		cant=cols*rows;
-		t.drawTiles(graphics,[0,0,0]);
+		//t.drawTiles(graphics,[0,0,0]);
 		totalTime=0;
 		lastPos=-1;
 	}
@@ -55,7 +55,7 @@ class ContAnimation extends GameElement {
 		if(loops==0) return;
 		lastPos=f%this.cant;
 		graphics.clear();
-		t.drawTiles(graphics, [0, 0, lastPos]);
+		//t.drawTiles(graphics, [0, 0, lastPos]);
 	}
 	
 	public function getFrame():Int{

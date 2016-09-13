@@ -35,7 +35,7 @@ class WinScene extends Scene
 		this.text.width= 750;
 		this.text.selectable=false;
 		this.text.height=200;
-		this.text.text =  "GANASTE";
+		this.text.text = "GANASTE";
 		this.text.setTextFormat(tf);
 		this.text.x=20;
 		this.text.y=250;

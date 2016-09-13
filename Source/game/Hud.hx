@@ -13,7 +13,7 @@ import haxe.ds.Vector.Vector;
 import openfl.Assets;
 import flash.display.Sprite;
 import flash.display.Bitmap;
-import openfl.display.Tilesheet;
+//import openfl.display.Tilesheet;
 import scenes.GameScene;
 
 /**
