@@ -30,6 +30,7 @@ class MenuScene extends Scene {
 
 	private var logo:Bitmap;
 	private var revenge:Bitmap;
+	private var sidescroll:BackgroundSidescroller;
 	private var transitioner:Transitioner;
         
 	public function new (sm:SceneManager) {
@@ -54,7 +55,7 @@ class MenuScene extends Scene {
 		hijos.push(transitioner);                
 		
 		// Scroll: la parte de adelante ira scrolleando
-		var sidescroll:BackgroundSidescroller = new BackgroundSidescroller(800);
+		sidescroll = new BackgroundSidescroller(800);
 		sidescroll.push( new Bitmap( Assets.getBitmapData("images/fondos/scroll_spring.png") ) );
 		sidescroll.push( new Bitmap( Assets.getBitmapData("images/fondos/scroll_summer.png") ) );
 		sidescroll.push( new Bitmap( Assets.getBitmapData("images/fondos/scroll_autumn.png") ) );
@@ -77,7 +78,7 @@ class MenuScene extends Scene {
 		addChild(logo);
 		
 		// Opciones
-		/*var popup:PopupWindow = new PopupWindow(this, 800, 600);
+		var popup:PopupWindow = new PopupWindow(this, 800, 600);
 		
 		var sprOpciones:Sprite = this.showOptions();
 		var sprAyuda:Sprite = this.showHelp();
@@ -88,15 +89,22 @@ class MenuScene extends Scene {
 		var btn_ayuda:Button = new Button("images/menu_ayuda.png", function() { popup.init(sprAyuda); }, -2);
 		var btn_creditos:Button = new Button("images/menu_creditos.png", function() { popup.init(sprCreditos); }, 2);
 		
-		stick.x = 676; stick.y = 605 - stick.height;
-		btn_opciones.x = stick.x - 76; btn_opciones.y = stick.y + 13;
-		btn_ayuda.x = stick.x - 81; btn_ayuda.y = stick.y + 61;
-		btn_creditos.x = stick.x - 51; btn_creditos.y = stick.y + 113;
+		stick.x = 676;
+		stick.y = 605 - stick.height;
+		
+		btn_opciones.x = stick.x - 76;
+		btn_opciones.y = stick.y + 13;
+		
+		btn_ayuda.x = stick.x - 81;
+		btn_ayuda.y = stick.y + 61;
+		
+		btn_creditos.x = stick.x - 51; 
+		btn_creditos.y = stick.y + 113;
 		
 		this.addChild(stick);
 		this.addChild(btn_opciones);
 		this.addChild(btn_ayuda);
-		this.addChild(btn_creditos);*/
+		this.addChild(btn_creditos);
 		
 		// Experimento botones
 		var players:SpriteBitmap = new SpriteBitmap("images/menu_players.png");
@@ -149,6 +157,13 @@ class MenuScene extends Scene {
 	override public function end(onComplete:Dynamic){
 		Actuate.tween(this, 1, { alpha:0 } ).onComplete(onComplete);
 	}
+	
+	override public function updateLogic(time:Float) {
+		super.updateLogic(time);
+		
+		//sidescroll
+		transitioner.updateLogic(time);
+    }
 	
 	public function play1(event:Event) {
 		trace("Play 1");

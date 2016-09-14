@@ -45,7 +45,7 @@ class BackgroundSidescroller extends GameElement
 		}
 		sprites[iterador].x += -1;
 		
-		/*if ( next >= 0 ) {
+		if ( next >= 0 ) {
 			sprites[next].x = sprites[next].x + sentido * veloc;
 			if ( sprites[iterador].width + sprites[iterador].x <= 0 ) {
 				removeChild(sprites[iterador]);
@@ -63,7 +63,7 @@ class BackgroundSidescroller extends GameElement
 				sprites[next].x = w - offset;
 				onChange();
 			}
-		}*/
+		}
 		
 	}
 	
