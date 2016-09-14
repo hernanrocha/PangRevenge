@@ -6,12 +6,12 @@
     <movie input="" />
     <movie path="project.xml" />
     <movie fps="60" />
-    <movie width="800" />
-    <movie height="600" />
+    <movie width="0" />
+    <movie height="0" />
     <movie version="0" />
     <movie minorVersion="0" />
     <movie platform="Lime" />
-    <movie background="#000000" />
+    <movie background="000000" />
     <movie preferredSDK=";3;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
@@ -22,7 +22,7 @@
     <class path="Source" />
     <class path="C:\Dev\HaxeToolkit\haxe\lib\openfl\4,1,0\externs\core\openfl" />
     <class path="C:\Dev\HaxeToolkit\haxe\lib\openfl\4,1,0\externs\extras" />
-    <class path="Export\html5\release\haxe" />
+    <class path="Export\html5\debug\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -31,7 +31,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="False" />
-    <option additional="--remap flash:openfl" />
+    <option additional="--remap flash:openfl&#xA;-debug " />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

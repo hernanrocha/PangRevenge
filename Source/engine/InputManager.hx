@@ -9,11 +9,11 @@ class InputManager {
 	private static var instancia:InputManager;
 	
 	public static var config:Map<String,Int> = null;
-	public static inline var LEFT_ARROW:Int = 37;
+	public static inline var LEFT_ARROW:Int = 37;	
 	public static inline var RIGHT_ARROW:Int = 39;
 	
 	private function new () {
-		teclas=new Array<Bool>();
+		teclas = new Array<Bool>();		
 		
 		config = new Map<String, Int>();
 		
@@ -35,7 +35,7 @@ class InputManager {
 		config.set("DEBUG_UNLOCK_SCENES", "U".charCodeAt(0));
 	}
 	
-	public static function init(stage:Stage) {
+	public static function init(stage:Stage) {		
 		instancia = new InputManager();
 		instancia.suscribe(stage);
 	}
@@ -48,12 +48,13 @@ class InputManager {
 
 	// Cuando se Suelta una Tecla
     private function onKeyUp(event:KeyboardEvent){
-    	teclas[event.keyCode]=false;
+    	teclas[event.keyCode] = false;		
     }
 
 	// Cuando se Presiona una Tecla
     private function onKeyDown(event:KeyboardEvent){
-		teclas[event.keyCode]=true;
+		trace('Tecla ' + event.keyCode);
+		teclas[event.keyCode] = true;		
     }
     
 	// Saber si una tecla esta presionada

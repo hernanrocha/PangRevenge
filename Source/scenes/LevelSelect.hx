@@ -51,6 +51,8 @@ class LevelSelect extends Scene
 	override public function init() {
 		super.init();
 		
+		trace("Mostrar escena");
+		
 		// Mostrar Escena
 		this.alpha = 0;
 		Actuate.tween(this, 1, { alpha:1 } );
@@ -139,7 +141,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playScene() {
-		//sm.switchScene('game');
+		sm.switchScene('game');
 	}
 	
 	private function allPause(v:Bool) {

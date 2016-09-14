@@ -3,7 +3,10 @@ package engine.graphics;
 import flash.display.Bitmap;
 import flash.display.BitmapData;
 import flash.display.Sprite;
+import openfl.display.Tile;
+import openfl.display.Tileset;
 //import openfl.display.Tilesheet;
+import openfl.display.Tilemap;
 import flash.geom.Rectangle;
 import flash.events.MouseEvent;
 
@@ -17,6 +20,9 @@ import flash.events.MouseEvent;
  */
 class DynamicButton extends Sprite{
 	//private var tile:Tilesheet;
+	private var tile:Tileset;
+	private var tileInts:Array<Int>;
+	private var tilemap:Tilemap;
 	
 	private static inline var DISABLED:Int = 0;
 	private static inline var ENABLED:Int = 1;
@@ -34,13 +40,21 @@ class DynamicButton extends Sprite{
 		super();
 		
 		//tile = new Tilesheet(img);
+		tile = new Tileset(img);
 		var tileData = new Array<Float>();
 		
 		w = img.width;
 		h = Math.round(img.height / 3);
 		
-		//for (i in 0...3)
-			//tile.addTileRect(new Rectangle(0, i * h, w, h));
+		tileInts = new Array<Int>();
+		for (i in 0...3) {
+			tileInts.push(tile.addRect(new Rectangle(0, i * h, w, h)));
+		}
+		
+		tilemap = new Tilemap(800, 600, tile);
+		addChild(tilemap);
+		
+		tilemap.addTile(new Tile(tileInts.pop()));
 		
 		sprite = new Sprite();
 		sprite.width = width = w;
