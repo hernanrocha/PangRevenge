@@ -60,8 +60,10 @@ class LevelSelect extends Scene
 		allPause(false);
 		
 		// Desactivar todos los botones excepto el primero
-		levelSpring.alpha = levelSummer.alpha = levelAutumn.alpha = levelWinter.alpha = 1;
-		levelSpring.visible = levelSummer.visible = levelAutumn.visible = levelWinter.visible = true;
+		levelSpring.alpha = 1;
+		levelSpring.visible = true;
+		//levelSpring.alpha = levelSummer.alpha = levelAutumn.alpha = levelWinter.alpha = 1;
+		//levelSpring.visible = levelSummer.visible = levelAutumn.visible = levelWinter.visible = true;
 		
 		levelSpring.enable();
 		levelSummer.disable();
@@ -85,9 +87,9 @@ class LevelSelect extends Scene
 		levelSpring.y = levelSummer.y = levelAutumn.y = levelWinter.y = 60;
 		
 		levelSpring.x = 38;
-		levelSummer.x = levelSpring.x + levelSpring.w;
-		levelAutumn.x = levelSummer.x + levelSummer.w;
-		levelWinter.x = levelAutumn.x + levelAutumn.w;
+		levelSummer.x = levelSpring.x + levelSpring.imgw;
+		levelAutumn.x = levelSummer.x + levelSummer.imgw;
+		levelWinter.x = levelAutumn.x + levelAutumn.imgw;
 	}
 	
 	override public function end(onComplete:Dynamic) {
@@ -96,6 +98,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playSpring(e:Event) {
+		trace("Spring");
 		//GameScene.level.setSeason(1);
 		//allPause(true);
 		Actuate.tween(levelSummer, 1, { alpha:0 } );
@@ -105,6 +108,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playSummer(e:Event) {
+		trace("Summer");
 		if ( ! levelSummer.isEnabled ) return;
 		
 		GameScene.level.setSeason(2);
@@ -117,6 +121,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playAutumn(e:Event) {
+		trace("Autumn");
 		if ( ! levelAutumn.isEnabled ) return;
 		
 		GameScene.level.setSeason(3);
@@ -129,6 +134,7 @@ class LevelSelect extends Scene
 	}
 	
 	public function playWinter(e:Event) {
+		trace("Winter");
 		if ( ! levelWinter.isEnabled ) return;
 		
 		GameScene.level.setSeason(4);

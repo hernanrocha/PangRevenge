@@ -13,7 +13,7 @@ class Button extends Rotable{
 	var boton:Bitmap;
 	var text:TextField;
 	
-	public function new (dir:String , onClick:Dynamic, rot:Int=2) {
+	public function new (dir:String , onClick:Dynamic, rot:Int = 10) {
 		super();
 		
 		boton = new Bitmap(Assets.getBitmapData(dir));
@@ -21,9 +21,9 @@ class Button extends Rotable{
 		
 		addChild(boton);
 		
-		boton.addEventListener(MouseEvent.CLICK, onClick);
-		boton.addEventListener(MouseEvent.MOUSE_OVER, function(e) { useHandCursor = true; rotate(rot); } );
-		boton.addEventListener(MouseEvent.MOUSE_OUT, function(e) { useHandCursor = false; rotate(0); } );
+		addEventListener(MouseEvent.CLICK, onClick);
+		addEventListener(MouseEvent.MOUSE_OVER, function(e) { useHandCursor = true; rotate(rot); } );
+		addEventListener(MouseEvent.MOUSE_OUT, function(e) { useHandCursor = false; rotate(0); } );
 	}	
 
 }

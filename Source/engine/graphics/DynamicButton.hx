@@ -21,7 +21,7 @@ import flash.events.MouseEvent;
 class DynamicButton extends Sprite{
 	//private var tile:Tilesheet;
 	private var tile:Tileset;
-	private var tileInts:Array<Int>;
+	private var tileInts:Array<Tile>;
 	private var tilemap:Tilemap;
 	
 	private static inline var DISABLED:Int = 0;
@@ -31,8 +31,10 @@ class DynamicButton extends Sprite{
 	private var paused:Bool = false;
 	
 	public var isEnabled(default, null):Bool;
-	public var w(default, null):Int;
-	public var h(default, null):Int;
+	public var imgw(default, null):Int;
+	public var imgh(default, null):Int;
+	
+	var selected:Int;
 	
 	var sprite:Sprite;
 
@@ -41,38 +43,32 @@ class DynamicButton extends Sprite{
 		
 		//tile = new Tilesheet(img);
 		tile = new Tileset(img);
-		var tileData = new Array<Float>();
+		//var tileData = new Array<Float>();
 		
-		w = img.width;
-		h = Math.round(img.height / 3);
+		imgw = img.width;
+		imgh = Math.round(img.height / 3);
 		
-		tileInts = new Array<Int>();
+		tileInts = new Array<Tile>();
 		for (i in 0...3) {
-			tileInts.push(tile.addRect(new Rectangle(0, i * h, w, h)));
+			var id:Int = tile.addRect(new Rectangle(0, i * imgh, imgw, imgh));
+			trace("ID: " + id);
+			tileInts.push(new Tile(id));
 		}
 		
-		tilemap = new Tilemap(800, 600, tile);
-		addChild(tilemap);
+		tilemap = new Tilemap(imgw, imgh, tile);
+		addChild(tilemap);		
+
+		addEventListener(MouseEvent.CLICK, onClick);
+		addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
+		addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
 		
-		tilemap.addTile(new Tile(tileInts.pop()));
-		
-		sprite = new Sprite();
-		sprite.width = width = w;
-		sprite.height = height = h;
-		
-		sprite.graphics.drawRect(0,0,w,h);
-		addChild(sprite);
-		
-		this.disable();
-		
-		sprite.addEventListener(MouseEvent.CLICK, onClick);
-		sprite.addEventListener(MouseEvent.MOUSE_OVER, onMouseOver);
-		sprite.addEventListener(MouseEvent.MOUSE_OUT, onMouseOut);
+		selected = 0;
 	}
 		
 	private function draw(v:Int) {
-		graphics.clear();
-		//tile.drawTiles(graphics, [0,0,v]);
+		tilemap.removeTile(tileInts[selected]);
+		tilemap.addTile(tileInts[v]);
+		selected = v;
 	}
 	
 	public function disable() {
